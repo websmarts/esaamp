@@ -14237,3 +14237,7 @@ label.panel-block:hover {
   color: #209cee;
 }
 
+.navbar-item img {
+  max-height: 2.75rem;
+}
+
