@@ -1,6 +1,27 @@
-@extends('layout')
+@extends('layouts.default')
 
 @section('content')
+
+    <section class="hero is-info is-medium is-bold">
+    <div class="hero-head">
+    <div class="hero-body">
+      <div class="container has-text-centered">
+        <h1 class="title">
+          EQUIPMENT SAFETY AUDIT &amp; ASSET MANAGEMENT PORTAL
+        </h1>
+        <h2 class="subtitle">
+          The Equipment Safety Audit and Asset Maanagement Portal is a tool to manage the acquisition, safe use and replacement of hospital equipment to ensure optimal patient use and care.
+        </h2>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <div class="box cta">
+      <p class="has-text-centered">
+        <span class="tag is-danger">New</span> Now with support for wingdings as well as slingdings.
+      </p>
+    </div>
 
     <div class="columns features">
       <div class="column is-4">
@@ -20,11 +41,11 @@
       <div class="column is-4">
         <div class="card">
           <div class="card-image has-text-centered">
-              <i class="fa fa-id-card-o"></i>
+              <i class="fa fa-id-card"></i>
           </div>
           <div class="card-content">
             <div class="content">
-              <h4>SAFTETY SOLUTION.</h4>
+              <h4>SAFETY SOLUTION.</h4>
               <p>Ut venenatis tellus in metus vulputate. Amet consectetur adipiscing elit pellentesque. Sed arcu non odio euismod lacinia at quis risus. Faucibus turpis in eu mi bibendum neque egestas cmonsu songue. Phasellus vestibulum lorem sed risus.</p>
               <p><a href="#">Learn more</a></p>
             </div>
