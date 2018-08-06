@@ -1451,11 +1451,17 @@ var render = function() {
                           keyup: function($event) {
                             if (
                               !("button" in $event) &&
-                              _vm._k($event.keyCode, "enter", 13, $event.key)
+                              _vm._k(
+                                $event.keyCode,
+                                "enter",
+                                13,
+                                $event.key,
+                                "Enter"
+                              )
                             ) {
                               return null
                             }
-                            _vm.store($event)
+                            return _vm.store($event)
                           },
                           input: function($event) {
                             if ($event.target.composing) {
@@ -1500,11 +1506,17 @@ var render = function() {
                           keyup: function($event) {
                             if (
                               !("button" in $event) &&
-                              _vm._k($event.keyCode, "enter", 13, $event.key)
+                              _vm._k(
+                                $event.keyCode,
+                                "enter",
+                                13,
+                                $event.key,
+                                "Enter"
+                              )
                             ) {
                               return null
                             }
-                            _vm.store($event)
+                            return _vm.store($event)
                           },
                           input: function($event) {
                             if ($event.target.composing) {
@@ -1618,11 +1630,17 @@ var render = function() {
                           keyup: function($event) {
                             if (
                               !("button" in $event) &&
-                              _vm._k($event.keyCode, "enter", 13, $event.key)
+                              _vm._k(
+                                $event.keyCode,
+                                "enter",
+                                13,
+                                $event.key,
+                                "Enter"
+                              )
                             ) {
                               return null
                             }
-                            _vm.update($event)
+                            return _vm.update($event)
                           },
                           input: function($event) {
                             if ($event.target.composing) {
@@ -1663,11 +1681,17 @@ var render = function() {
                           keyup: function($event) {
                             if (
                               !("button" in $event) &&
-                              _vm._k($event.keyCode, "enter", 13, $event.key)
+                              _vm._k(
+                                $event.keyCode,
+                                "enter",
+                                13,
+                                $event.key,
+                                "Enter"
+                              )
                             ) {
                               return null
                             }
-                            _vm.update($event)
+                            return _vm.update($event)
                           },
                           input: function($event) {
                             if ($event.target.composing) {
@@ -1984,7 +2008,7 @@ var render = function() {
                   on: {
                     submit: function($event) {
                       $event.preventDefault()
-                      _vm.store($event)
+                      return _vm.store($event)
                     }
                   }
                 },
@@ -2465,7 +2489,7 @@ function applyToTag (styleElement, obj) {
     styleElement.setAttribute('media', media)
   }
   if (options.ssrId) {
-    styleElement.setAttribute(ssridKey, obj.id)
+    styleElement.setAttribute(ssrIdKey, obj.id)
   }
 
   if (sourceMap) {

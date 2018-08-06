@@ -31,6 +31,19 @@
   @include('layouts.partials.footer')
 
   <script src="{{ asset('js/app.js') }}"></script>
+  
+  <!-- Bulm menu support -->
+ <script>
+    (function() {
+    var burger = document.querySelector('.burger');
+    var menu = document.querySelector('#'+burger.dataset.target);
+    burger.addEventListener('click', function() {
+        burger.classList.toggle('is-active');
+        menu.classList.toggle('is-active');
+    });
+})();
+</script>
+
 
   @yield('scripts')
 
