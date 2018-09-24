@@ -23,27 +23,30 @@ class SlingsController extends Controller
                 'name'=> 'description',
                 'input'=>'v-text-field',
                 'label'=> 'Description',
-                'rules'=>  'required|min:2|max:255'
+                'rules'=>  'required|min:2|max:10'
                             
             ],
             [
                 'name'=> 'cost_centre',
                 'input'=>'v-text-field',
                 'label'=> 'Cost centre',
-                'rules'=> ''
+                
+                
             ],
             [
                 'name'=> 'current_location',
                 'input'=>'v-text-field',
                 'label'=> 'Current location',
-                'rules'=> ''
+                
+                
             ],  
             [
                 'name'=> 'department_id',
                 'input'=>'v-select',
                 'label'=> 'Department',
                 'items'=> [['text'=>'department 1','value'=>'1'],['text'=>'department 2','value'=>'2']],
-                'rules'=> ''
+                
+                
             ]
 
         ];
