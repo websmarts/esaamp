@@ -23,6 +23,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        
+        $clientdata = $this->clientdata();
+        return view('home',compact('clientdata'));
+    }
+
+    protected function clientdata()
+    {
+        return ['client'=>'Alfred Hospital'];
     }
 }

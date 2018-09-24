@@ -18,3 +18,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('slings', 'Api\SlingsController@index');
+Route::get('sling/{barcode}', 'Api\SlingsController@getSlingByBarcode');

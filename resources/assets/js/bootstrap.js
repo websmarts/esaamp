@@ -37,25 +37,15 @@ if (token) {
     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
-window.Vue = require('vue') 
-import Buefy from 'buefy'
-//import 'buefy/lib/buefy.css'
 
-window.Vue.use(Buefy)
+// window.Vue = require('vue');
 
-/**
- * Echo exposes an expressive API for subscribing to channels and listening
- * for events that are broadcast by Laravel. Echo and event broadcasting
- * allows your team to easily build robust real-time web applications.
- */
+// import Buefy from 'buefy';
+// //import 'buefy/lib/buefy.css';
 
-// import Echo from 'laravel-echo'
+// import "vue-material-design-icons/styles.css";
 
-// window.Pusher = require('pusher-js');
-
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: 'your-pusher-key',
-//     cluster: 'mt1',
-//     encrypted: true
+// window.Vue.use(Buefy, {
+//     defaultIconPack: 'fas'
+    
 // });

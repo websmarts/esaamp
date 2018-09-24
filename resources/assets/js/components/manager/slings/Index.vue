@@ -21,7 +21,7 @@ Filter: <input v-model="filterKey" type="text" name="filter">
     </tr>
   </thead>
   <tbody>
-    <tr v-for="sling in displayList">
+    <tr v-for="sling in displayList" :key="sling.id">
       <td>{{ sling.barcode }}</td>
       <td>{{ sling.vendor }}</td>
       <td>{{ sling.vendor_part_reference }}</td>

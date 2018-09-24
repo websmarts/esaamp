@@ -20,6 +20,10 @@
     "vue": "^2.5.7"
   },
   "dependencies": {
-    "ajv": "^6.5.2"
+    "@mdi/font": "^2.6.95",
+    "ajv": "^6.5.2",
+    "vue-material-design-icons": "^1.6.0",
+    "vue-router": "^3.0.1",
+    "vuetify": "^1.1.13"
   }
 }

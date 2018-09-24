@@ -11,8 +11,8 @@
 
 	                <div class="panel-body">
 	                    <div class="box">
-
-			            <sling-index :listitems="slings"></sling-index>
+						<h1>Slings Index and DataTable</h1>
+			            <slingtable></slingtable>
 
 		        		</div>
 		    		</div>
@@ -25,5 +25,9 @@
 @endsection
 
 @section('scripts')
-<script src="{{ asset('js/slings_app.js') }}"></script>
+
+	<script src="{{ asset('js/slings.js') }}"></script>
+
+
 @endsection
+  

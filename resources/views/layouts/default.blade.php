@@ -15,7 +15,8 @@
 
     <!-- Custom styles for this template -->
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
-    <link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+ 
   </head>
 <!-- NAVBAR
 ================================================== -->
@@ -32,7 +33,7 @@
 
   <script src="{{ asset('js/app.js') }}"></script>
   
-  <!-- Bulm menu support -->
+  <!-- Bulma menu support -->
  <script>
     (function() {
     var burger = document.querySelector('.burger');
@@ -45,7 +46,7 @@
 </script>
 
 
-  @yield('scripts')
+
 
   </body>
 </html>

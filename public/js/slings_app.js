@@ -461,7 +461,7 @@ var render = function() {
       _c(
         "tbody",
         _vm._l(_vm.displayList, function(sling) {
-          return _c("tr", [
+          return _c("tr", { key: sling.id }, [
             _c("td", [_vm._v(_vm._s(sling.barcode))]),
             _vm._v(" "),
             _c("td", [_vm._v(_vm._s(sling.vendor))]),
