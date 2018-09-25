@@ -34,7 +34,7 @@
 
         <v-content>
         
-            <v-toolbar dark flat tile color="primary lighten-2" height="90">
+            <v-toolbar tile dark flat  color="primary lighten-2" height="90">
                 
                     
                 <v-layout row align-center justify-center >

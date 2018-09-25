@@ -1,6 +1,6 @@
 <template>
 
-      <v-card flat>
+      <v-card dark flat  color="primary lighten-2">
           <v-layout row align-center>
               <v-flex xs4 >
 
