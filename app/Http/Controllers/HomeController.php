@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Client;
+
+
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -24,12 +27,13 @@ class HomeController extends Controller
     public function index()
     {
         
+
         $clientdata = $this->clientdata();
         return view('home',compact('clientdata'));
     }
 
     protected function clientdata()
     {
-        return ['client'=>'Alfred Hospital'];
+        return Client::with('sites.departments')->first();
     }
 }

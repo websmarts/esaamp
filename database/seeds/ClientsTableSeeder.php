@@ -1,0 +1,32 @@
+<?php
+use App\Client;
+use Illuminate\Database\Seeder;
+
+class ClientsTableSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        Client::create( [
+            'name'=>'Alfred Hospital',
+            'status'=>'active'
+
+        ]);
+
+        Client::create( [
+            'name'=>'Caulfield Hospital',
+            'status'=>'active'
+
+        ]);
+
+        Client::create( [
+            'name'=>'Sandringham Hospital',
+            'status'=>'active'
+
+        ]);
+    }
+}

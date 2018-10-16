@@ -16,7 +16,16 @@ import Vuetify from 'vuetify';
 
 
 Vue.use(Router)
-Vue.use(Vuetify)
+
+// Helpers
+import colors from 'vuetify/es5/util/colors'
+Vue.use(Vuetify, {
+    theme: {
+      primary: colors.indigo.darken1, // #E53935
+      secondary: colors.indigo.lighten4, // #FFCDD2
+      accent: colors.indigo.base // #3F51B5
+    }
+  })
 
 Vue.component(
     'asset-toolbar',

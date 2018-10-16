@@ -12,7 +12,13 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        User::create(['email' => 'admin@here.com', 'name' => 'admin', 'password' => bcrypt('pass')]);
+        User::create([
+            'client_id'=>1 ,
+            'email' => 'admin@here.com', 
+            'name' => 'admin',
+            'title' => 'Charge Sister', 
+            'roles'=>'user', 
+            'password' => bcrypt('pass')]);
 
     }
 }

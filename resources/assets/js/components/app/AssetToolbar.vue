@@ -1,6 +1,6 @@
 <template>
 
-      <v-card dark flat  color="primary lighten-2">
+      <v-card dark flat  color="grey lighten-2">
           <v-layout row align-center>
               <v-flex xs4 >
 
@@ -65,7 +65,7 @@ export default {
     },
     mounted() {
         let self = this
-        axios.get('/api/slings')
+        axios.get('/api/assets')
         .then(function (response) {
             // handle success
             // console.log(response.data);

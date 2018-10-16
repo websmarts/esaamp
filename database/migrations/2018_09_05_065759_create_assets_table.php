@@ -15,7 +15,31 @@ class CreateAssetsTable extends Migration
     {
         Schema::create('assets', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
+            $table->integer('client_id')->unsigned();
+            $table->string('barcode');
+            $table->string('vendor')->nullable();
+            $table->string('vendor_part_reference')->nullable();
+            $table->string('description')->nullable();
+            $table->string('size')->nullable();
+            $table->float('cost_price')->nullable();
+            $table->integer('site_id')->unsigned();
+            $table->integer('department_id')->unsigned();
+            $table->string('cost_centre')->nullable();
+
+            $table->integer('asset_type_id')->unsigned();
+            $table->json('jdata')->nullable();
+           
+            $table->enum('quarantined', ['yes', 'no'])->nullable();
+            $table->enum('retire_from_service', ['yes', 'no'])->nullable();
+
+            $table->date('commissioned_date')->nullable();
+            $table->date('retired_date')->nullable();
+            $table->date('next_audit_due')->nullable();
+            
+            $table->timestamp('updated_at')->nullable();
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('deleted_at')->nullable();
+            
         });
     }
 

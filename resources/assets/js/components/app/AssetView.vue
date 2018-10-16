@@ -1,12 +1,15 @@
 <template>
 <v-layout justify-center>
+    
     <v-flex xs12 sm10 md8 lg6>
         <v-tabs
             v-model="active"
-            color="grey darken-3"
-            dark
-            slider-color="purple"
+            color="green lighten-2"
+            light
+            slider-color="grey darken-2"
             >
+            <v-flex xs2 class="grey darken-2" style="text-align: right;font-size:120%;color:#fff; padding:5px" >Asset ID</v-flex>
+            <v-flex  class="grey darken-2" style="font-size:120%;color:#fff; padding:5px" >{{barcode}}</v-flex>
             <v-tab  
                 :key="edit"
                 ripple
@@ -24,7 +27,6 @@
             >
                 <v-card flat>
                 <v-card-text>
-                    Edit Asset Form
                     <myform :barcode="barcode"></myform>
                     </v-card-text>
                 </v-card>
