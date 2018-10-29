@@ -68,6 +68,7 @@
 
 <script>
     // Global app data
+const refdata = @json($refdata);
 const clientdata = @json($clientdata);
 
 </script>

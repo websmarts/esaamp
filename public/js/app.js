@@ -1882,6 +1882,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js");
@@ -1911,19 +1913,29 @@ var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js
                 var site = _.find(clientdata.sites, ['id', this.data.site_id]);
                 return site.departments;
             }
+        },
+        conditionOptions: function conditionOptions() {
+            return refdata.condition_options;
+        },
+        myRefData: function myRefData() {
+            return refdata;
         }
     },
     methods: {
         groupA: function groupA(s) {
             // return true if input is one of the following
 
-            var options = ['v-text-field', 'v-switch'];
+            var options = ['v-text-field', 'v-switch', 'v-select'];
             return options.indexOf(s.input) > -1;
         },
         groupB: function groupB(s) {
 
             var options = ['v-date-picker'];
             return options.indexOf(s.input) > -1;
+        },
+        getOptions: function getOptions(key) {
+            console.log('Refdata Options Key', key);
+            return refdata[key];
         },
         siteChange: function siteChange(e) {
 
@@ -20026,7 +20038,7 @@ var render = function() {
                                       rules: s.rules,
                                       readonly: s.readonly,
                                       value: _vm.data[s.name],
-                                      items: s.items,
+                                      items: _vm.getOptions(s.items),
                                       light: ""
                                     }
                                   })

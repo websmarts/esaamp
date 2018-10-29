@@ -17,4 +17,9 @@ class AssetType extends Model
         'dataschema',
         'auditschema' 
     ];
+
+    protected $casts = [
+        'dataschema' => 'array',
+        'auditschema' => 'array'
+    ];
 }

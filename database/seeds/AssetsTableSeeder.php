@@ -15,7 +15,7 @@ class AssetsTableSeeder extends Seeder
      */
     public function run()
     {
-        $slings = Sling::select('barcode','description')->get();
+        $slings = Sling::get();
 
         $clients = Client::all();
 
@@ -33,14 +33,26 @@ class AssetsTableSeeder extends Seeder
                         $sling = $slings->shift();
                         $data['barcode'] = $sling->barcode;
                         $data['description'] = $sling->description;
+                        $data['vendor'] = $sling->vendor;
+                        $data['vendor_part_reference'] = $sling->vendor_part_reference;
+
 
 
                         $data['client_id']= $C->id;
                         $data['site_id'] = $S->id;
                         $data['department_id'] = $D->id;
+                        $data['cost_centre'] = $sling->cost_centre;
                         $data['asset_type_id'] = 1; // sling
 
-                        $data['jdata'] = json_encode(['a'=>'b']);
+                        $data['commissioned_date']=$sling->commissioned_date;
+
+                        $data['condition']=$sling->condition > '' ? $sling->condition : null;
+                        $data['retire_from_service']=$sling->retire_from_service;
+                        $data['retired_date']=$sling->retired_date;
+                        $data['next_audit_due'] = $sling->next_audit_due;
+
+
+                        $data['meta'] = ['wash_count'=>$sling->wash_count,'last_washed_date'=>$sling->last_washed_date,'last_washed_updated_at'=>$sling->last_washed_updated_at];
 
                         Asset::create($data);
                     }

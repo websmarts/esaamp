@@ -31,6 +31,8 @@
                         ></v-select>
                     </v-flex>
 
+                   
+
                     <v-flex  v-for="s in schema" :key="s.name" xs12 >
 
                         <template v-if="groupA(s)">
@@ -41,7 +43,7 @@
                                     :rules="s.rules"
                                     :readonly="s.readonly"
                                     :value="data[s.name]"
-                                    :items="s.items"
+                                    :items="getOptions(s.items)"
                                     light
                                 ></component>
                             </v-flex>
@@ -109,13 +111,19 @@ export default {
                 const site = _.find(clientdata.sites,['id',this.data.site_id])
                 return site.departments
             }
+        },
+        conditionOptions() {
+            return refdata.condition_options
+        },
+        myRefData() {
+            return refdata
         }
     },
     methods: {
         groupA(s) {
             // return true if input is one of the following
             
-            const options = ['v-text-field', 'v-switch']
+            const options = ['v-text-field', 'v-switch','v-select']
             return options.indexOf(s.input) > -1
            
         },
@@ -124,6 +132,10 @@ export default {
             const options = ['v-date-picker']
             return options.indexOf(s.input) > -1
 
+        },
+        getOptions(key){
+            console.log('Refdata Options Key',key)
+            return refdata[key]
         },
         siteChange(e){
             

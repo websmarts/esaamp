@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Asset;
+use App\AssetType;
 
 class AssetsController extends Controller
 {
@@ -15,75 +16,22 @@ class AssetsController extends Controller
     public function getAssetByBarcode($barcode)
     {
         
+        $asset = Asset::where('barcode',$barcode)->first();
+
+        $data = $asset->toArray();
+        $meta = $data['meta'];
+
+        //dd($meta);
+        foreach($meta as $key=>$value){
+            $data[$key]=$value;
+        }
+
+        unSet($data['meta']);
         
-        $formData =  Asset::with('type')->where('barcode',$barcode)->first();
+
+        $assetType = AssetType::find($asset->asset_type_id);
 
         
-
-        $formSchema =  [ 
-                
-            [
-                'name'=> 'description',
-                'input'=>'v-text-field',
-                'label'=> 'Description',
-                'rules'=>  'required|min:2|max:250'
-                            
-            ],
-            [
-                'name'=> 'vendor',
-                'input'=>'v-text-field',
-                'label'=> 'Vendor',
-                
-                            
-            ],
-            [
-                'name'=> 'vendor_part_reference',
-                'input'=>'v-text-field',
-                'label'=> 'Vendor Part#',
-                
-                            
-            ],
-            [
-                'name'=> 'size',
-                'input'=>'v-text-field',
-                'label'=> 'Size',
-                
-                            
-            ],
-            [
-                'name'=> 'cost_price',
-                'input'=>'v-text-field',
-                'label'=> 'Cost price',
-                
-                            
-            ],
-            [
-                'name'=> 'cost_centre',
-                'input'=>'v-text-field',
-                'label'=> 'Cost centre',
-                
-                
-            ],
-            [
-                'name'=> 'quarantined',
-                'input'=>'v-switch',
-                'label'=> 'Quarantined',
-                
-                
-            ],
-            [
-                'name'=> 'retired_date',
-                'input'=>'v-date-picker',
-                'landscape'=>false,
-                'reactive'=>true,
-                'label'=> 'Retired date',
-                
-                
-            ]    
-            
-
-        ];
-
-        return ['data'=>$formData,'dataschema'=>$formSchema];
+        return ['data'=>$data,'dataschema'=>$assetType->dataschema];
     }
 }

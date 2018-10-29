@@ -25,7 +25,9 @@ class Asset extends Model
         'cost_centre', 
 
         'asset_type_id',
-        'jdata', 
+        'meta', 
+
+        'condition',
         
         'quarantined',
         'retire_from_service',
@@ -36,11 +38,11 @@ class Asset extends Model
     ];
 
     protected $casts = [
-        'jdata' => 'array'
+        'meta' => 'array'
     ];
 
-    public function type()
+    public function atype()
     {
-        return $this->belongsTo('App\AssetType');
+        return $this->belongsTo('App\AssetType','asset_type_id');
     }
 }

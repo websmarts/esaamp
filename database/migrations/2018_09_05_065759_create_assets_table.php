@@ -27,8 +27,9 @@ class CreateAssetsTable extends Migration
             $table->string('cost_centre')->nullable();
 
             $table->integer('asset_type_id')->unsigned();
-            $table->json('jdata')->nullable();
-           
+            $table->json('meta')->nullable();
+            
+            $table->enum('condition', ['Excellent', 'Good', 'Satisfactory','Unsatisfactory'])->nullable();
             $table->enum('quarantined', ['yes', 'no'])->nullable();
             $table->enum('retire_from_service', ['yes', 'no'])->nullable();
 
