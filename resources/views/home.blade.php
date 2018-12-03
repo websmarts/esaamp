@@ -1,21 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="box">
-    <div class="columns is-centered">
-        <div class="column is-half">
-        	<div id="app">
-	        	<div class="panel panel-default">
-	                <div class="panel-heading ">Main Dashboard</div>
+<div id="app"></div>
 
-	                <div class="panel-body">
-	                    <div class="box">
-	                    	Dashboard content
-	                    </div>
-	                </div>
-	            </div>
-	        </div><!-- end App -->
-  		</div>
-  	</div>
-</div>
+<script>
+    // Global app data
+const $Refdata = @json($refdata);
+const $Clientdata = @json($clientdata);
+
+</script>
+ 
+  
+<script src="{{ asset('js/app.js') }}"></script>
 @endsection

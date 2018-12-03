@@ -1,37 +1,11 @@
 <template>  
     <div>
-
-        <v-form ref="form">
-            <v-container>
+        <div>Asset audit form
+            <v-form ref="auditform">
+                <v-container>
                 <v-layout row wrap>
                    
-                    <v-flex xs12>
-                        <v-text-field label="Barcode" :value="data.barcode" readonly ></v-text-field>
-                    </v-flex>
-                    <v-flex xs12>
-                        <v-select
-                            v-model="data.site_id"
-                            :items="sites"
-                            :rules="siteRules"
-                            item-text="name"
-                            item-value="id"
-                            label="Site"
-                            @change="siteChange"
-                        ></v-select>
-                    </v-flex>
-
-                    <v-flex xs12>
-
-                        <v-select
-                            v-model="data.department_id"
-                            :items="siteDepartments"
-                            :rules="departmentRules"
-                            item-text="name"
-                            item-value="id"
-                            label="Department"
-                        ></v-select>
-                    </v-flex>
-
+                    
                    
 
                     <v-flex  v-for="s in schema" :key="s.name" xs12 >
@@ -111,45 +85,39 @@
                     </v-flex>
                 </v-layout>
             </v-container>
-        </v-form>
+            </v-form>
+        </div>
+        <div>Asset Audit History</div>
+
+        
     </div>
 
 </template>
 
 <script>
 
-const myValidator = require('./myValidatorClass') ;
+const myValidator = require('../../myValidatorClass') ;
 
 
 export default {
-    props: ['barcode'],
+    props: ['asset'],
     data() {
         return {
             
             valid: true,
             
-            siteRules: [v => !!v || 'Site is required'],
-            departmentRules: [v => !!v || 'Department is required'],
+            
             data: {},
+            
+
             schema: [],
-            sites: clientdata.sites, 
+            
             showSuccessAlertFlag: false,
             successAlertMessage: ''        
         }
     },
     computed: {
-        siteDepartments(){
-            if (this.data.site_id){
-                const site = _.find(clientdata.sites,['id',this.data.site_id])
-                return site.departments
-            }
-        },
-        conditionOptions() {
-            return refdata.condition_options
-        },
-        myRefData() {
-            return refdata
-        }
+        
     },
     methods: {
         groupA(s) {
@@ -170,43 +138,36 @@ export default {
             return options.indexOf(s.input) > -1
         },
         getOptions(key){
-            console.log('Refdata Options Key',key)
+            // console.log('Refdata Options Key',key)
 
             // Could update to check if key is a string of options and if it is then return
             // them as an array
 
             // But for now we assume key is a key into the global refdata array
-            if(refdata.hasOwnProperty(key)){
-                return refdata[key]
+            if($Refdata.hasOwnProperty(key)){
+                return $Refdata[key]
             }
 
         },
         changed(e,field) {
-            console.log('changed',e,field)
+            // console.log('changed',e,field)
             this.data[field]=e
         },
-        siteChange(e){
-            
-            // If current department selected is not in the list of the 
-            // current list of site.departments then clear value
-            const found = _.find(this.siteDepartments,['id',this.data.department_id])
-            if(!found)
-                this.data.department_id = null
-        },
+        
         submit () {
-            if (this.$refs.form.validate()) {
+            if (this.$refs.auditform.validate()) {
             // Native form submission is not yet supported
-            console.log('Form is valid and I am submitting it now with this data',this.data)
+            // console.log('Form is valid and I am submitting it now with this data',this.data)
 
             const data = this.data
-            data._method = "PUT"
+            
 
             let self=this
 
-            axios.post('/api/asset/'+ this.barcode, this.data)
+            axios.post('/api/audit/'+ this.asset.barcode, this.data)
             .then(function (response) {
                 // handle success
-                 console.log(response.data);
+                // console.log(response.data);
                  self.successAlertMessage = 'Record update successful'
                  self.showSuccessAlertFlag = true
                 
@@ -225,7 +186,7 @@ export default {
         clear () {
             
             this.data = Object.assign({}, {}, {})
-            this.$refs.form.reset()
+            this.$refs.auditform.reset()
             // this.$nextTick( function() {
             //     this.$refs.form.reset()
             // })
@@ -238,16 +199,35 @@ export default {
             
             this.clear()
 
-            axios.get('/api/asset/'+ this.barcode)
+            let barcode = this.asset.barcode
+
+            console.log('Audit barcode',barcode)
+
+            axios.get('/api/audit/'+ barcode)
             .then(function (response) {
                 // handle success
                 // console.log(response.data);
-                self.data = response.data.data
 
-                // Pass data and schema the validator 
-                const validator = new myValidator(self.data,response.data.dataschema)
+                let asset = response.data.asset
 
-                // Get the schema with the laravel rules converted to local rules
+                // retrieve and remove assettype data from asset
+                let assettype = asset.assettype
+                delete asset.assettype
+
+                // retrieve and remove metadata from asset
+                let metadata = asset.meta
+                delete asset.meta
+
+                
+                // Combine the core schema with any metaschema
+                let schema = assettype.auditschema // .concat(assettype.metaschema)
+            
+                
+                // Setup formdata object by combining the core asset data Obj and the asset meta data Obj
+                self.data = Object.assign({},asset,metadata)
+                
+                // Setup the formschema with the laravel rules converted to local rules
+                const validator = new myValidator(self.data,schema)
                 self.schema =  validator.schema_with_rules
                 
             })
@@ -262,11 +242,11 @@ export default {
         }
     },
     watch: {
-        'barcode' (to, from) {
+        'asset' (to, from) {
         // react to route changes...
 
         // Ajax load latest data from server for asset ....
-        console.log('barcode updated to: ',to)
+        console.log('audit asset updated to: ',to)
         // this.formdata.description = 'my description for ' + this.barcode;
         // this.formdata.notes = 'my notes for barcode ' + this.barcode;
         this.load()
@@ -276,7 +256,8 @@ export default {
         }
     },
     mounted() {
-        this.load()
+        console.log('Asset Audit Mounted - Audit asset',this.asset)
+        //this.load()
     }
 }
 

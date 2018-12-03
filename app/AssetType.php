@@ -15,11 +15,13 @@ class AssetType extends Model
         'client_id',
         'name',
         'dataschema',
-        'auditschema' 
+        'auditschema',
+        'metaschema'
     ];
 
     protected $casts = [
         'dataschema' => 'array',
-        'auditschema' => 'array'
+        'auditschema' => 'array',
+        'metaschema' => 'array'
     ];
 }

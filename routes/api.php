@@ -20,5 +20,20 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 // Route::get('slings', 'Api\SlingsController@index');
 // Route::get('sling/{barcode}', 'Api\SlingsController@getSlingByBarcode');
 
-Route::get('assets', 'Api\AssetsController@index');
-Route::get('asset/{barcode}', 'Api\AssetsController@getAssetByBarcode');
+Route::middleware('auth:api')->group( function(){
+
+    Route::get('assets', 'Api\AssetsController@index');
+    Route::get('asset/{barcode}', 'Api\AssetsController@getAssetByBarcode');
+    Route::put('asset/{barcode}', 'Api\AssetsController@update');
+
+    
+    Route::get('audit/{barcode}', 'Api\AuditController@getAssetByBarcode');
+    Route::post('audit/{barcode}', 'Api\AuditController@store');
+    Route::put('audit/{barcode}', 'Api\AuditController@update');
+
+
+
+});
+
+
+

@@ -42,18 +42,19 @@ class AssetsTableSeeder extends Seeder
                         $data['site_id'] = $S->id;
                         $data['department_id'] = $D->id;
                         $data['cost_centre'] = $sling->cost_centre;
-                        $data['asset_type_id'] = 1; // sling
+                        $data['asset_type_id'] = 2; // 1=basic asset, 2 = sling asset
 
-                        $data['commissioned_date']=$sling->commissioned_date;
+                        $data['commissioned_date']=$sling->commissioned_date !='0000-01-01'? $sling->commissioned_date : null;
 
                         $data['condition']=$sling->condition > '' ? $sling->condition : null;
-                        $data['retire_from_service']=$sling->retire_from_service;
+                        $data['retire_from_service']=$sling->retire_from_service == 'yes' ? 1: 0;
                         $data['retired_date']=$sling->retired_date;
                         $data['next_audit_due'] = $sling->next_audit_due;
 
 
                         $data['meta'] = ['wash_count'=>$sling->wash_count,'last_washed_date'=>$sling->last_washed_date,'last_washed_updated_at'=>$sling->last_washed_updated_at];
 
+                       
                         Asset::create($data);
                     }
                     

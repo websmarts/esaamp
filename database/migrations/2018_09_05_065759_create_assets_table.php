@@ -30,8 +30,8 @@ class CreateAssetsTable extends Migration
             $table->json('meta')->nullable();
             
             $table->enum('condition', ['Excellent', 'Good', 'Satisfactory','Unsatisfactory'])->nullable();
-            $table->enum('quarantined', ['yes', 'no'])->nullable();
-            $table->enum('retire_from_service', ['yes', 'no'])->nullable();
+            $table->tinyInteger('quarantined')->default(0);
+            $table->tinyInteger('retire_from_service')->default(0);
 
             $table->date('commissioned_date')->nullable();
             $table->date('retired_date')->nullable();

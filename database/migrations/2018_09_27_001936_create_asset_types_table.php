@@ -18,6 +18,7 @@ class CreateAssetTypesTable extends Migration
             $table->integer('client_id')->unsigned();
             $table->string('name');
             $table->json('dataschema');
+            $table->json('metaschema');
             $table->json('auditschema');
             $table->timestamps();
         });

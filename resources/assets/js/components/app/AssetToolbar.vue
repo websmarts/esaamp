@@ -6,9 +6,8 @@
 
                         <v-autocomplete
                             :loading="loading"
-                            :items="items"
-                            item-text="barcode"
-                            item-value="barcode"
+                            :items="barcodes"
+                            
                             v-model="select"
                             @change="assetSelected"
                             clearable
@@ -38,17 +37,18 @@ export default {
 
         return {
             select: this.$route.params.barcode,
-            items: [],
+            barcodes: [],
             
             loading: false,
             isEditing: false,
-            goBtnDisabled: true,
+            // goBtnDisabled: true,
             
         }
     },
     methods: {
         assetSelected(e) {
-            this.goBtnDisabled = false
+            //this.goBtnDisabled = false
+         this.view();
         },
         view() {
             this.$router.push('/view/'+this.select);
@@ -69,7 +69,8 @@ export default {
         .then(function (response) {
             // handle success
             // console.log(response.data);
-            self.items = response.data
+
+            self.barcodes = response.data
         })
         .catch(function (error) {
             // handle error

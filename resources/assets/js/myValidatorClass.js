@@ -2,6 +2,8 @@ class myValidator {
 
     constructor(formdata,schema) {
         this.formdata = formdata;
+
+       
         this.schema = schema;
         this.process();
         
@@ -16,6 +18,7 @@ class myValidator {
     process() { // convert laravel rules to v-form rules
 
         const makeRule = this.makeRule;
+
 
         this.schema.forEach( function(obj, index){
 
@@ -36,13 +39,13 @@ class myValidator {
 
                 // check for min
                 const minResult = /min:(\d+)/.exec(rulesStr)
-                if ( minResult[1] > 0 ) {                      
+                if ( minResult && minResult[1] > 0 ) {                      
                     obj.rules.push( makeRule(obj,{key:'min',length:minResult[1]}) )
                 }
 
                 //check for max
                 const maxResult = /max:(\d+)/.exec(rulesStr)      
-                    if ( maxResult[1] ) {                      
+                    if ( maxResult && maxResult[1] ) {                      
                         obj.rules.push(makeRule(obj, {key:'max',length: maxResult[1]}) )
                 }
                 

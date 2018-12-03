@@ -26,17 +26,20 @@
                 :key="edit"
             >
                 <v-card flat>
-                <v-card-text>
-                    <myform :barcode="barcode"></myform>
-                    </v-card-text>
+                    
+                        <v-card-text>
+                            <asset-edit-form :asset="asset"></asset-edit-form>
+                        </v-card-text>
+                    
                 </v-card>
+                        
             </v-tab-item>
 
             <v-tab-item  
                 :key="audit"
             >
                 <v-card flat>
-                <v-card-text>Audit Asset Form &amp; History</v-card-text>
+                <v-card-text><asset-audit :asset="asset"></asset-audit></v-card-text>
                 </v-card>
             </v-tab-item>
 
@@ -53,14 +56,44 @@ export default {
             edit: null,
             audit: null,
             barcode: this.$route.params.barcode,
+            asset:{}
             
         }
+    },
+    methods: {
+        load () {
+            let self = this
+            
+
+            axios.get('/api/asset/'+ this.barcode)
+            .then(function (response) {
+                // handle success
+                // console.log(response.data);
+
+                self.asset = response.data.asset
+
+                
+                
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+            .then(function () {
+                // always executed
+            });
+
+        }
+    },
+    mounted() {
+        this.load()
     },
     watch: {
     '$route' (to, from) {
       // react to route changes...
       console.log('re-routed to: ',to.params.barcode)
       this.barcode = to.params.barcode
+      this.load()
     }
   }
 }

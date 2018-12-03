@@ -37,8 +37,11 @@ const AddAsset = {template:'<div>Add Asset</div>'};
 const ViewAsset = require('./components/app/AssetView.vue')
 const Reports = {template:'<div>Reports</div>'};
 
-const myform = require('./myform.vue');
-Vue.component('myform',myform);
+const assetEditForm = require('./components/app/AssetEditForm.vue');
+Vue.component('assetEditForm',assetEditForm);
+
+const assetAudit = require('./components/app/AssetAudit.vue');
+Vue.component('assetAudit',assetAudit);
 
 const routes = [
     { path: '/', component: Dashboard },
@@ -52,13 +55,22 @@ const router = new Router({
     
 });
 
+const App = require('./components/app/App.vue');
+
 
 Vue.config.productionTip = false
 
 new Vue(
     { 
         el: '#app',
-        router
+        router,
+        template:'<App/>',
+        components: { App },
+        data() {
+            return {
+                clientname: $Clientdata.name
+            }
+        }
         
 
     }

@@ -118,11 +118,11 @@
 
 <script>
 
-const myValidator = require('./myValidatorClass') ;
+const myValidator = require('../../myValidatorClass') ;
 
 
 export default {
-    props: ['barcode'],
+    props: ['asset'],
     data() {
         return {
             
@@ -131,8 +131,12 @@ export default {
             siteRules: [v => !!v || 'Site is required'],
             departmentRules: [v => !!v || 'Department is required'],
             data: {},
+            metadata: {},
+
             schema: [],
-            sites: clientdata.sites, 
+            metaschema: [],
+
+            sites: $Clientdata.sites, 
             showSuccessAlertFlag: false,
             successAlertMessage: ''        
         }
@@ -140,15 +144,15 @@ export default {
     computed: {
         siteDepartments(){
             if (this.data.site_id){
-                const site = _.find(clientdata.sites,['id',this.data.site_id])
+                const site = _.find($Clientdata.sites,['id',this.data.site_id])
                 return site.departments
             }
         },
         conditionOptions() {
-            return refdata.condition_options
+            return $Refdata.condition_options
         },
         myRefData() {
-            return refdata
+            return $Refdata
         }
     },
     methods: {
@@ -170,19 +174,19 @@ export default {
             return options.indexOf(s.input) > -1
         },
         getOptions(key){
-            console.log('Refdata Options Key',key)
+            // console.log('Refdata Options Key',key)
 
             // Could update to check if key is a string of options and if it is then return
             // them as an array
 
             // But for now we assume key is a key into the global refdata array
-            if(refdata.hasOwnProperty(key)){
-                return refdata[key]
+            if($Refdata.hasOwnProperty(key)){
+                return $Refdata[key]
             }
 
         },
         changed(e,field) {
-            console.log('changed',e,field)
+            // console.log('changed',e,field)
             this.data[field]=e
         },
         siteChange(e){
@@ -196,17 +200,17 @@ export default {
         submit () {
             if (this.$refs.form.validate()) {
             // Native form submission is not yet supported
-            console.log('Form is valid and I am submitting it now with this data',this.data)
+            // console.log('Form is valid and I am submitting it now with this data',this.data)
 
             const data = this.data
-            data._method = "PUT"
+            
 
             let self=this
 
-            axios.post('/api/asset/'+ this.barcode, this.data)
+            axios.put('/api/asset/'+ this.asset.barcode, this.data)
             .then(function (response) {
                 // handle success
-                 console.log(response.data);
+                // console.log(response.data);
                  self.successAlertMessage = 'Record update successful'
                  self.showSuccessAlertFlag = true
                 
@@ -238,35 +242,45 @@ export default {
             
             this.clear()
 
-            axios.get('/api/asset/'+ this.barcode)
-            .then(function (response) {
-                // handle success
-                // console.log(response.data);
-                self.data = response.data.data
+            
 
-                // Pass data and schema the validator 
-                const validator = new myValidator(self.data,response.data.dataschema)
+            let assetdata = _.clone(this.asset) // shallow clone removes deep objects
 
-                // Get the schema with the laravel rules converted to local rules
-                self.schema =  validator.schema_with_rules
+            
+
+
+            let assettype = this.asset.assettype
+
+            
+
+            // retrieve and remove metadata from asset
+            let metadata = this.asset.meta
+            
+
+            
+            // Combine the core schema with any metaschema
+            let schema = assettype.dataschema.concat(assettype.metaschema)
+
+           
+        
+            
+            // Setup formdata object by combining the core asset data Obj and the asset meta data Obj
+            self.data = Object.assign({},assetdata,metadata)
+            
+            // Setup the formschema with the laravel rules converted to local rules
+            const validator = new myValidator(self.data,schema)
+            self.schema =  validator.schema_with_rules
                 
-            })
-            .catch(function (error) {
-                // handle error
-                console.log(error);
-            })
-            .then(function () {
-                // always executed
-            });
+            
 
         }
     },
     watch: {
-        'barcode' (to, from) {
+        'asset' (to, from) {
         // react to route changes...
 
         // Ajax load latest data from server for asset ....
-        console.log('barcode updated to: ',to)
+        console.log('asset  updated to: ',to)
         // this.formdata.description = 'my description for ' + this.barcode;
         // this.formdata.notes = 'my notes for barcode ' + this.barcode;
         this.load()
@@ -276,7 +290,7 @@ export default {
         }
     },
     mounted() {
-        this.load()
+        //this.load()
     }
 }
 

@@ -31,7 +31,7 @@
 
   @include('layouts.partials.footer')
 
-  <script src="{{ asset('js/app.js') }}"></script>
+  
   
   <!-- Bulma menu support -->
  <script>

@@ -2,10 +2,14 @@
 
 namespace App;
 
+use App\Traits\storesMetadata;
 use Illuminate\Database\Eloquent\Model;
 
 class Asset extends Model
 {
+    
+    use storesMetadata;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -20,18 +24,13 @@ class Asset extends Model
         'size', 
         'cost_price', 
         'site_id',
-        'department_id',
-        
+        'department_id',        
         'cost_centre', 
-
         'asset_type_id',
         'meta', 
-
-        'condition',
-        
+        'condition',   
         'quarantined',
         'retire_from_service',
-
         'commissioned_date', 
         'retired_date', 
         'next_audit_due' 
@@ -41,8 +40,26 @@ class Asset extends Model
         'meta' => 'array'
     ];
 
-    public function atype()
+
+ 
+    /**
+     *  Returns an array of the supported keys in metadata
+     */
+    protected function metakeys()
+    {
+        return collect($this->assettype->metaschema)->pluck('name')->all();
+    }
+    
+
+
+    public function assettype()
     {
         return $this->belongsTo('App\AssetType','asset_type_id');
+
+    }
+
+    public function audits()
+    {
+        return $this->hasMany('App\Audit');
     }
 }
