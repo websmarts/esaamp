@@ -39,7 +39,11 @@
                 :key="audit"
             >
                 <v-card flat>
-                <v-card-text><asset-audit :asset="asset"></asset-audit></v-card-text>
+                <v-card-text>
+                    <asset-audit :asset="asset"  @created="addAudit"></asset-audit>
+                    <div>Asset Audit History</div>
+                    <audit-history :audits="asset.audits"></audit-history>
+                </v-card-text>
                 </v-card>
             </v-tab-item>
 
@@ -61,6 +65,10 @@ export default {
         }
     },
     methods: {
+        addAudit(audit){
+            // console.log('pushing new audit',audit)
+            this.asset.audits.push(audit)
+        },
         load () {
             let self = this
             
@@ -91,7 +99,7 @@ export default {
     watch: {
     '$route' (to, from) {
       // react to route changes...
-      console.log('re-routed to: ',to.params.barcode)
+      // console.log('re-routed to: ',to.params.barcode)
       this.barcode = to.params.barcode
       this.load()
     }

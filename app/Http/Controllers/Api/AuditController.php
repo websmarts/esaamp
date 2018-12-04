@@ -42,19 +42,18 @@ class AuditController extends Controller
             $asset = Asset::where('barcode',$barcode)->first();
 
             // get the audit data
-            $input = $this->request->input();
-            $data = $this->transform($input);
+            $data = $this->getData();
 
             $asset->update($data['assetdata']);
             $audit = $asset->audits()->create($data['auditdata']);
             $audit->update($data['auditdata']);
             
         
-            return ['data'=>'success','record'=>$data];
+            return ['data'=>'success','record'=>$audit->refresh()];
 
     }
 
-    private function transform($input)
+    private function getData()
     {
 
         $auditdata=[];
@@ -62,26 +61,27 @@ class AuditController extends Controller
         $data = [];
 
         // Handle the switch inputs
-        $auditdata['quarantined'] = $input['quarantined']===true ? 1 : 0;
-        $auditdata['retire_from_service'] = $input['retire_from_service']===true ? 1 : 0;
+        $auditdata['quarantined'] = $this->request->quarantined === true ? 1 : 0;
+        $auditdata['retire_from_service'] = $this->request->retire_from_service === true ? 1 : 0;
 
         
 
 
 
-        $auditdata['audit_date'] = $input['audit_date'];
+        $auditdata['audit_date'] = $this->request->audit_date;
         $auditdata['created_by'] = $this->user->id;
-        $auditdata['audit_notes'] = $input['audit_notes'];
-        $auditdata['next_action'] = $input['next_action'];
-        $auditdata['condition'] = $input['condition'];
+        $auditdata['auditors'] = $this->request->auditors;
+        $auditdata['audit_notes'] = $this->request->audit_notes;
+        $auditdata['next_action'] = $this->request->next_action;
+        $auditdata['condition'] = $this->request->condition;
 
 
         // Asset data
         // Handle the switch inputs
-        $assetdata['quarantined'] = $input['quarantined']===true ? 1 : 0;
-        $assetdata['retire_from_service'] = $input['retire_from_service']===true ? 1 : 0;
-        $assetdata['condition'] = $input['condition'];
-        $assetdata['next_audit_due']=$input['next_audit_due'];
+        $assetdata['quarantined'] = $this->request->quarantined === true ? 1 : 0;
+        $assetdata['retire_from_service'] = $this->request->retire_from_service === true ? 1 : 0;
+        $assetdata['condition'] = $this->request->condition;
+        $assetdata['next_audit_due'] = $this->request->next_audit_due;
 
         if($assetdata['retire_from_service']){
             $assetdata['retired_date'] = gmdate('Y-m-d');

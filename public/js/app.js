@@ -1866,7 +1866,7 @@ var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js
         submit: function submit() {
             if (this.$refs.auditform.validate()) {
                 // Native form submission is not yet supported
-                // console.log('Form is valid and I am submitting it now with this data',this.data)
+                console.log('Form is valid and I am submitting it now with this data', this.data);
 
                 var data = this.data;
 
@@ -1877,6 +1877,12 @@ var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js
                     // console.log(response.data);
                     self.successAlertMessage = 'Record update successful';
                     self.showSuccessAlertFlag = true;
+
+                    // push the new audit onto the audits stack
+                    // should emit an event so parent can update the record TODO
+                    self.$emit('created', response.data.record);
+                    // this.asset.audits.push(response.data.record)
+
                 }).catch(function (error) {
                     // handle error
                     console.log(error);
@@ -1900,40 +1906,45 @@ var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js
 
             this.clear();
 
-            var barcode = this.asset.barcode;
+            var assetdata = {};
 
-            console.log('Audit barcode', barcode);
+            var extractKeys = ['barcode', 'condition', 'quarantined', 'retire_from_service'];
+            _.each(extractKeys, function (key) {
 
-            axios.get('/api/audit/' + barcode).then(function (response) {
-                // handle success
-                // console.log(response.data);
-
-                var asset = response.data.asset;
-
-                // retrieve and remove assettype data from asset
-                var assettype = asset.assettype;
-                delete asset.assettype;
-
-                // retrieve and remove metadata from asset
-                var metadata = asset.meta;
-                delete asset.meta;
-
-                // Combine the core schema with any metaschema
-                var schema = assettype.auditschema; // .concat(assettype.metaschema)
-
-
-                // Setup formdata object by combining the core asset data Obj and the asset meta data Obj
-                self.data = Object.assign({}, asset, metadata);
-
-                // Setup the formschema with the laravel rules converted to local rules
-                var validator = new myValidator(self.data, schema);
-                self.schema = validator.schema_with_rules;
-            }).catch(function (error) {
-                // handle error
-                console.log(error);
-            }).then(function () {
-                // always executed
+                assetdata[key] = _.clone(self.asset[key]);
             });
+
+            // console.log('cleaned clone',assetdata)
+
+            // retrieve and remove assettype data from asset
+            var assettype = this.asset.assettype;
+
+            // Set schema to assets auditschema
+            var schema = assettype.auditschema;
+            var datakeys = _.map(schema, 'name');
+
+            // add datakeys that are NOT already in assetdata
+            _.each(datakeys, function (key) {
+                if (!assetdata.hasOwnProperty(key)) {
+                    assetdata[key] = null;
+                }
+            });
+
+            //  set the dafault value for audit date 
+            var now = new Date();
+            var today = now.toISOString().substring(0, 10); // YYYY-mm-dd
+            assetdata.audit_date = today;
+
+            // Set the logged in user as one of the  Auditors
+            assetdata['auditors'] = $Refdata.user.name;
+
+            // console.log('ASSETDATA',assetdata)
+
+            self.data = Object.assign({}, assetdata);
+
+            // Setup the formschema with the laravel rules converted to local rules
+            var validator = new myValidator(self.data, schema);
+            self.schema = validator.schema_with_rules;
         }
     },
     watch: {
@@ -1941,14 +1952,14 @@ var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js
             // react to route changes...
 
             // Ajax load latest data from server for asset ....
-            console.log('audit asset updated to: ', to);
+            // console.log('audit asset updated to: ',to)
             // this.formdata.description = 'my description for ' + this.barcode;
             // this.formdata.notes = 'my notes for barcode ' + this.barcode;
             this.load();
         }
     },
     mounted: function mounted() {
-        console.log('Asset Audit Mounted - Audit asset', this.asset);
+        // console.log('Asset Audit Mounted - Audit asset',this.asset)
         //this.load()
     }
 });
@@ -2196,8 +2207,11 @@ var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js
 
             this.clear();
 
-            var assetdata = _.clone(this.asset); // shallow clone removes deep objects
-
+            // Remove some unwanted data so it does not become part of the formdata
+            var assetdata = _.clone(this.asset);
+            delete assetdata.assettype;
+            delete assetdata.audits;
+            delete assetdata.meta;
 
             var assettype = this.asset.assettype;
 
@@ -2220,7 +2234,7 @@ var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js
             // react to route changes...
 
             // Ajax load latest data from server for asset ....
-            console.log('asset  updated to: ', to);
+            // console.log('asset  updated to: ',to)
             // this.formdata.description = 'my description for ' + this.barcode;
             // this.formdata.notes = 'my notes for barcode ' + this.barcode;
             this.load();
@@ -2374,6 +2388,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -2388,6 +2406,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     methods: {
+        addAudit: function addAudit(audit) {
+            // console.log('pushing new audit',audit)
+            this.asset.audits.push(audit);
+        },
         load: function load() {
             var self = this;
 
@@ -2411,10 +2433,72 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     watch: {
         '$route': function $route(to, from) {
             // react to route changes...
-            console.log('re-routed to: ', to.params.barcode);
+            // console.log('re-routed to: ',to.params.barcode)
             this.barcode = to.params.barcode;
             this.load();
         }
+    }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/app/AuditHistory.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['audits'],
+    data: function data() {
+        return {
+            headers: [{
+                text: 'Date ',
+                align: 'left',
+                sortable: true,
+                value: 'meta.audit_date'
+            }, {
+                text: 'Audtitor ',
+                align: 'left',
+                sortable: false,
+                value: 'created_by'
+            }, {
+                text: 'Notes ',
+                align: 'left',
+                sortable: false,
+                value: 'meta.audit_notes'
+            }, {
+                text: 'Next action ',
+                align: 'left',
+                sortable: false,
+                value: 'meta.netxt_action'
+            }, {
+                text: 'Condition ',
+                align: 'left',
+                sortable: false,
+                value: 'meta.condition'
+            }]
+        };
     }
 });
 
@@ -20130,6 +20214,58 @@ module.exports = function normalizeComponent (
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-1badbb8b\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/app/AuditHistory.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("v-data-table", {
+    staticClass: "elevation-1",
+    attrs: { headers: _vm.headers, items: _vm.audits },
+    scopedSlots: _vm._u([
+      {
+        key: "items",
+        fn: function(props) {
+          return [
+            _c("td", { staticClass: "text-xs-left" }, [
+              _vm._v(_vm._s(props.item.meta.audit_date))
+            ]),
+            _vm._v(" "),
+            _c("td", { staticClass: "text-xs-left" }, [
+              _vm._v(_vm._s(props.item.meta.auditors))
+            ]),
+            _vm._v(" "),
+            _c("td", { staticClass: "text-xs-left" }, [
+              _vm._v(_vm._s(props.item.meta.audit_notes))
+            ]),
+            _vm._v(" "),
+            _c("td", { staticClass: "text-xs-left" }, [
+              _vm._v(_vm._s(props.item.meta.next_action))
+            ]),
+            _vm._v(" "),
+            _c("td", { staticClass: "text-xs-left" }, [
+              _vm._v(_vm._s(props.item.meta.condition))
+            ])
+          ]
+        }
+      }
+    ])
+  })
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-1badbb8b", module.exports)
+  }
+}
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-412978bd\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/app/AssetToolbar.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20334,7 +20470,18 @@ var render = function() {
                     [
                       _c(
                         "v-card-text",
-                        [_c("asset-audit", { attrs: { asset: _vm.asset } })],
+                        [
+                          _c("asset-audit", {
+                            attrs: { asset: _vm.asset },
+                            on: { created: _vm.addAudit }
+                          }),
+                          _vm._v(" "),
+                          _c("div", [_vm._v("Asset Audit History")]),
+                          _vm._v(" "),
+                          _c("audit-history", {
+                            attrs: { audits: _vm.asset.audits }
+                          })
+                        ],
                         1
                       )
                     ],
@@ -20784,197 +20931,188 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c(
-      "div",
-      [
-        _vm._v("Asset audit form\n        "),
-        _c(
-          "v-form",
-          { ref: "auditform" },
-          [
-            _c(
-              "v-container",
-              [
-                _c(
-                  "v-layout",
-                  { attrs: { row: "", wrap: "" } },
-                  [
-                    _vm._l(_vm.schema, function(s) {
-                      return _c(
-                        "v-flex",
-                        { key: s.name, attrs: { xs12: "" } },
-                        [
-                          _vm.groupA(s)
-                            ? [
-                                _c(
-                                  "v-flex",
-                                  { attrs: { xs12: "" } },
-                                  [
-                                    _c(s.input, {
-                                      tag: "component",
-                                      attrs: {
-                                        label: s.label,
-                                        rules: s.rules,
-                                        readonly: s.readonly,
-                                        value: _vm.data[s.name],
-                                        items: _vm.getOptions(s.items),
-                                        light: ""
-                                      },
-                                      on: {
-                                        change: function($event) {
-                                          _vm.changed($event, s.name)
-                                        }
-                                      }
-                                    })
-                                  ],
-                                  1
-                                )
-                              ]
-                            : _vm._e(),
-                          _vm._v(" "),
-                          _vm.groupB(s)
-                            ? [
-                                _c(
-                                  "v-layout",
-                                  {
-                                    attrs: {
-                                      row: "",
-                                      wrap: "",
-                                      "align-left": ""
-                                    }
-                                  },
-                                  [
-                                    _c("v-flex", { attrs: { xs2: "" } }, [
-                                      _vm._v(_vm._s(s.label))
-                                    ]),
-                                    _vm._v(" "),
-                                    _c(
-                                      "v-flex",
-                                      { attrs: { xs10: "" } },
-                                      [
-                                        _c(s.input, {
-                                          tag: "component",
-                                          attrs: {
-                                            label: s.label,
-                                            rules: s.rules,
-                                            readonly: s.readonly,
-                                            value: _vm.data[s.name],
-                                            reactive: s.reactive,
-                                            landscape: s.landscape,
-                                            color: "green",
-                                            light: ""
-                                          },
-                                          model: {
-                                            value: _vm.data[s.name],
-                                            callback: function($$v) {
-                                              _vm.$set(_vm.data, s.name, $$v)
-                                            },
-                                            expression: "data[s.name]"
-                                          }
-                                        })
-                                      ],
-                                      1
-                                    )
-                                  ],
-                                  1
-                                )
-                              ]
-                            : _vm._e(),
-                          _vm._v(" "),
-                          _vm.groupC(s)
-                            ? [
-                                _c(
-                                  "v-flex",
-                                  { attrs: { xs12: "" } },
-                                  [
-                                    _c(s.input, {
-                                      tag: "component",
-                                      attrs: {
-                                        label: s.label,
-                                        rules: s.rules,
-                                        readonly: s.readonly,
-                                        value: _vm.data[s.name],
-                                        items: _vm.getOptions(s.items),
-                                        light: ""
-                                      },
-                                      on: {
-                                        change: function($event) {
-                                          _vm.changed($event, s.name)
-                                        }
-                                      },
-                                      model: {
-                                        value: _vm.data[s.name],
-                                        callback: function($$v) {
-                                          _vm.$set(_vm.data, s.name, $$v)
-                                        },
-                                        expression: "data[s.name]"
-                                      }
-                                    })
-                                  ],
-                                  1
-                                )
-                              ]
-                            : _vm._e()
-                        ],
-                        2
-                      )
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "v-btn",
-                      {
-                        attrs: { disabled: !_vm.valid },
-                        on: { click: _vm.submit }
-                      },
-                      [_vm._v("\n                    submit\n                ")]
-                    ),
-                    _vm._v(" "),
-                    _c("v-btn", { on: { click: _vm.clear } }, [
-                      _vm._v("clear")
-                    ]),
-                    _vm._v(" "),
-                    _c("v-btn", { on: { click: _vm.load } }, [_vm._v("reset")]),
-                    _vm._v(" "),
-                    _c(
+  return _c(
+    "div",
+    [
+      _c("div", [_vm._v("Asset audit form")]),
+      _vm._v(" "),
+      _c(
+        "v-form",
+        { ref: "auditform" },
+        [
+          _c(
+            "v-container",
+            [
+              _c(
+                "v-layout",
+                { attrs: { row: "", wrap: "" } },
+                [
+                  _vm._l(_vm.schema, function(s) {
+                    return _c(
                       "v-flex",
-                      { attrs: { xs12: "" } },
+                      { key: s.name, attrs: { xs12: "" } },
                       [
-                        _c(
-                          "v-alert",
-                          {
-                            attrs: {
-                              value: _vm.showSuccessAlertFlag,
-                              dismissible: "",
-                              type: "success"
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "\n                        " +
-                                _vm._s(_vm.successAlertMessage) +
-                                "\n                        "
-                            )
-                          ]
-                        )
+                        _vm.groupA(s)
+                          ? [
+                              _c(
+                                "v-flex",
+                                { attrs: { xs12: "" } },
+                                [
+                                  _c(s.input, {
+                                    tag: "component",
+                                    attrs: {
+                                      label: s.label,
+                                      rules: s.rules,
+                                      readonly: s.readonly,
+                                      value: _vm.data[s.name],
+                                      items: _vm.getOptions(s.items),
+                                      light: ""
+                                    },
+                                    on: {
+                                      change: function($event) {
+                                        _vm.changed($event, s.name)
+                                      }
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            ]
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.groupB(s)
+                          ? [
+                              _c(
+                                "v-layout",
+                                {
+                                  attrs: { row: "", wrap: "", "align-left": "" }
+                                },
+                                [
+                                  _c("v-flex", { attrs: { xs2: "" } }, [
+                                    _vm._v(_vm._s(s.label))
+                                  ]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "v-flex",
+                                    { attrs: { xs10: "" } },
+                                    [
+                                      _c(s.input, {
+                                        tag: "component",
+                                        attrs: {
+                                          label: s.label,
+                                          rules: s.rules,
+                                          readonly: s.readonly,
+                                          value: _vm.data[s.name],
+                                          reactive: s.reactive,
+                                          landscape: s.landscape,
+                                          color: "green",
+                                          light: ""
+                                        },
+                                        model: {
+                                          value: _vm.data[s.name],
+                                          callback: function($$v) {
+                                            _vm.$set(_vm.data, s.name, $$v)
+                                          },
+                                          expression: "data[s.name]"
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  )
+                                ],
+                                1
+                              )
+                            ]
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.groupC(s)
+                          ? [
+                              _c(
+                                "v-flex",
+                                { attrs: { xs12: "" } },
+                                [
+                                  _c(s.input, {
+                                    tag: "component",
+                                    attrs: {
+                                      label: s.label,
+                                      rules: s.rules,
+                                      readonly: s.readonly,
+                                      value: _vm.data[s.name],
+                                      items: _vm.getOptions(s.items),
+                                      light: ""
+                                    },
+                                    on: {
+                                      change: function($event) {
+                                        _vm.changed($event, s.name)
+                                      }
+                                    },
+                                    model: {
+                                      value: _vm.data[s.name],
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.data, s.name, $$v)
+                                      },
+                                      expression: "data[s.name]"
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            ]
+                          : _vm._e()
                       ],
-                      1
+                      2
                     )
-                  ],
-                  2
-                )
-              ],
-              1
-            )
-          ],
-          1
-        )
-      ],
-      1
-    ),
-    _vm._v(" "),
-    _c("div", [_vm._v("Asset Audit History")])
-  ])
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      attrs: { disabled: !_vm.valid },
+                      on: { click: _vm.submit }
+                    },
+                    [_vm._v("\n                submit\n            ")]
+                  ),
+                  _vm._v(" "),
+                  _c("v-btn", { on: { click: _vm.clear } }, [_vm._v("clear")]),
+                  _vm._v(" "),
+                  _c("v-btn", { on: { click: _vm.load } }, [_vm._v("reset")]),
+                  _vm._v(" "),
+                  _c(
+                    "v-flex",
+                    { attrs: { xs12: "" } },
+                    [
+                      _c(
+                        "v-alert",
+                        {
+                          attrs: {
+                            value: _vm.showSuccessAlertFlag,
+                            dismissible: "",
+                            type: "success"
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                    " +
+                              _vm._s(_vm.successAlertMessage) +
+                              "\n                    "
+                          )
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                2
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -57878,6 +58016,9 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('assetEditForm', assetEdit
 var assetAudit = __webpack_require__("./resources/assets/js/components/app/AssetAudit.vue");
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('assetAudit', assetAudit);
 
+var auditHistory = __webpack_require__("./resources/assets/js/components/app/AuditHistory.vue");
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('auditHistory', auditHistory);
+
 var routes = [{ path: '/', component: Dashboard }, { path: '/view/:barcode', component: ViewAsset }, { path: '/add', component: AddAsset }, { path: '/reports', component: Reports }];
 
 var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
@@ -58188,6 +58329,54 @@ if (false) {(function () {
     hotAPI.createRecord("data-v-63b6a2d3", Component.options)
   } else {
     hotAPI.reload("data-v-63b6a2d3", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/app/AuditHistory.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/app/AuditHistory.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-1badbb8b\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/app/AuditHistory.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\app\\AuditHistory.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1badbb8b", Component.options)
+  } else {
+    hotAPI.reload("data-v-1badbb8b", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true

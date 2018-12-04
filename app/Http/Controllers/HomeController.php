@@ -50,6 +50,7 @@ class HomeController extends Controller
 
         $refdata['condition_options'] = $this->getConditionOptions();
         $refdata['asset_types'] = $this->getAssetTypes();
+        $refdata['user'] = auth()->user();
         
         
         return $refdata;

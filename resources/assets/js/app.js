@@ -43,6 +43,9 @@ Vue.component('assetEditForm',assetEditForm);
 const assetAudit = require('./components/app/AssetAudit.vue');
 Vue.component('assetAudit',assetAudit);
 
+const auditHistory = require('./components/app/AuditHistory.vue');
+Vue.component('auditHistory',auditHistory);
+
 const routes = [
     { path: '/', component: Dashboard },
     { path: '/view/:barcode', component: ViewAsset },

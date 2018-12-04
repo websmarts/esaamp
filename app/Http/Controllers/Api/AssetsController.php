@@ -36,7 +36,7 @@ class AssetsController extends Controller
     public function getAssetByBarcode($barcode)
     {
         
-        $asset = Asset::with('assettype')->where('barcode',$barcode)->first();  
+        $asset = Asset::with(['audits','assettype'])->where('barcode',$barcode)->first();  
        
         return ['asset'=>$asset->toArray()];
     }

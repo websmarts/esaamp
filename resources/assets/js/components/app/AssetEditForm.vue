@@ -241,28 +241,24 @@ export default {
             let self = this
             
             this.clear()
+         
+            // Remove some unwanted data so it does not become part of the formdata
+            let assetdata = _.clone(this.asset) 
+            delete assetdata.assettype
+            delete assetdata.audits
+            delete assetdata.meta
 
             
-
-            let assetdata = _.clone(this.asset) // shallow clone removes deep objects
-
-            
-
-
             let assettype = this.asset.assettype
 
-            
 
             // retrieve and remove metadata from asset
             let metadata = this.asset.meta
             
-
             
             // Combine the core schema with any metaschema
             let schema = assettype.dataschema.concat(assettype.metaschema)
-
-           
-        
+    
             
             // Setup formdata object by combining the core asset data Obj and the asset meta data Obj
             self.data = Object.assign({},assetdata,metadata)
@@ -270,8 +266,7 @@ export default {
             // Setup the formschema with the laravel rules converted to local rules
             const validator = new myValidator(self.data,schema)
             self.schema =  validator.schema_with_rules
-                
-            
+                           
 
         }
     },
@@ -280,7 +275,7 @@ export default {
         // react to route changes...
 
         // Ajax load latest data from server for asset ....
-        console.log('asset  updated to: ',to)
+        // console.log('asset  updated to: ',to)
         // this.formdata.description = 'my description for ' + this.barcode;
         // this.formdata.notes = 'my notes for barcode ' + this.barcode;
         this.load()
