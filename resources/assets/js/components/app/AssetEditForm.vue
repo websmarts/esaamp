@@ -53,23 +53,45 @@
                         </template>
 
                         <template v-if="groupB(s)">
-                            <v-layout row wrap align-left>
-                            <v-flex xs2 >{{s.label}}</v-flex>
-                            <v-flex xs10>  
-                                <component 
-                                    v-model="data[s.name]"
-                                    :is="s.input" 
-                                    :label="s.label"
-                                    :rules="s.rules"
-                                    :readonly="s.readonly"
-                                    :value="data[s.name]"
-                                    :reactive="s.reactive"
-                                    :landscape="s.landscape"
-                                    color="green"
-                                    light
-                                ></component>
+                            <v-flex xs12 sm6 md4>
+                                
+                            <v-menu
+                                :ref="s.name"
+                                :close-on-content-click="false"
+                                v-model="menus[s.name]"
+                                :nudge-right="80"
+                                
+                                lazyx
+                                transition="scale-transition"
+                                offset-y
+                                full-width
+                                min-width="290px"
+                            >
+                                <v-text-field
+                                slot="activator"
+                                v-model="data[s.name]"
+
+                                :label="s.label"
+                                :rules = "s.rules"
+                                
+                                append-icon="event"
+                                readonly
+                                ></v-text-field>
+                                <v-date-picker 
+                                v-model="data[s.name]" 
+                                :label="s.label"
+                                :rules="s.rules"
+                                :readonly="s.readonly"
+                                :value="data[s.name]"
+                                :items="getOptions(s.items)"
+                               
+                                no-title
+                                light
+                                scrollable>
+                                
+                                </v-date-picker>
+                            </v-menu>
                             </v-flex>
-                            </v-layout>
                         </template>
 
                         <template v-if="groupC(s)">
@@ -89,6 +111,7 @@
                         </template>
 
                     </v-flex>
+                   
 
                     <v-btn
                         :disabled="!valid"
@@ -135,6 +158,10 @@ export default {
 
             schema: [],
             metaschema: [],
+
+            // Datepicker 
+            menus: {},
+           
 
             sites: $Clientdata.sites, 
             showSuccessAlertFlag: false,
@@ -258,7 +285,19 @@ export default {
             
             // Combine the core schema with any metaschema
             let schema = assettype.dataschema.concat(assettype.metaschema)
-    
+
+            // set the datepicker menus data property
+            // find all datapicker.names
+            console.log('SCHEMA',schema)
+            let datepickers = _.filter(schema,{'input': 'v-date-picker'})
+            console.log('DatePickers',datepickers)
+            let menus ={}
+            _.each(datepickers, function(p){
+                menus[p.name]=false
+            })
+            console.log('MENUS',menus)
+            self.menus = Object.assign({},menus)
+            
             
             // Setup formdata object by combining the core asset data Obj and the asset meta data Obj
             self.data = Object.assign({},assetdata,metadata)
@@ -286,6 +325,7 @@ export default {
     },
     mounted() {
         //this.load()
+        console.log('$REFS',this.$refs);
     }
 }
 

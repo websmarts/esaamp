@@ -1811,6 +1811,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js");
@@ -1821,6 +1844,10 @@ var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js
         return {
 
             valid: true,
+
+            menus: {
+                audit_date: false
+            },
 
             data: {},
 
@@ -2089,6 +2116,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js");
@@ -2111,6 +2161,9 @@ var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js
 
             schema: [],
             metaschema: [],
+
+            // Datepicker 
+            menus: {},
 
             sites: $Clientdata.sites,
             showSuccessAlertFlag: false,
@@ -2221,6 +2274,18 @@ var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js
             // Combine the core schema with any metaschema
             var schema = assettype.dataschema.concat(assettype.metaschema);
 
+            // set the datepicker menus data property
+            // find all datapicker.names
+            console.log('SCHEMA', schema);
+            var datepickers = _.filter(schema, { 'input': 'v-date-picker' });
+            console.log('DatePickers', datepickers);
+            var menus = {};
+            _.each(datepickers, function (p) {
+                menus[p.name] = false;
+            });
+            console.log('MENUS', menus);
+            self.menus = Object.assign({}, menus);
+
             // Setup formdata object by combining the core asset data Obj and the asset meta data Obj
             self.data = Object.assign({}, assetdata, metadata);
 
@@ -2242,6 +2307,7 @@ var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js
     },
     mounted: function mounted() {
         //this.load()
+        console.log('$REFS', this.$refs);
     }
 });
 
@@ -20781,30 +20847,60 @@ var render = function() {
                         _vm.groupB(s)
                           ? [
                               _c(
-                                "v-layout",
-                                {
-                                  attrs: { row: "", wrap: "", "align-left": "" }
-                                },
+                                "v-flex",
+                                { attrs: { xs12: "", sm6: "", md4: "" } },
                                 [
-                                  _c("v-flex", { attrs: { xs2: "" } }, [
-                                    _vm._v(_vm._s(s.label))
-                                  ]),
-                                  _vm._v(" "),
                                   _c(
-                                    "v-flex",
-                                    { attrs: { xs10: "" } },
+                                    "v-menu",
+                                    {
+                                      ref: s.name,
+                                      refInFor: true,
+                                      attrs: {
+                                        "close-on-content-click": false,
+                                        "nudge-right": 80,
+                                        lazyx: "",
+                                        transition: "scale-transition",
+                                        "offset-y": "",
+                                        "full-width": "",
+                                        "min-width": "290px"
+                                      },
+                                      model: {
+                                        value: _vm.menus[s.name],
+                                        callback: function($$v) {
+                                          _vm.$set(_vm.menus, s.name, $$v)
+                                        },
+                                        expression: "menus[s.name]"
+                                      }
+                                    },
                                     [
-                                      _c(s.input, {
-                                        tag: "component",
+                                      _c("v-text-field", {
+                                        attrs: {
+                                          slot: "activator",
+                                          label: s.label,
+                                          rules: s.rules,
+                                          "append-icon": "event",
+                                          readonly: ""
+                                        },
+                                        slot: "activator",
+                                        model: {
+                                          value: _vm.data[s.name],
+                                          callback: function($$v) {
+                                            _vm.$set(_vm.data, s.name, $$v)
+                                          },
+                                          expression: "data[s.name]"
+                                        }
+                                      }),
+                                      _vm._v(" "),
+                                      _c("v-date-picker", {
                                         attrs: {
                                           label: s.label,
                                           rules: s.rules,
                                           readonly: s.readonly,
                                           value: _vm.data[s.name],
-                                          reactive: s.reactive,
-                                          landscape: s.landscape,
-                                          color: "green",
-                                          light: ""
+                                          items: _vm.getOptions(s.items),
+                                          "no-title": "",
+                                          light: "",
+                                          scrollable: ""
                                         },
                                         model: {
                                           value: _vm.data[s.name],
@@ -20983,30 +21079,60 @@ var render = function() {
                         _vm.groupB(s)
                           ? [
                               _c(
-                                "v-layout",
-                                {
-                                  attrs: { row: "", wrap: "", "align-left": "" }
-                                },
+                                "v-flex",
+                                { attrs: { xs12: "", sm6: "", md4: "" } },
                                 [
-                                  _c("v-flex", { attrs: { xs2: "" } }, [
-                                    _vm._v(_vm._s(s.label))
-                                  ]),
-                                  _vm._v(" "),
                                   _c(
-                                    "v-flex",
-                                    { attrs: { xs10: "" } },
+                                    "v-menu",
+                                    {
+                                      ref: s.name,
+                                      refInFor: true,
+                                      attrs: {
+                                        "close-on-content-click": false,
+                                        "nudge-right": 80,
+                                        lazy: "",
+                                        transition: "scale-transition",
+                                        "offset-y": "",
+                                        "full-width": "",
+                                        "min-width": "290px"
+                                      },
+                                      model: {
+                                        value: _vm.menus[s.name],
+                                        callback: function($$v) {
+                                          _vm.$set(_vm.menus, s.name, $$v)
+                                        },
+                                        expression: "menus[s.name]"
+                                      }
+                                    },
                                     [
-                                      _c(s.input, {
-                                        tag: "component",
+                                      _c("v-text-field", {
+                                        attrs: {
+                                          slot: "activator",
+                                          label: s.label,
+                                          rules: s.rules,
+                                          "append-icon": "event",
+                                          readonly: ""
+                                        },
+                                        slot: "activator",
+                                        model: {
+                                          value: _vm.data[s.name],
+                                          callback: function($$v) {
+                                            _vm.$set(_vm.data, s.name, $$v)
+                                          },
+                                          expression: "data[s.name]"
+                                        }
+                                      }),
+                                      _vm._v(" "),
+                                      _c("v-date-picker", {
                                         attrs: {
                                           label: s.label,
                                           rules: s.rules,
                                           readonly: s.readonly,
                                           value: _vm.data[s.name],
-                                          reactive: s.reactive,
-                                          landscape: s.landscape,
-                                          color: "green",
-                                          light: ""
+                                          items: _vm.getOptions(s.items),
+                                          "no-title": "",
+                                          light: "",
+                                          scrollable: ""
                                         },
                                         model: {
                                           value: _vm.data[s.name],

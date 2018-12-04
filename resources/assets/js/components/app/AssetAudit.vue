@@ -30,26 +30,49 @@
                     </template>
 
                     <template v-if="groupB(s)">
-                        <v-layout row wrap align-left>
-                        <v-flex xs2 >{{s.label}}</v-flex>
-                        <v-flex xs10>  
-                            <component 
+                        <v-flex xs12 sm6 md4>
+                            <v-menu
+                                :ref="s.name"
+                                :close-on-content-click="false"
+                                v-model="menus[s.name]"
+                                :nudge-right="80"
+                                
+                                lazy
+                                transition="scale-transition"
+                                offset-y
+                                full-width
+                                min-width="290px"
+                            >
+                                <v-text-field
+                                slot="activator"
                                 v-model="data[s.name]"
-                                :is="s.input" 
+
+                                :label="s.label"
+                                :rules = "s.rules"
+                                
+                                append-icon="event"
+                                readonly
+                                ></v-text-field>
+                                <v-date-picker 
+                                v-model="data[s.name]" 
                                 :label="s.label"
                                 :rules="s.rules"
                                 :readonly="s.readonly"
                                 :value="data[s.name]"
-                                :reactive="s.reactive"
-                                :landscape="s.landscape"
-                                color="green"
+                                :items="getOptions(s.items)"
+                               
+                                no-title
                                 light
-                            ></component>
-                        </v-flex>
-                        </v-layout>
+                                scrollable>
+                                
+                                </v-date-picker>
+                            </v-menu>
+                            </v-flex>
+                        
                     </template>
 
                     <template v-if="groupC(s)">
+                        
                         <v-flex xs12>   
                             <component 
                                 v-model="data[s.name]"
@@ -105,6 +128,10 @@ export default {
         return {
             
             valid: true,
+            
+            menus: {
+                audit_date: false,
+            },
             
             
             data: {},
