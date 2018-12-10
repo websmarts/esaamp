@@ -33,8 +33,8 @@ Vue.component(
 );
 
 const Dashboard = {template:'<div>Dashboard</div>'};
-const AddAsset = {template:'<div>Add Asset</div>'};
-const ViewAsset = require('./components/app/AssetView.vue')
+const AddAsset = require('./components/app/AssetAdd.vue');
+const ViewAsset = require('./components/app/AssetView.vue');
 const Reports = {template:'<div>Reports</div>'};
 
 const assetEditForm = require('./components/app/AssetEditForm.vue');
@@ -49,7 +49,7 @@ Vue.component('auditHistory',auditHistory);
 const routes = [
     { path: '/', component: Dashboard },
     { path: '/view/:barcode', component: ViewAsset },
-    { path: '/add', component: AddAsset },
+    { path: '/add/:assettype', component: AddAsset },
     { path: '/reports', component: Reports }
   ];
 

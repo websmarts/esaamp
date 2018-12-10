@@ -8,7 +8,7 @@
                             :loading="loading"
                             :items="barcodes"
                             
-                            v-model="select"
+                            v-model="barcode"
                             @change="assetSelected"
                             clearable
                             cache-items
@@ -19,9 +19,34 @@
                             solo
                         ></v-autocomplete>
                 </v-flex>
-                <v-flex ><v-btn :disabled="!select" color="blue darken-2" @click="view">Select</v-btn></v-flex>
-                <v-flex ><v-btn color="blue darken-2" @click="add">Add</v-btn></v-flex>
-                <v-flex ><v-btn color="blue darken-2" @click="reports">Reports</v-btn></v-flex>
+                <v-flex ><v-btn :disabled="!barcode" color="blue darken-2" @click="view">
+                    View<v-icon dark right v-show="btn_selected.view">check_circle</v-icon>
+                    </v-btn></v-flex>
+
+                <v-flex >
+                    <v-menu offset-y>
+                    <v-btn slot="activator"  color="blue darken-2">
+                        Add<v-icon dark right v-show="btn_selected.add">check_circle</v-icon>
+                        </v-btn>
+
+                        <v-list>
+                            <v-list-tile
+                            v-for="(item, index) in assetTypes"
+                            :key="index"
+                            @click="add(item.id)"
+                            >
+                            <v-list-tile-title>{{ item.name }}</v-list-tile-title>
+                            </v-list-tile>
+                        </v-list>
+
+                    </v-menu>
+                </v-flex>
+
+
+                <v-flex ><v-btn color="blue darken-2" @click="reports">
+                    Reports<v-icon dark right v-show="btn_selected.reports">check_circle</v-icon>
+                    </v-btn>
+                </v-flex>
           </v-layout>
         </v-card>
                         
@@ -33,15 +58,26 @@
 
 <script>
 export default {
+    props: ['currentroute'],
     data() {
 
         return {
-            select: this.$route.params.barcode,
+            barcode: this.$route.params.barcode,
             barcodes: [],
             
             loading: false,
             isEditing: false,
             // goBtnDisabled: true,
+
+            
+            assetTypes: $Refdata.asset_types,
+
+            btn_selected: {
+                view: false,
+                add: false,
+                reports: false
+            },
+            
             
         }
     },
@@ -51,18 +87,35 @@ export default {
          this.view();
         },
         view() {
-            this.$router.push('/view/'+this.select);
+            this.$router.push('/view/'+this.barcode);
+            //this.updateButtonSelectIndicators('select')
             
         },
-        add() {
-            this.$router.push('/add');
+        add(assetTypeId) {
+            this.$router.push('/add/'+ assetTypeId);
+            //this.updateButtonSelectIndicators('add')
         },
         reports() {
             this.$router.push('/reports');
+            //this.updateButtonSelectIndicators('reports')
         },
+        updateButtonSelectIndicators(btn){
+            let self = this
+            Object.keys(this.btn_selected).forEach(function(key,index) {
+                // console.log('key btn',key,btn)
+                self.btn_selected[key] = key == btn ? true : false
+            })
+        }
+        
         
 
     },
+    watch: {
+        'currentroute' (to, from) {
+            this.updateButtonSelectIndicators(to)
+        }
+    },
+    
     mounted() {
         let self = this
         axios.get('/api/assets')
@@ -79,7 +132,10 @@ export default {
         .then(function () {
             // always executed
         });
+
+    
     }
+    
 
 }
 

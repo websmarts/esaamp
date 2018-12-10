@@ -1,12 +1,15 @@
-<template>  
-    <div>
-
-        <v-form ref="form" v-model="valid">
+<template>
+   <v-layout justify-center row wrap> 
+       <v-flex  xs12 sm10 md8 lg6>
+           <div class="display-2">Add Asset</div>
+ 
+        <v-form ref="add_asset_form" v-model="valid" :lazy-validation="false">
             <v-container>
                 <v-layout row wrap>
                    
-                    <v-flex xs12>
-                        <v-text-field label="Barcode" :value="formdata.barcode" :rules="barcodeRules" ></v-text-field>
+                   
+                    <v-flex  xs12>
+                        <v-text-field label="Barcode" v-model="formdata.barcode" :rules="barcodeRules"></v-text-field>
                     </v-flex>
                     <v-flex xs12>
                         <v-select
@@ -52,7 +55,7 @@
                             </v-flex>
                         </template>
 
-                        <template v-if="groupB(s)"><!-- datepickers -->
+                        <template v-if="groupB(s)">
                             <v-flex xs12 sm6 md4>
                                 
                             <v-menu
@@ -60,6 +63,8 @@
                                 :close-on-content-click="false"
                                 v-model="dateMenus[s.name]"
                                 :nudge-right="80"
+                                
+                                xlazy
                                 transition="scale-transition"
                                 offset-y
                                 full-width
@@ -67,9 +72,11 @@
                             >
                                 <v-text-field
                                 slot="activator"
-                                :value ="formatDate(formdata[s.name])"
+                                :value="formatDate(formdata[s.name])"
+
                                 :label="s.label"
-                                :rules = "s.rules"  
+                                :rules = "s.rules"
+                                
                                 append-icon="event"
                                 readonly
                                 ></v-text-field>
@@ -80,23 +87,25 @@
                                 :rules="s.rules"
                                 :readonly="s.readonly"
                                 :items="getOptions(s.items)"
+                               
                                 no-title
                                 light
-                                scrollable>  
+                                scrollable>
+                                
                                 </v-date-picker>
                             </v-menu>
                             </v-flex>
                         </template>
 
-                        <template v-if="groupC(s)"><!-- switches -->
+                        <template v-if="groupC(s)">
                             <v-flex xs12>   
                                 <component 
-                                    xv-model="formdata[s.name]"
+                                    :value="formdata[s.name]"
                                     :is="s.input" 
                                     :label="s.label"
                                     :rules="s.rules"
                                     :readonly="s.readonly"
-                                    :value="formdata[s.name]"
+
                                     :items="getOptions(s.items)"
                                     @change="changed($event,s.name)"
                                     light
@@ -114,8 +123,8 @@
                         >
                         submit
                     </v-btn>
-                    <v-btn @click="clear">clear</v-btn>
-                    <v-btn @click="load">reset</v-btn>
+                    <!-- <v-btn @click="clear">clear</v-btn>
+                    <v-btn @click="load">reset</v-btn> -->
 
                     <v-flex xs12>
                              <v-alert
@@ -130,47 +139,48 @@
                 </v-layout>
             </v-container>
         </v-form>
-    </div>
-
+        
+    </v-flex>
+</v-layout>
 </template>
 
 <script>
 
 const myValidator = require('../../myValidatorClass') ;
 
-
 export default {
-    props: ['asset'],
     data() {
         return {
-            
-            valid: false,
+            formdata: {},
+            schema: [],
+            assetTypeId: parseInt(this.$route.params.assettype),
+            assetType:{},
+            dateMenus: {},
 
+            valid: true,
             barcodeRules: [v => !!v || 'Barcode is required'],
             siteRules: [v => !!v || 'Site is required'],
-            departmentRules: [this.newRule],
-            formdata: {},
-            metadata: {},
-
-            schema: [],
-            metaschema: [],
-
-            // Object keyed by datepicker names 
-            dateMenus: {},
-           
+            departmentRules: [this.newRule ],
 
             sites: $Clientdata.sites, 
             showSuccessAlertFlag: false,
             successAlertMessage: '',
-            saving: false // xhr save indicator
+
+            saving: false, // Btn loading icon control
+
+            rawSchema:[]
+
+            
         }
     },
     computed: {
         siteDepartments(){
             if (this.formdata.site_id){
                 const site = _.find($Clientdata.sites,['id',this.formdata.site_id])
+                // console.log('Returning site departments for site_id',this.data.site_id)
                 return site.departments
             }
+            return []
         },
         conditionOptions() {
             return $Refdata.condition_options
@@ -232,22 +242,30 @@ export default {
             // If current department selected is not in the list of the 
             // current list of site.departments then clear value
             const found = _.find(this.siteDepartments,['id',this.formdata.department_id])
-            if(!found)
-                this.data.department_id = null
+            if(!found){
+                delete this.formdata.department_id // force select to forget its value
+                //this.data.department_id = null 
+                 
+            }
+                
+
+           //this.$refs.add_asset_form.validate()
         },
         submit () {
-            if (this.$refs.form.validate()) {
+            if (this.$refs.add_asset_form.validate()) {
             // Native form submission is not yet supported
             // console.log('Form is valid and I am submitting it now with this data',this.data)
 
-            const formdata = this.formdata
-            
+            const data = this.formdata
 
+            data['asset_type_id'] = this.assetTypeId
+            data['client_id'] = $Clientdata.id
+            
             let self=this
 
-            this.saving = true // Activate Button loading icon
+            self.saving = true
 
-            axios.put('/api/asset/'+ this.asset.barcode, formdata)
+            axios.post('/api/asset', data)
             .then(function (response) {
                 // handle success
                 // console.log(response.data);
@@ -262,7 +280,7 @@ export default {
             })
             .then(function () {
                 // always executed
-                self.saving = false // Remove button loading icon
+                self.saving = false
             });
             }
         },
@@ -277,63 +295,63 @@ export default {
             this.showSuccessAlertFlag = false
             this.successAlertMessage=''
         },
-        
         load () {
-            let self = this
             
-            this.clear()
-         
-            // Remove keys that are not used in the formdata
-            let assetdata = _.clone(this.asset) 
-            delete assetdata.assettype
-            delete assetdata.audits
-            delete assetdata.meta
+            this.assetType = _.find($Refdata.asset_types,['id',this.assetTypeId])
 
-            
-            let assettype = this.asset.assettype
-
-            let metadata = this.asset.meta
+            // Remove some unwanted data so it does not become part of the formdata
+        
             
             
             // Combine the core schema with any metaschema
-            let schema = assettype.dataschema.concat(assettype.metaschema)
+            let schema = this.assetType.dataschema.concat(this.assetType.metaschema)
 
-            // setup the datepicker v-menus data property            
+            // set the datepicker menus data property
+            // find all datapicker.names
+            // console.log('SCHEMA',schema)
             let datepickers = _.filter(schema,{'input': 'v-date-picker'})
+            // console.log('DatePickers',datepickers)
             let dateMenus ={}
             _.each(datepickers, function(p){
                 dateMenus[p.name]=false
             })
-             
-            // Setup formdata object by combining the core asset data Obj and the asset meta data Obj
-            self.formdata = Object.assign({},assetdata,metadata)
+            // console.log('MENUS',menus)
+            self.dateMenus = Object.assign({},dateMenus)
 
+            let datakeys = _.map(schema,'name')
+            let formdata = {}
+
+            // add datakeys that are NOT already in assetdata
+            _.each(datakeys, function(key){
+                    
+                    formdata[key] = ''       
+                
+            })
+            
+            
+            // Setup formdata object by combining the core asset data Obj and the asset meta data Obj
+            this.formdata = Object.assign({},formdata)
             
             // Setup the formschema with the laravel rules converted to local rules
+            this.rawSchema = schema
             const validator = new myValidator(self.formdata,schema)
-            self.schema =  validator.schema_with_rules
-                           
-
-        }
-    },
-    watch: {
-        'asset' (to, from) {
-        // react to route changes...
-
-        // Ajax load latest data from server for asset ....
-        // console.log('asset  updated to: ',to)
-        // this.formdata.description = 'my description for ' + this.barcode;
-        // this.formdata.notes = 'my notes for barcode ' + this.barcode;
-        this.load()
-
-        
+            this.schema =  validator.schema_with_rules
+            
 
         }
     },
     mounted() {
-        //this.load()
-        
+    
+        this.load()
+    },
+    watch: {
+    '$route' (to, from) {
+      // react to route changes...
+      // console.log('re-routed to: ',to.params.barcode)
+      this.assetTypeId = parseInt(to.params.assettype)
+      this.load()
     }
+  }
 }
 
 </script>

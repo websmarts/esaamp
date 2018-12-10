@@ -21,7 +21,7 @@
                                 :label="s.label"
                                 :rules="s.rules"
                                 :readonly="s.readonly"
-                                :value="data[s.name]"
+                                :value="formdata[s.name]"
                                 :items="getOptions(s.items)"
                                 @change="changed($event,s.name)"
                                 light
@@ -34,10 +34,8 @@
                             <v-menu
                                 :ref="s.name"
                                 :close-on-content-click="false"
-                                v-model="menus[s.name]"
+                                v-model="dateMenus[s.name]"
                                 :nudge-right="80"
-                                
-                                lazy
                                 transition="scale-transition"
                                 offset-y
                                 full-width
@@ -45,26 +43,22 @@
                             >
                                 <v-text-field
                                 slot="activator"
-                                v-model="data[s.name]"
-
+                                :value="formatDate(formdata[s.name])"
                                 :label="s.label"
-                                :rules = "s.rules"
-                                
+                                :rules = "s.rules"                               
                                 append-icon="event"
                                 readonly
                                 ></v-text-field>
+
                                 <v-date-picker 
-                                v-model="data[s.name]" 
+                                v-model="formdata[s.name]" 
                                 :label="s.label"
                                 :rules="s.rules"
                                 :readonly="s.readonly"
-                                :value="data[s.name]"
-                                :items="getOptions(s.items)"
-                               
+                                :items="getOptions(s.items)"                              
                                 no-title
                                 light
-                                scrollable>
-                                
+                                scrollable>                               
                                 </v-date-picker>
                             </v-menu>
                             </v-flex>
@@ -75,12 +69,11 @@
                         
                         <v-flex xs12>   
                             <component 
-                                v-model="data[s.name]"
                                 :is="s.input" 
                                 :label="s.label"
                                 :rules="s.rules"
                                 :readonly="s.readonly"
-                                :value="data[s.name]"
+                                :value="formdata[s.name]"
                                 :items="getOptions(s.items)"
                                 @change="changed($event,s.name)"
                                 light
@@ -96,8 +89,8 @@
                     >
                     submit
                 </v-btn>
-                <v-btn @click="clear">clear</v-btn>
-                <v-btn @click="load">reset</v-btn>
+                <!-- <v-btn @click="clear">clear</v-btn>
+                <v-btn @click="load">reset</v-btn> -->
 
                 <v-flex xs12>
                             <v-alert
@@ -129,12 +122,12 @@ export default {
             
             valid: true,
             
-            menus: {
+            dateMenus: { // flags for datepicker popups
                 audit_date: false,
             },
             
             
-            data: {},
+            formdata: {},
             
 
             schema: [],
@@ -147,6 +140,12 @@ export default {
         
     },
     methods: {
+        formatDate (date) {
+            if (!date) return null
+
+            const [year, month, day] = date.split('-')
+            return `${day}-${month}-${year}`
+        },
         groupA(s) {
             // return true if input is one of the following
             
@@ -178,24 +177,19 @@ export default {
         },
         changed(e,field) {
             // console.log('changed',e,field)
-            this.data[field]=e
+            this.formdata[field]=e
         },
         
         submit () {
             if (this.$refs.auditform.validate()) {
-            // Native form submission is not yet supported
-            console.log('Form is valid and I am submitting it now with this data',this.data)
-
-            const data = this.data
-            
 
             let self=this
 
-            axios.post('/api/audit/'+ this.asset.barcode, this.data)
+            axios.post('/api/audit/'+ this.asset.barcode, self.formdata)
             .then(function (response) {
                 // handle success
                 // console.log(response.data);
-                 self.successAlertMessage = 'Record update successful'
+                 self.successAlertMessage = 'Success ... audit record saved'
                  self.showSuccessAlertFlag = true
 
                  // push the new audit onto the audits stack
@@ -217,7 +211,7 @@ export default {
 
         clear () {
             
-            this.data = Object.assign({}, {}, {})
+            this.formdata = Object.assign({}, {}, {})
             this.$refs.auditform.reset()
             // this.$nextTick( function() {
             //     this.$refs.form.reset()
@@ -237,7 +231,6 @@ export default {
             
             let extractKeys = ['barcode','condition','quarantined','retire_from_service']
             _.each(extractKeys, function(key){
-
                  assetdata[key] =  _.clone(self.asset[key])
             })
 
@@ -262,6 +255,8 @@ export default {
             //  set the dafault value for audit date 
             let now = new Date()
             let today = now.toISOString().substring(0,10) // YYYY-mm-dd
+           
+
             assetdata.audit_date = today
 
             // Set the logged in user as one of the  Auditors
@@ -269,10 +264,10 @@ export default {
 
             // console.log('ASSETDATA',assetdata)
 
-            self.data = Object.assign({},assetdata)
+            self.formdata = Object.assign({},assetdata)
             
             // Setup the formschema with the laravel rules converted to local rules
-            const validator = new myValidator(self.data,schema)
+            const validator = new myValidator(self.formdata,schema)
             self.schema =  validator.schema_with_rules        
 
         }

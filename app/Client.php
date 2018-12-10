@@ -12,7 +12,7 @@ class Client extends Model
      * @var array
      */
     protected $fillable = [
-        'name','status'
+        'name','status','timezone'
     ];
 
     protected $hidden = ['updated_at','created_at'];

@@ -33,7 +33,7 @@
                 <v-layout row align-center justify-center >
                     <v-flex xs12 sm11 md7>
 
-                    <asset-toolbar></asset-toolbar>
+                    <asset-toolbar :currentroute="currentroute"></asset-toolbar>
                             
                     </v-flex>
                 </v-layout>
@@ -65,8 +65,29 @@
 export default {
     data() {
         return {
-            clientname: $Clientdata['name']
+            clientname: $Clientdata['name'],
+            currentroute: ''
         }
+    },
+    methods: {
+        setCurrentRoute(){
+            let action = this.$route.path
+            let res = action.match(/\/([^\/]*)/)
+            this.currentroute = res[1]
+
+        }
+    },
+    watch: {
+        '$route' (to, from) {
+            // react to route changes...
+            // console.log('re-routed to: ',to.path)
+            this.barcode = to.params.barcode
+
+            this.setCurrentRoute()
+        }
+    },
+    mounted() {
+        this.setCurrentRoute()
     }
 }
 

@@ -24,11 +24,12 @@ Route::middleware('auth:api')->group( function(){
 
     Route::get('assets', 'Api\AssetsController@index');
     Route::get('asset/{barcode}', 'Api\AssetsController@getAssetByBarcode');
+    Route::post('asset/','Api\AssetsController@store');
     Route::put('asset/{barcode}', 'Api\AssetsController@update');
 
     
     Route::get('audit/{barcode}', 'Api\AuditController@getAssetByBarcode');
-    Route::post('audit/{barcode}', 'Api\AuditController@store');
+    Route::post('audit/', 'Api\AuditController@store');
     Route::put('audit/{barcode}', 'Api\AuditController@update');
 
 

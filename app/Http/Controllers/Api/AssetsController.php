@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Asset;
+use App\Client;
 use App\AssetType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +21,8 @@ class AssetsController extends Controller
          //$this->user = auth('api')->user();
          
         $this->user = $request->user('api');
+        $this->client = Client::find($this->user->client_id);
+        $this->request = $request;    
         $this->request = $request;    
         
     }
@@ -37,8 +40,19 @@ class AssetsController extends Controller
     {
         
         $asset = Asset::with(['audits','assettype'])->where('barcode',$barcode)->first();  
+
        
         return ['asset'=>$asset->toArray()];
+    }
+
+    public function store()
+    {
+        $data = $this->getData($this->request->input());
+        //dd($data);
+
+        $asset = Asset::create($data);
+
+        dd($asset);
     }
 
     public function update( $barcode)
@@ -50,7 +64,7 @@ class AssetsController extends Controller
             // Update data
             $asset = Asset::where('barcode',$barcode)->first();
 
-            $data = $this->transform($this->request->input());
+            $data = $this->getData($this->request->input());
 
             //$data = $asset->setmeta($data);
 
@@ -60,19 +74,37 @@ class AssetsController extends Controller
 
     }
 
-    private function transform($data)
+    private function getData($data)
     {
 
         // Remove the ID
         unSet($data['id']);
 
+        // Note Meta data handled by Asset model
+
         // Handle the switch inputs
         $data['quarantined'] = $data['quarantined']===true ? 1 : 0;
         $data['retire_from_service'] = $data['retire_from_service']===true ? 1 : 0;
 
+        // Commisioned date
+        if(!$this->isValidDate($data['commissioned_date'])){
+            unSet($data['commissioned_date']);
+        }
+        
+
+        // Set the client_id
+        $data['client_id'] = $this->user->client_id;
+
         return $data;
     }
 
+    protected function isValidDate($date) 
+    {
+        // check length = 10 eg YYYY-MM-DD
+        return strlen($date) == 10;
+    }
+
+    
     
     
 }

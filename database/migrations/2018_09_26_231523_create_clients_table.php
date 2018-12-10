@@ -17,6 +17,7 @@ class CreateClientsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->enum('status',['active','inactive']);
+            $table->string('timezone');
 
             $table->timestamps();
         });

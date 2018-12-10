@@ -105,14 +105,14 @@ class AssetTypesTableSeeder extends Seeder
                 'name'=> 'auditors',
                 'input'=>'v-text-field',
                 'label'=> 'Auditors',
+                'rules'=>  'required|min:2|max:250'
                 
                 
             ],
             [
                 'name'=> 'audit_notes',
                 'input'=>'v-text-field',
-                'label'=> 'Audit notes',
-                
+                'label'=> 'Audit notes',              
                 
             ],
             [
@@ -126,7 +126,8 @@ class AssetTypesTableSeeder extends Seeder
                 'name'=>'condition',
                 'input' =>'v-select',
                 'items' =>'condition_options', // vue form will load select options from refData[condition_options]
-                'label' =>'Condition'
+                'label' =>'Condition',
+                'rules'=>  'required'
             ],
 
             [

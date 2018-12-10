@@ -13,19 +13,22 @@ class ClientsTableSeeder extends Seeder
     {
         Client::create( [
             'name'=>'Alfred Hospital',
-            'status'=>'active'
+            'status'=>'active',
+            'timezone'=>'Australia/Melbourne'
 
         ]);
 
         Client::create( [
             'name'=>'Caulfield Hospital',
-            'status'=>'active'
+            'status'=>'active',
+            'timezone'=>'Australia/Melbourne'
 
         ]);
 
         Client::create( [
             'name'=>'Sandringham Hospital',
-            'status'=>'active'
+            'status'=>'active',
+            'timezone'=>'Australia/Melbourne'
 
         ]);
     }

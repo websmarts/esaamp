@@ -32,6 +32,21 @@ class HomeController extends Controller
 
         $clientdata = $this->clientdata();
         $refdata = $this->referenceData();
+        // dd($refdata);
+
+        // $d = $clientdata->created_at;
+
+        // echo $d->toDayDateTimeString().'<br>';
+        // $d->setTimeZone( new \DateTimeZone('Australia/Melbourne'));
+        // echo $d->toDayDateTimeString().'<br>';
+
+        // $d->setTimeZone( new \DateTimeZone('UTC'));
+        // echo $d->toDayDateTimeString().'<br>';
+
+        // dd($d->toDayDateTimeString());
+
+        // $date->setTimezone(new \DateTimeZone('Australia/Melbourne'));
+        // dd(date('e'));
 
 
         return view('home',compact('clientdata','refdata'));

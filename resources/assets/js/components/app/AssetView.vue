@@ -61,7 +61,6 @@ export default {
             audit: null,
             barcode: this.$route.params.barcode,
             asset:{}
-            
         }
     },
     methods: {
@@ -97,13 +96,15 @@ export default {
         this.load()
     },
     watch: {
-    '$route' (to, from) {
-      // react to route changes...
-      // console.log('re-routed to: ',to.params.barcode)
-      this.barcode = to.params.barcode
-      this.load()
+        '$route' (to, from) {
+            // react to route changes...
+            // console.log('re-routed to: ',to.params.barcode)
+            this.barcode = to.params.barcode
+
+
+            this.load()
+        }
     }
-  }
 }
 
 </script>

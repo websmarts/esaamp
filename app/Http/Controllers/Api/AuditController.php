@@ -7,6 +7,7 @@ use App\Asset;
 use App\AssetType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Client;
 
 
 class AuditController extends Controller
@@ -19,6 +20,7 @@ class AuditController extends Controller
          //$this->user = auth('api')->user();
          
         $this->user = $request->user('api');
+        $this->client = Client::find($this->user->client_id);
         $this->request = $request;    
         
     }
@@ -64,11 +66,9 @@ class AuditController extends Controller
         $auditdata['quarantined'] = $this->request->quarantined === true ? 1 : 0;
         $auditdata['retire_from_service'] = $this->request->retire_from_service === true ? 1 : 0;
 
-        
 
+        $auditdata['audit_date'] = $this->convertToUtcDate($this->request->audit_date);
 
-
-        $auditdata['audit_date'] = $this->request->audit_date;
         $auditdata['created_by'] = $this->user->id;
         $auditdata['auditors'] = $this->request->auditors;
         $auditdata['audit_notes'] = $this->request->audit_notes;
@@ -93,6 +93,20 @@ class AuditController extends Controller
 
 
         return $data;
+    }
+
+    protected function convertToUtcDate($date)
+    {
+        
+        $dt = \DateTime::createFromFormat('Y-m-d',$date,new \DateTimeZone($this->getTimezone())); 
+        $dt->setTimeZone(new \DateTimeZone('UTC'));
+        return $dt->format('Y-m-d');
+    }
+
+
+    protected function getTimezone()
+    {
+        return $this->client->timezone;
     }
 
     
