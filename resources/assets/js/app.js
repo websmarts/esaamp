@@ -19,6 +19,7 @@ Vue.use(Router)
 
 // Helpers
 import colors from 'vuetify/es5/util/colors'
+//import apiService from './components/app/lib/apiService';
 Vue.use(Vuetify, {
     theme: {
       primary: colors.indigo.darken1, // #E53935
@@ -63,6 +64,15 @@ const App = require('./components/app/App.vue');
 
 Vue.config.productionTip = false
 
+// import api from './components/app/lib/apiService.js';
+import apiService from './components/app/lib/apiServiceClass.js';
+
+const api =  new apiService;
+
+Vue.prototype.$api = api;
+
+
+
 new Vue(
     { 
         el: '#app',
@@ -72,6 +82,7 @@ new Vue(
         data() {
             return {
                 clientname: $Clientdata.name
+               
             }
         }
         

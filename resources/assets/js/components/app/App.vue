@@ -11,7 +11,7 @@
                 <span style="font-size:13px">Equipment Safety Audit &amp; Asset Management Portal</span>
             </v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-toolbar-title class="title" >{{ clientname }}</v-toolbar-title>
+            <v-toolbar-title class="title" >{{ clientname }} {{ loading }}</v-toolbar-title>
             <v-spacer></v-spacer>
 
             <v-toolbar-items class="hidden-sm-and-down">
@@ -66,7 +66,8 @@ export default {
     data() {
         return {
             clientname: $Clientdata['name'],
-            currentroute: ''
+            currentroute: '',
+            loading: window.loading
         }
     },
     methods: {

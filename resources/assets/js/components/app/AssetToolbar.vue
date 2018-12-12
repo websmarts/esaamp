@@ -3,7 +3,7 @@
       <v-card dark flat  color="grey lighten-2">
           <v-layout row align-center>
               <v-flex xs4 >
-
+                        
                         <v-autocomplete
                             :loading="loading"
                             :items="barcodes"
@@ -57,13 +57,23 @@
 </template>
 
 <script>
+
+import { EventBus } from './lib/eventbus.js';
+EventBus.$on('new_barcode', barcode => {
+  console.log(`Toolbar says - Oh, that's nice we have a new barcode  ${barcode}! :)`)
+  $Barcodes.push(barcode)
+});
+
+import store from './lib/store.js';
+
 export default {
     props: ['currentroute'],
     data() {
 
         return {
+            store: store,
             barcode: this.$route.params.barcode,
-            barcodes: [],
+            barcodes: $Barcodes,
             
             loading: false,
             isEditing: false,
@@ -79,6 +89,11 @@ export default {
             },
             
             
+        }
+    },
+    computed: {
+        xhr_loading() {
+            return this.store.isActive()
         }
     },
     methods: {
@@ -99,10 +114,9 @@ export default {
             this.$router.push('/reports');
             //this.updateButtonSelectIndicators('reports')
         },
-        updateButtonSelectIndicators(btn){
+        updateButtons(btn){
             let self = this
             Object.keys(this.btn_selected).forEach(function(key,index) {
-                // console.log('key btn',key,btn)
                 self.btn_selected[key] = key == btn ? true : false
             })
         }
@@ -112,29 +126,11 @@ export default {
     },
     watch: {
         'currentroute' (to, from) {
-            this.updateButtonSelectIndicators(to)
+            this.updateButtons(to)
         }
     },
     
-    mounted() {
-        let self = this
-        axios.get('/api/assets')
-        .then(function (response) {
-            // handle success
-            // console.log(response.data);
-
-            self.barcodes = response.data
-        })
-        .catch(function (error) {
-            // handle error
-            console.log(error);
-        })
-        .then(function () {
-            // always executed
-        });
-
-    
-    }
+ 
     
 
 }

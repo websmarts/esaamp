@@ -1,8 +1,5 @@
 <template>  
     <div>
-        
-
-        <div>Asset audit form</div>
 
         <v-form ref="auditform">
             <v-container>
@@ -11,7 +8,7 @@
                 
                 
 
-                <v-flex  v-for="s in schema" :key="s.name" xs12 >
+                <v-flex  v-for="s in formschema" :key="s.name" xs12 >
 
                     <template v-if="groupA(s)">
                         <v-flex xs12>   
@@ -73,7 +70,7 @@
                                 :label="s.label"
                                 :rules="s.rules"
                                 :readonly="s.readonly"
-                                :value="formdata[s.name]"
+                                v-model="formdata[s.name]"
                                 :items="getOptions(s.items)"
                                 @change="changed($event,s.name)"
                                 light
@@ -112,7 +109,7 @@
 
 <script>
 
-const myValidator = require('../../myValidatorClass') ;
+const formValidator = require('./lib/validatorClass') ;
 
 
 export default {
@@ -130,7 +127,7 @@ export default {
             formdata: {},
             
 
-            schema: [],
+            formschema: [],
             
             showSuccessAlertFlag: false,
             successAlertMessage: ''        
@@ -185,7 +182,7 @@ export default {
 
             let self=this
 
-            axios.post('/api/audit/'+ this.asset.barcode, self.formdata)
+            axios.post('/api/audit', self.formdata)
             .then(function (response) {
                 // handle success
                 // console.log(response.data);
@@ -267,8 +264,8 @@ export default {
             self.formdata = Object.assign({},assetdata)
             
             // Setup the formschema with the laravel rules converted to local rules
-            const validator = new myValidator(self.formdata,schema)
-            self.schema =  validator.schema_with_rules        
+            const validator = new formValidator(self.formdata,schema)
+            self.formschema =  validator.schema_with_rules        
 
         }
     },

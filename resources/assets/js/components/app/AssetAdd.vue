@@ -1,7 +1,7 @@
 <template>
    <v-layout justify-center row wrap> 
        <v-flex  xs12 sm10 md8 lg6>
-           <div class="display-2">Add Asset</div>
+           <div class="display-1">Add ({{ assettype.name }}) Asset</div>
  
         <v-form ref="add_asset_form" v-model="valid" :lazy-validation="false">
             <v-container>
@@ -37,7 +37,7 @@
 
                    
 
-                    <v-flex  v-for="s in schema" :key="s.name" xs12 >
+                    <v-flex  v-for="s in formschema" :key="s.name" xs12 >
 
                         <template v-if="groupA(s)">
                             <v-flex xs12>   
@@ -97,15 +97,14 @@
                             </v-flex>
                         </template>
 
-                        <template v-if="groupC(s)">
+                        <template v-if="groupC(s)"><!-- switches -->
                             <v-flex xs12>   
                                 <component 
-                                    :value="formdata[s.name]"
+                                    v-model="formdata[s.name]"
                                     :is="s.input" 
                                     :label="s.label"
                                     :rules="s.rules"
                                     :readonly="s.readonly"
-
                                     :items="getOptions(s.items)"
                                     @change="changed($event,s.name)"
                                     light
@@ -145,30 +144,20 @@
 </template>
 
 <script>
+import { EventBus } from './lib/eventbus.js';
 
-const myValidator = require('../../myValidatorClass') ;
+const formValidator = require('./lib/validatorClass') ;
+import assetforms from './mixins/assetforms.js';
 
 export default {
+    mixins: [assetforms],
     data() {
         return {
-            formdata: {},
-            schema: [],
+            
             assetTypeId: parseInt(this.$route.params.assettype),
-            assetType:{},
-            dateMenus: {},
+            barcodes: $Barcodes,
 
-            valid: true,
-            barcodeRules: [v => !!v || 'Barcode is required'],
-            siteRules: [v => !!v || 'Site is required'],
-            departmentRules: [this.newRule ],
-
-            sites: $Clientdata.sites, 
-            showSuccessAlertFlag: false,
-            successAlertMessage: '',
-
-            saving: false, // Btn loading icon control
-
-            rawSchema:[]
+            barcodeRules: [this.barcodeRuleset],
 
             
         }
@@ -187,69 +176,27 @@ export default {
         },
         myRefData() {
             return $Refdata
+        },
+       
+        assettype() {
+            return _.find($Refdata['asset_types'],['id',this.assetTypeId])
         }
     },
     methods: {
-        formatDate (date) {
-            if (!date) return null
+        barcodeRuleset(v){
 
-            const [year, month, day] = date.split('-')
-            return `${day}-${month}-${year}`
-        },
-        newRule(v){
-            // if the value is not found in siteDepartments then invalid
             
-            let found = _.find(this.siteDepartments,['id',v])
-            //console.log('FOUND',!!found)
-
-            return !!found || 'Select a department'
-        },
-        groupA(s) {
-            // return true if input is one of the following
-            
-            const options = ['v-text-field','v-select']
-            return options.indexOf(s.input) > -1
-           
-        },
-        groupB(s) {
-            
-            const options = ['v-date-picker']
-            return options.indexOf(s.input) > -1
-
-        },
-        groupC(s) {
-            const options = ['v-switch']
-            return options.indexOf(s.input) > -1
-        },
-        getOptions(key){
-            // console.log('Refdata Options Key',key)
-
-            // Could update to check if key is a string of options and if it is then return
-            // them as an array
-
-            // But for now we assume key is a key into the global refdata array
-            if($Refdata.hasOwnProperty(key)){
-                return $Refdata[key]
+            if(!v) {
+                return 'Barcode is required'
             }
 
-        },
-        changed(e,field) {
-            // console.log('changed',e,field)
-            this.formdata[field]=e
-        },
-        siteChange(e){
-            
-            // If current department selected is not in the list of the 
-            // current list of site.departments then clear value
-            const found = _.find(this.siteDepartments,['id',this.formdata.department_id])
-            if(!found){
-                delete this.formdata.department_id // force select to forget its value
-                //this.data.department_id = null 
-                 
-            }
-                
 
-           //this.$refs.add_asset_form.validate()
+            // is unique
+            if(this.barcodes.includes(v)){
+                return 'This barcode is already in use, '
+            }
+            
+            return true
         },
         submit () {
             if (this.$refs.add_asset_form.validate()) {
@@ -257,6 +204,8 @@ export default {
             // console.log('Form is valid and I am submitting it now with this data',this.data)
 
             const data = this.formdata
+
+            const newBarcode = data.barcode
 
             data['asset_type_id'] = this.assetTypeId
             data['client_id'] = $Clientdata.id
@@ -271,6 +220,9 @@ export default {
                 // console.log(response.data);
                  self.successAlertMessage = 'Record update successful'
                  self.showSuccessAlertFlag = true
+
+                 // emit event to update the list of barcodes
+                 EventBus.$emit('new_barcode',newBarcode)
                 
                 
             })
@@ -334,8 +286,8 @@ export default {
             
             // Setup the formschema with the laravel rules converted to local rules
             this.rawSchema = schema
-            const validator = new myValidator(self.formdata,schema)
-            this.schema =  validator.schema_with_rules
+            const validator = new formValidator(self.formdata,schema)
+            this.formschema =  validator.schema_with_rules
             
 
         }

@@ -1704,7 +1704,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             clientname: $Clientdata['name'],
-            currentroute: ''
+            currentroute: '',
+            loading: window.loading
         };
     },
 
@@ -1736,183 +1737,168 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_eventbus_js__ = __webpack_require__("./resources/assets/js/components/app/lib/eventbus.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_assetforms_js__ = __webpack_require__("./resources/assets/js/components/app/mixins/assetforms.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
-var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js");
+var formValidator = __webpack_require__("./resources/assets/js/components/app/lib/validatorClass.js");
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    mixins: [__WEBPACK_IMPORTED_MODULE_1__mixins_assetforms_js__["a" /* default */]],
     data: function data() {
         return {
-            formdata: {},
-            schema: [],
+
             assetTypeId: parseInt(this.$route.params.assettype),
-            assetType: {},
-            dateMenus: {},
+            barcodes: $Barcodes,
 
-            valid: true,
-            barcodeRules: [function (v) {
-                return !!v || 'Barcode is required';
-            }],
-            siteRules: [function (v) {
-                return !!v || 'Site is required';
-            }],
-            departmentRules: [this.newRule],
-
-            sites: $Clientdata.sites,
-            showSuccessAlertFlag: false,
-            successAlertMessage: '',
-
-            saving: false, // Btn loading icon control
-
-            rawSchema: []
+            barcodeRules: [this.barcodeRuleset]
 
         };
     },
@@ -1931,69 +1917,24 @@ var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js
         },
         myRefData: function myRefData() {
             return $Refdata;
+        },
+        assettype: function assettype() {
+            return _.find($Refdata['asset_types'], ['id', this.assetTypeId]);
         }
     },
     methods: {
-        formatDate: function formatDate(date) {
-            if (!date) return null;
+        barcodeRuleset: function barcodeRuleset(v) {
 
-            var _date$split = date.split('-'),
-                _date$split2 = _slicedToArray(_date$split, 3),
-                year = _date$split2[0],
-                month = _date$split2[1],
-                day = _date$split2[2];
-
-            return day + '-' + month + '-' + year;
-        },
-        newRule: function newRule(v) {
-            // if the value is not found in siteDepartments then invalid
-
-            var found = _.find(this.siteDepartments, ['id', v]);
-            //console.log('FOUND',!!found)
-
-            return !!found || 'Select a department';
-        },
-        groupA: function groupA(s) {
-            // return true if input is one of the following
-
-            var options = ['v-text-field', 'v-select'];
-            return options.indexOf(s.input) > -1;
-        },
-        groupB: function groupB(s) {
-
-            var options = ['v-date-picker'];
-            return options.indexOf(s.input) > -1;
-        },
-        groupC: function groupC(s) {
-            var options = ['v-switch'];
-            return options.indexOf(s.input) > -1;
-        },
-        getOptions: function getOptions(key) {
-            // console.log('Refdata Options Key',key)
-
-            // Could update to check if key is a string of options and if it is then return
-            // them as an array
-
-            // But for now we assume key is a key into the global refdata array
-            if ($Refdata.hasOwnProperty(key)) {
-                return $Refdata[key];
-            }
-        },
-        changed: function changed(e, field) {
-            // console.log('changed',e,field)
-            this.formdata[field] = e;
-        },
-        siteChange: function siteChange(e) {
-
-            // If current department selected is not in the list of the 
-            // current list of site.departments then clear value
-            var found = _.find(this.siteDepartments, ['id', this.formdata.department_id]);
-            if (!found) {
-                delete this.formdata.department_id; // force select to forget its value
-                //this.data.department_id = null 
+            if (!v) {
+                return 'Barcode is required';
             }
 
-            //this.$refs.add_asset_form.validate()
+            // is unique
+            if (this.barcodes.includes(v)) {
+                return 'This barcode is already in use, ';
+            }
+
+            return true;
         },
         submit: function submit() {
             if (this.$refs.add_asset_form.validate()) {
@@ -2001,6 +1942,8 @@ var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js
                 // console.log('Form is valid and I am submitting it now with this data',this.data)
 
                 var data = this.formdata;
+
+                var newBarcode = data.barcode;
 
                 data['asset_type_id'] = this.assetTypeId;
                 data['client_id'] = $Clientdata.id;
@@ -2014,6 +1957,9 @@ var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js
                     // console.log(response.data);
                     _self.successAlertMessage = 'Record update successful';
                     _self.showSuccessAlertFlag = true;
+
+                    // emit event to update the list of barcodes
+                    __WEBPACK_IMPORTED_MODULE_0__lib_eventbus_js__["a" /* EventBus */].$emit('new_barcode', newBarcode);
                 }).catch(function (error) {
                     // handle error
                     console.log(error);
@@ -2069,8 +2015,8 @@ var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js
 
             // Setup the formschema with the laravel rules converted to local rules
             this.rawSchema = schema;
-            var validator = new myValidator(self.formdata, schema);
-            this.schema = validator.schema_with_rules;
+            var validator = new formValidator(self.formdata, schema);
+            this.formschema = validator.schema_with_rules;
         }
     },
     mounted: function mounted() {
@@ -2206,12 +2152,9 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 //
 //
 //
-//
-//
-//
 
 
-var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js");
+var formValidator = __webpack_require__("./resources/assets/js/components/app/lib/validatorClass.js");
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['asset'],
@@ -2226,7 +2169,7 @@ var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js
 
             formdata: {},
 
-            schema: [],
+            formschema: [],
 
             showSuccessAlertFlag: false,
             successAlertMessage: ''
@@ -2281,7 +2224,7 @@ var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js
 
                 var self = this;
 
-                axios.post('/api/audit/' + this.asset.barcode, self.formdata).then(function (response) {
+                axios.post('/api/audit', self.formdata).then(function (response) {
                     // handle success
                     // console.log(response.data);
                     self.successAlertMessage = 'Success ... audit record saved';
@@ -2353,8 +2296,8 @@ var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js
             self.formdata = Object.assign({}, assetdata);
 
             // Setup the formschema with the laravel rules converted to local rules
-            var validator = new myValidator(self.formdata, schema);
-            self.schema = validator.schema_with_rules;
+            var validator = new formValidator(self.formdata, schema);
+            self.formschema = validator.schema_with_rules;
         }
     },
     watch: {
@@ -2381,8 +2324,8 @@ var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_assetforms_js__ = __webpack_require__("./resources/assets/js/components/app/mixins/assetforms.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_store__ = __webpack_require__("./resources/assets/js/components/app/lib/store.js");
 //
 //
 //
@@ -2521,133 +2464,50 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 //
 
 
-var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js");
+var formValidator = __webpack_require__("./resources/assets/js/components/app/lib/validatorClass.js");
+
+
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['asset'],
+    mixins: [__WEBPACK_IMPORTED_MODULE_0__mixins_assetforms_js__["a" /* default */]],
     data: function data() {
         return {
-
-            valid: false,
-
-            barcodeRules: [function (v) {
-                return !!v || 'Barcode is required';
-            }],
-            siteRules: [function (v) {
-                return !!v || 'Site is required';
-            }],
-            departmentRules: [this.newRule],
-            formdata: {},
-            metadata: {},
-
-            schema: [],
-            metaschema: [],
-
-            // Object keyed by datepicker names 
-            dateMenus: {},
-
-            sites: $Clientdata.sites,
-            showSuccessAlertFlag: false,
-            successAlertMessage: '',
-            saving: false // xhr save indicator
+            store: __WEBPACK_IMPORTED_MODULE_1__lib_store__["a" /* default */]
         };
     },
 
     computed: {
-        siteDepartments: function siteDepartments() {
-            if (this.formdata.site_id) {
-                var site = _.find($Clientdata.sites, ['id', this.formdata.site_id]);
-                return site.departments;
-            }
-        },
-        conditionOptions: function conditionOptions() {
-            return $Refdata.condition_options;
-        },
-        myRefData: function myRefData() {
-            return $Refdata;
+        xhr_loading: function xhr_loading() {
+            return this.store.isActive();
         }
     },
     methods: {
-        formatDate: function formatDate(date) {
-            if (!date) return null;
-
-            var _date$split = date.split('-'),
-                _date$split2 = _slicedToArray(_date$split, 3),
-                year = _date$split2[0],
-                month = _date$split2[1],
-                day = _date$split2[2];
-
-            return day + '-' + month + '-' + year;
-        },
-        newRule: function newRule(v) {
-            // if the value is not found in siteDepartments then invalid
-
-            var found = _.find(this.siteDepartments, ['id', v]);
-            //console.log('FOUND',!!found)
-
-            return !!found || 'Select a department';
-        },
-        groupA: function groupA(s) {
-            // return true if input is one of the following
-
-            var options = ['v-text-field', 'v-select'];
-            return options.indexOf(s.input) > -1;
-        },
-        groupB: function groupB(s) {
-
-            var options = ['v-date-picker'];
-            return options.indexOf(s.input) > -1;
-        },
-        groupC: function groupC(s) {
-            var options = ['v-switch'];
-            return options.indexOf(s.input) > -1;
-        },
-        getOptions: function getOptions(key) {
-            // console.log('Refdata Options Key',key)
-
-            // Could update to check if key is a string of options and if it is then return
-            // them as an array
-
-            // But for now we assume key is a key into the global refdata array
-            if ($Refdata.hasOwnProperty(key)) {
-                return $Refdata[key];
-            }
-        },
-        changed: function changed(e, field) {
-            // console.log('changed',e,field)
-            this.formdata[field] = e;
-        },
-        siteChange: function siteChange(e) {
-
-            // If current department selected is not in the list of the 
-            // current list of site.departments then clear value
-            var found = _.find(this.siteDepartments, ['id', this.formdata.department_id]);
-            if (!found) this.data.department_id = null;
-        },
         submit: function submit() {
+            var _this = this;
+
             if (this.$refs.form.validate()) {
                 // Native form submission is not yet supported
                 // console.log('Form is valid and I am submitting it now with this data',this.data)
 
                 var formdata = this.formdata;
+                var path = '/api/asset/' + this.asset.barcode;
 
-                var self = this;
-
-                this.saving = true; // Activate Button loading icon
-
-                axios.put('/api/asset/' + this.asset.barcode, formdata).then(function (response) {
-                    // handle success
-                    // console.log(response.data);
-                    self.successAlertMessage = 'Record update successful';
-                    self.showSuccessAlertFlag = true;
-                }).catch(function (error) {
-                    // handle error
-                    console.log(error);
-                }).then(function () {
-                    // always executed
-                    self.saving = false; // Remove button loading icon
+                this.$api.put(path, formdata, function (status, data) {
+                    _this.showSuccessMessage('Asset data has been saved');
                 });
             }
+        },
+        showSuccessMessage: function showSuccessMessage(msg) {
+            this.successAlertMessage = msg;
+            this.showSuccessAlertFlag = true;
+
+            var self = this;
+
+            setTimeout(function () {
+                self.showSuccessAlertFlag = false;
+            }, 3000);
         },
         clear: function clear() {
 
@@ -2688,25 +2548,18 @@ var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js
             self.formdata = Object.assign({}, assetdata, metadata);
 
             // Setup the formschema with the laravel rules converted to local rules
-            var validator = new myValidator(self.formdata, schema);
-            self.schema = validator.schema_with_rules;
+            var validator = new formValidator(self.formdata, schema);
+            self.formschema = validator.schema_with_rules;
         }
     },
     watch: {
         'asset': function asset(to, from) {
             // react to route changes...
 
-            // Ajax load latest data from server for asset ....
-            // console.log('asset  updated to: ',to)
-            // this.formdata.description = 'my description for ' + this.barcode;
-            // this.formdata.notes = 'my notes for barcode ' + this.barcode;
             this.load();
         }
     },
-    mounted: function mounted() {
-        //this.load()
-
-    }
+    mounted: function mounted() {}
 });
 
 /***/ }),
@@ -2716,6 +2569,8 @@ var myValidator = __webpack_require__("./resources/assets/js/myValidatorClass.js
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_eventbus_js__ = __webpack_require__("./resources/assets/js/components/app/lib/eventbus.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_store_js__ = __webpack_require__("./resources/assets/js/components/app/lib/store.js");
 //
 //
 //
@@ -2774,14 +2629,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
+
+
+__WEBPACK_IMPORTED_MODULE_0__lib_eventbus_js__["a" /* EventBus */].$on('new_barcode', function (barcode) {
+    console.log('Toolbar says - Oh, that\'s nice we have a new barcode  ' + barcode + '! :)');
+    $Barcodes.push(barcode);
+});
+
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['currentroute'],
     data: function data() {
 
         return {
+            store: __WEBPACK_IMPORTED_MODULE_1__lib_store_js__["a" /* default */],
             barcode: this.$route.params.barcode,
-            barcodes: [],
+            barcodes: $Barcodes,
 
             loading: false,
             isEditing: false,
@@ -2799,6 +2664,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
 
+    computed: {
+        xhr_loading: function xhr_loading() {
+            return this.store.isActive();
+        }
+    },
     methods: {
         assetSelected: function assetSelected(e) {
             //this.goBtnDisabled = false
@@ -2816,34 +2686,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$router.push('/reports');
             //this.updateButtonSelectIndicators('reports')
         },
-        updateButtonSelectIndicators: function updateButtonSelectIndicators(btn) {
+        updateButtons: function updateButtons(btn) {
             var self = this;
             Object.keys(this.btn_selected).forEach(function (key, index) {
-                // console.log('key btn',key,btn)
                 self.btn_selected[key] = key == btn ? true : false;
             });
         }
     },
     watch: {
         'currentroute': function currentroute(to, from) {
-            this.updateButtonSelectIndicators(to);
+            this.updateButtons(to);
         }
-    },
-
-    mounted: function mounted() {
-        var self = this;
-        axios.get('/api/assets').then(function (response) {
-            // handle success
-            // console.log(response.data);
-
-            self.barcodes = response.data;
-        }).catch(function (error) {
-            // handle error
-            console.log(error);
-        }).then(function () {
-            // always executed
-        });
     }
+
 });
 
 /***/ }),
@@ -2853,6 +2708,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_store__ = __webpack_require__("./resources/assets/js/components/app/lib/store.js");
+//
+//
+//
 //
 //
 //
@@ -2908,9 +2767,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
+            store: __WEBPACK_IMPORTED_MODULE_0__lib_store__["a" /* default */],
             active: null,
             edit: null,
             audit: null,
@@ -2919,24 +2781,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
 
+    computed: {
+        xhr_loading: function xhr_loading() {
+            return this.store.isActive();
+        }
+    },
     methods: {
         addAudit: function addAudit(audit) {
             // console.log('pushing new audit',audit)
             this.asset.audits.push(audit);
         },
         load: function load() {
-            var self = this;
+            var _this = this;
 
-            axios.get('/api/asset/' + this.barcode).then(function (response) {
-                // handle success
-                // console.log(response.data);
-
-                self.asset = response.data.asset;
-            }).catch(function (error) {
-                // handle error
-                console.log(error);
-            }).then(function () {
-                // always executed
+            this.$api.get('/api/asset/' + this.barcode, function (status, data) {
+                _this.asset = Object.assign({}, data.asset);
             });
         }
     },
@@ -37495,7 +37354,9 @@ var render = function() {
         "v-flex",
         { attrs: { xs12: "", sm10: "", md8: "", lg6: "" } },
         [
-          _c("div", { staticClass: "display-2" }, [_vm._v("Add Asset")]),
+          _c("div", { staticClass: "display-1" }, [
+            _vm._v("Add (" + _vm._s(_vm.assettype.name) + ") Asset")
+          ]),
           _vm._v(" "),
           _c(
             "v-form",
@@ -37588,7 +37449,7 @@ var render = function() {
                         1
                       ),
                       _vm._v(" "),
-                      _vm._l(_vm.schema, function(s) {
+                      _vm._l(_vm.formschema, function(s) {
                         return _c(
                           "v-flex",
                           { key: s.name, attrs: { xs12: "" } },
@@ -37708,7 +37569,6 @@ var render = function() {
                                       _c(s.input, {
                                         tag: "component",
                                         attrs: {
-                                          value: _vm.formdata[s.name],
                                           label: s.label,
                                           rules: s.rules,
                                           readonly: s.readonly,
@@ -37719,6 +37579,13 @@ var render = function() {
                                           change: function($event) {
                                             _vm.changed($event, s.name)
                                           }
+                                        },
+                                        model: {
+                                          value: _vm.formdata[s.name],
+                                          callback: function($$v) {
+                                            _vm.$set(_vm.formdata, s.name, $$v)
+                                          },
+                                          expression: "formdata[s.name]"
                                         }
                                       })
                                     ],
@@ -38114,6 +37981,10 @@ var render = function() {
                       _c(
                         "v-card-text",
                         [
+                          _c("div", { staticClass: "display-1" }, [
+                            _vm._v("View/Edit Asset")
+                          ]),
+                          _vm._v(" "),
                           _c("asset-edit-form", { attrs: { asset: _vm.asset } })
                         ],
                         1
@@ -38136,6 +38007,10 @@ var render = function() {
                       _c(
                         "v-card-text",
                         [
+                          _c("div", { staticClass: "display-1" }, [
+                            _vm._v("Audit Asset")
+                          ]),
+                          _vm._v(" "),
                           _c("asset-audit", {
                             attrs: { asset: _vm.asset },
                             on: { created: _vm.addAudit }
@@ -38215,7 +38090,7 @@ var render = function() {
           _c("v-spacer"),
           _vm._v(" "),
           _c("v-toolbar-title", { staticClass: "title" }, [
-            _vm._v(_vm._s(_vm.clientname))
+            _vm._v(_vm._s(_vm.clientname) + " " + _vm._s(_vm.loading))
           ]),
           _vm._v(" "),
           _c("v-spacer"),
@@ -38423,7 +38298,7 @@ var render = function() {
                     1
                   ),
                   _vm._v(" "),
-                  _vm._l(_vm.schema, function(s) {
+                  _vm._l(_vm.formschema, function(s) {
                     return _c(
                       "v-flex",
                       { key: s.name, attrs: { xs12: "" } },
@@ -38534,11 +38409,9 @@ var render = function() {
                                   _c(s.input, {
                                     tag: "component",
                                     attrs: {
-                                      "xv-model": "formdata[s.name]",
                                       label: s.label,
                                       rules: s.rules,
                                       readonly: s.readonly,
-                                      value: _vm.formdata[s.name],
                                       items: _vm.getOptions(s.items),
                                       light: ""
                                     },
@@ -38546,6 +38419,13 @@ var render = function() {
                                       change: function($event) {
                                         _vm.changed($event, s.name)
                                       }
+                                    },
+                                    model: {
+                                      value: _vm.formdata[s.name],
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.formdata, s.name, $$v)
+                                      },
+                                      expression: "formdata[s.name]"
                                     }
                                   })
                                 ],
@@ -38561,15 +38441,11 @@ var render = function() {
                   _c(
                     "v-btn",
                     {
-                      attrs: { disabled: !_vm.valid, loading: _vm.saving },
+                      attrs: { disabled: !_vm.valid, loading: _vm.xhr_loading },
                       on: { click: _vm.submit }
                     },
-                    [_vm._v("\n                    submit\n                ")]
+                    [_vm._v("\n                    Save\n                ")]
                   ),
-                  _vm._v(" "),
-                  _c("v-btn", { on: { click: _vm.clear } }, [_vm._v("clear")]),
-                  _vm._v(" "),
-                  _c("v-btn", { on: { click: _vm.load } }, [_vm._v("reset")]),
                   _vm._v(" "),
                   _c(
                     "v-flex",
@@ -38579,9 +38455,16 @@ var render = function() {
                         "v-alert",
                         {
                           attrs: {
-                            value: _vm.showSuccessAlertFlag,
+                            outline: "",
                             dismissible: "",
                             type: "success"
+                          },
+                          model: {
+                            value: _vm.showSuccessAlertFlag,
+                            callback: function($$v) {
+                              _vm.showSuccessAlertFlag = $$v
+                            },
+                            expression: "showSuccessAlertFlag"
                           }
                         },
                         [
@@ -38630,8 +38513,6 @@ var render = function() {
   return _c(
     "div",
     [
-      _c("div", [_vm._v("Asset audit form")]),
-      _vm._v(" "),
       _c(
         "v-form",
         { ref: "auditform" },
@@ -38643,7 +38524,7 @@ var render = function() {
                 "v-layout",
                 { attrs: { row: "", wrap: "" } },
                 [
-                  _vm._l(_vm.schema, function(s) {
+                  _vm._l(_vm.formschema, function(s) {
                     return _c(
                       "v-flex",
                       { key: s.name, attrs: { xs12: "" } },
@@ -38757,7 +38638,6 @@ var render = function() {
                                       label: s.label,
                                       rules: s.rules,
                                       readonly: s.readonly,
-                                      value: _vm.formdata[s.name],
                                       items: _vm.getOptions(s.items),
                                       light: ""
                                     },
@@ -38765,6 +38645,13 @@ var render = function() {
                                       change: function($event) {
                                         _vm.changed($event, s.name)
                                       }
+                                    },
+                                    model: {
+                                      value: _vm.formdata[s.name],
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.formdata, s.name, $$v)
+                                      },
+                                      expression: "formdata[s.name]"
                                     }
                                   })
                                 ],
@@ -75690,6 +75577,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuetify___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vuetify__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vuetify_es5_util_colors__ = __webpack_require__("./node_modules/vuetify/es5/util/colors.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vuetify_es5_util_colors___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_vuetify_es5_util_colors__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_app_lib_apiServiceClass_js__ = __webpack_require__("./resources/assets/js/components/app/lib/apiServiceClass.js");
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -75707,6 +75595,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
 
 // Helpers
 
+//import apiService from './components/app/lib/apiService';
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_2_vuetify___default.a, {
     theme: {
         primary: __WEBPACK_IMPORTED_MODULE_3_vuetify_es5_util_colors___default.a.indigo.darken1, // #E53935
@@ -75742,6 +75631,13 @@ var App = __webpack_require__("./resources/assets/js/components/app/App.vue");
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.config.productionTip = false;
 
+// import api from './components/app/lib/apiService.js';
+
+
+var api = new __WEBPACK_IMPORTED_MODULE_4__components_app_lib_apiServiceClass_js__["a" /* default */]();
+
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.prototype.$api = api;
+
 new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
     el: '#app',
     router: router,
@@ -75750,6 +75646,7 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
     data: function data() {
         return {
             clientname: $Clientdata.name
+
         };
     }
 });
@@ -75782,9 +75679,9 @@ window.moment = __webpack_require__("./node_modules/moment/moment.js");
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__("./node_modules/axios/index.js");
+// window.axios = require('axios');
 
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+// window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /**
  * Next we will register the CSRF Token as a common header with Axios so that
@@ -75792,13 +75689,14 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
  * a simple convenience so we don't have to attach every token manually.
  */
 
-var token = document.head.querySelector('meta[name="csrf-token"]');
+// let token = document.head.querySelector('meta[name="csrf-token"]');
 
-if (token) {
-  window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-} else {
-  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
-}
+// if (token) {
+//     window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+// } else {
+//     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+// }
+
 
 // window.Vue = require('vue');
 
@@ -76150,7 +76048,185 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ "./resources/assets/js/myValidatorClass.js":
+/***/ "./resources/assets/js/components/app/lib/apiServiceClass.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__("./node_modules/axios/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store__ = __webpack_require__("./resources/assets/js/components/app/lib/store.js");
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+
+
+
+var _class = function () {
+  function _class() {
+    _classCallCheck(this, _class);
+
+    var service = __WEBPACK_IMPORTED_MODULE_0_axios___default.a;
+    var token = document.head.querySelector('meta[name="csrf-token"]');
+
+    this.store = __WEBPACK_IMPORTED_MODULE_1__store__["a" /* default */];
+
+    service.interceptors.response.use(this.handleSuccess, this.handleError);
+    service.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+    service.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+
+    service.interceptors.request.use(function (config) {
+      __WEBPACK_IMPORTED_MODULE_1__store__["a" /* default */].startRequest();
+      //alert('started loadind ...');
+      return config;
+    }, function (error) {
+      __WEBPACK_IMPORTED_MODULE_1__store__["a" /* default */].endRequest();
+      alert('OOPs an api request error occured');
+
+      return error;
+    });
+    this.service = service;
+  }
+
+  _createClass(_class, [{
+    key: 'handleSuccess',
+    value: function handleSuccess(response) {
+
+      __WEBPACK_IMPORTED_MODULE_1__store__["a" /* default */].endRequest();
+
+      return response;
+    }
+  }, {
+    key: 'handleError',
+    value: function handleError(error) {
+
+      __WEBPACK_IMPORTED_MODULE_1__store__["a" /* default */].endRequest();
+
+      switch (error.response.status) {
+        case 401:
+
+          // do something when you're unauthenticated
+          alert('Not authenticated request');
+          break;
+
+        case 403:
+          // do something when you're unauthorized to access a resource
+          alert('Not authorisded to access resource');
+          break;
+
+        case 500:
+          // do something when your server exploded
+          alert('Server returned 500 error, it may just be busy, close this alert to try again');
+          return __WEBPACK_IMPORTED_MODULE_0_axios___default.a.request(error.config); // re-issue request
+          break;
+
+        case 405:
+          alert('Method not allowed');
+          break;
+
+        default:
+          // handle normal errors with some alert or whatever
+          alert('default error handler');
+      }
+      return Promise.reject(error);
+    }
+  }, {
+    key: 'redirectTo',
+    value: function redirectTo(document, path) {
+      document.location = path;
+    }
+  }, {
+    key: 'get',
+    value: function get(path, callback) {
+      return this.service.get(path).then(function (response) {
+        return callback(response.status, response.data);
+      });
+    }
+  }, {
+    key: 'put',
+    value: function put(path, payload, callback) {
+      return this.service.request({
+        method: 'PUT',
+        url: path,
+        responseType: 'json',
+        data: payload
+      }).then(function (response) {
+        return callback(response.status, response.data);
+      });
+    }
+  }, {
+    key: 'patch',
+    value: function patch(path, payload, callback) {
+      return this.service.request({
+        method: 'PATCH',
+        url: path,
+        responseType: 'json',
+        data: payload
+      }).then(function (response) {
+        return callback(response.status, response.data);
+      });
+    }
+  }, {
+    key: 'post',
+    value: function post(path, payload, callback) {
+      return this.service.request({
+        method: 'POST',
+        url: path,
+        responseType: 'json',
+        data: payload
+      }).then(function (response) {
+        return callback(response.status, response.data);
+      });
+    }
+  }]);
+
+  return _class;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (_class);
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/app/lib/eventbus.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EventBus; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__("./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+
+var EventBus = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a();
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/app/lib/store.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+  debug: true,
+  state: {
+    requestCounter: 0
+  },
+  startRequest: function startRequest() {
+
+    this.state.requestCounter++;
+  },
+  endRequest: function endRequest() {
+
+    this.state.requestCounter = this.state.requestCounter-- < 0 ? this.state.requestCounter : 0;
+  },
+  isActive: function isActive() {
+
+    return this.state.requestCounter > 0;
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/app/lib/validatorClass.js":
 /***/ (function(module, exports) {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -76246,6 +76322,111 @@ var myValidator = function () {
 }();
 
 module.exports = myValidator;
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/app/mixins/assetforms.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    data: function data() {
+        return {
+            formdata: {}, // form data
+            formschema: [], // form scheme
+            valid: true, // form valid flag
+            barcodeRules: [function (v) {
+                return !!v || 'Barcode is required';
+            }],
+            siteRules: [function (v) {
+                return !!v || 'Site is required';
+            }],
+            departmentRules: [this.siteDepartmentRule],
+            dateMenus: {}, // Object keyed by datepicker names 
+            showSuccessAlertFlag: false,
+            successAlertMessage: '',
+            saving: false // xhr save indicator on submit button
+        };
+    },
+
+    computed: {
+        sites: function sites() {
+            return $Clientdata.sites;
+        },
+        siteDepartments: function siteDepartments() {
+            if (this.formdata.site_id) {
+                var site = _.find(this.sites, ['id', this.formdata.site_id]);
+                return site.departments;
+            }
+        },
+        conditionOptions: function conditionOptions() {
+            return $Refdata.condition_options;
+        },
+        myRefData: function myRefData() {
+            return $Refdata;
+        }
+    },
+    methods: {
+        formatDate: function formatDate(date) {
+            if (!date) return null;
+
+            var _date$split = date.split('-'),
+                _date$split2 = _slicedToArray(_date$split, 3),
+                year = _date$split2[0],
+                month = _date$split2[1],
+                day = _date$split2[2];
+
+            return day + '-' + month + '-' + year;
+        },
+        siteDepartmentRule: function siteDepartmentRule(v) {
+            // if the value is not found in siteDepartments then invalid
+
+            var found = _.find(this.siteDepartments, ['id', v]);
+            //console.log('FOUND',!!found)
+
+            return !!found || 'Select a department';
+        },
+        groupA: function groupA(s) {
+            // return true if input is one of the following
+
+            var options = ['v-text-field', 'v-select'];
+            return options.indexOf(s.input) > -1;
+        },
+        groupB: function groupB(s) {
+
+            var options = ['v-date-picker'];
+            return options.indexOf(s.input) > -1;
+        },
+        groupC: function groupC(s) {
+            var options = ['v-switch'];
+            return options.indexOf(s.input) > -1;
+        },
+        getOptions: function getOptions(key) {
+            // console.log('Refdata Options Key',key)
+
+            // Could update to check if key is a string of options and if it is then return
+            // them as an array
+
+            // But for now we assume key is a key into the global refdata array
+            if ($Refdata.hasOwnProperty(key)) {
+                return $Refdata[key];
+            }
+        },
+        changed: function changed(e, field) {
+            // console.log('changed',e,field)
+            this.formdata[field] = e;
+        },
+        siteChange: function siteChange(e) {
+
+            // If current department selected is not in the list of the 
+            // current list of site.departments then clear value
+            var found = _.find(this.siteDepartments, ['id', this.formdata.department_id]);
+            if (!found) this.formdata.department_id = null;
+        }
+    }
+});
 
 /***/ }),
 

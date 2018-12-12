@@ -8,9 +8,12 @@ use App\Client;
 use Illuminate\Http\Request;
 use App\AssetType;
 use Illuminate\Support\Facades\Auth;
+use App\Asset;
 
 class HomeController extends Controller
 {
+    protected $user;
+    
     /**
      * Create a new controller instance.
      *
@@ -19,6 +22,8 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+
+
     }
 
     /**
@@ -26,30 +31,18 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        
+        $this->user = $request->user();
+
+    
 
         $clientdata = $this->clientdata();
         $refdata = $this->referenceData();
-        // dd($refdata);
-
-        // $d = $clientdata->created_at;
-
-        // echo $d->toDayDateTimeString().'<br>';
-        // $d->setTimeZone( new \DateTimeZone('Australia/Melbourne'));
-        // echo $d->toDayDateTimeString().'<br>';
-
-        // $d->setTimeZone( new \DateTimeZone('UTC'));
-        // echo $d->toDayDateTimeString().'<br>';
-
-        // dd($d->toDayDateTimeString());
-
-        // $date->setTimezone(new \DateTimeZone('Australia/Melbourne'));
-        // dd(date('e'));
+        $barcodes = $this->getBarcodes();
 
 
-        return view('home',compact('clientdata','refdata'));
+        return view('home',compact('clientdata','refdata','barcodes'));
     }
 
     protected function clientdata()
@@ -90,5 +83,16 @@ class HomeController extends Controller
         $col =  AssetType::where('client_id',Auth::user()->client_id)->get();
 
         return $col->keyBy('id')->toArray();
+    }
+
+    protected function getBarcodes()
+    {
+        $barcodes = Asset::select('barcode')
+                    ->where('client_id',$this->user->client_id)
+                    ->get()
+                    ->pluck('barcode')
+                    ->all();
+
+        return $barcodes;
     }
 }

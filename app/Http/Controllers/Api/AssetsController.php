@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 class AssetsController extends Controller
 {
     protected $user;
+    protected $client;
     protected $request;
 
     public function __construct(Request $request)
@@ -23,7 +24,7 @@ class AssetsController extends Controller
         $this->user = $request->user('api');
         $this->client = Client::find($this->user->client_id);
         $this->request = $request;    
-        $this->request = $request;    
+          
         
     }
 
@@ -41,7 +42,8 @@ class AssetsController extends Controller
         
         $asset = Asset::with(['audits','assettype'])->where('barcode',$barcode)->first();  
 
-       
+       //dd($asset);
+
         return ['asset'=>$asset->toArray()];
     }
 
@@ -52,7 +54,8 @@ class AssetsController extends Controller
 
         $asset = Asset::create($data);
 
-        dd($asset);
+        return ['data'=>'success','record'=>$data];
+
     }
 
     public function update( $barcode)
@@ -66,9 +69,9 @@ class AssetsController extends Controller
 
             $data = $this->getData($this->request->input());
 
-            //$data = $asset->setmeta($data);
-
             $asset->update($data);
+
+            sleep(2);
             
             return ['data'=>'success','record'=>$data];
 

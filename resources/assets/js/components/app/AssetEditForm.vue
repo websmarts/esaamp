@@ -34,7 +34,7 @@
 
                    
 
-                    <v-flex  v-for="s in schema" :key="s.name" xs12 >
+                    <v-flex  v-for="s in formschema" :key="s.name" xs12 >
 
                         <template v-if="groupA(s)">
                             <v-flex xs12>   
@@ -91,12 +91,11 @@
                         <template v-if="groupC(s)"><!-- switches -->
                             <v-flex xs12>   
                                 <component 
-                                    xv-model="formdata[s.name]"
+                                    v-model="formdata[s.name]"
                                     :is="s.input" 
                                     :label="s.label"
                                     :rules="s.rules"
                                     :readonly="s.readonly"
-                                    :value="formdata[s.name]"
                                     :items="getOptions(s.items)"
                                     @change="changed($event,s.name)"
                                     light
@@ -109,17 +108,18 @@
 
                     <v-btn
                         :disabled="!valid"
-                        :loading="saving"
+                        :loading="xhr_loading"
                         @click="submit"
                         >
-                        submit
+                        Save
                     </v-btn>
-                    <v-btn @click="clear">clear</v-btn>
-                    <v-btn @click="load">reset</v-btn>
+                    <!-- <v-btn @click="clear">clear</v-btn>
+                    <v-btn @click="load">reset</v-btn> -->
 
                     <v-flex xs12>
                              <v-alert
-                            :value="showSuccessAlertFlag"
+                            v-model="showSuccessAlertFlag"
+                            outline
                             dismissible
                             type="success"
                             >
@@ -136,135 +136,53 @@
 
 <script>
 
-const myValidator = require('../../myValidatorClass') ;
+const formValidator = require('./lib/validatorClass') ;
+import assetforms from './mixins/assetforms.js';
+
+
+import store from './lib/store';
+
 
 
 export default {
     props: ['asset'],
+    mixins: [assetforms],
     data() {
         return {
-            
-            valid: false,
-
-            barcodeRules: [v => !!v || 'Barcode is required'],
-            siteRules: [v => !!v || 'Site is required'],
-            departmentRules: [this.newRule],
-            formdata: {},
-            metadata: {},
-
-            schema: [],
-            metaschema: [],
-
-            // Object keyed by datepicker names 
-            dateMenus: {},
-           
-
-            sites: $Clientdata.sites, 
-            showSuccessAlertFlag: false,
-            successAlertMessage: '',
-            saving: false // xhr save indicator
+            store: store
         }
     },
     computed: {
-        siteDepartments(){
-            if (this.formdata.site_id){
-                const site = _.find($Clientdata.sites,['id',this.formdata.site_id])
-                return site.departments
-            }
-        },
-        conditionOptions() {
-            return $Refdata.condition_options
-        },
-        myRefData() {
-            return $Refdata
+        xhr_loading() {
+            return this.store.isActive()
         }
     },
     methods: {
-        formatDate (date) {
-            if (!date) return null
-
-            const [year, month, day] = date.split('-')
-            return `${day}-${month}-${year}`
-        },
-        newRule(v){
-            // if the value is not found in siteDepartments then invalid
-            
-            let found = _.find(this.siteDepartments,['id',v])
-            //console.log('FOUND',!!found)
-
-            return !!found || 'Select a department'
-        },
-        groupA(s) {
-            // return true if input is one of the following
-            
-            const options = ['v-text-field','v-select']
-            return options.indexOf(s.input) > -1
-           
-        },
-        groupB(s) {
-            
-            const options = ['v-date-picker']
-            return options.indexOf(s.input) > -1
-
-        },
-        groupC(s) {
-            const options = ['v-switch']
-            return options.indexOf(s.input) > -1
-        },
-        getOptions(key){
-            // console.log('Refdata Options Key',key)
-
-            // Could update to check if key is a string of options and if it is then return
-            // them as an array
-
-            // But for now we assume key is a key into the global refdata array
-            if($Refdata.hasOwnProperty(key)){
-                return $Refdata[key]
-            }
-
-        },
-        changed(e,field) {
-            // console.log('changed',e,field)
-            this.formdata[field]=e
-        },
-        siteChange(e){
-            
-            // If current department selected is not in the list of the 
-            // current list of site.departments then clear value
-            const found = _.find(this.siteDepartments,['id',this.formdata.department_id])
-            if(!found)
-                this.data.department_id = null
-        },
         submit () {
             if (this.$refs.form.validate()) {
-            // Native form submission is not yet supported
-            // console.log('Form is valid and I am submitting it now with this data',this.data)
+                // Native form submission is not yet supported
+                // console.log('Form is valid and I am submitting it now with this data',this.data)
 
-            const formdata = this.formdata
-            
+                const formdata = this.formdata
+                const path = '/api/asset/'+ this.asset.barcode
 
-            let self=this
-
-            this.saving = true // Activate Button loading icon
-
-            axios.put('/api/asset/'+ this.asset.barcode, formdata)
-            .then(function (response) {
-                // handle success
-                // console.log(response.data);
-                 self.successAlertMessage = 'Record update successful'
-                 self.showSuccessAlertFlag = true
                 
-                
-            })
-            .catch(function (error) {
-                // handle error
-                console.log(error);
-            })
-            .then(function () {
-                // always executed
-                self.saving = false // Remove button loading icon
-            });
+
+                this.$api.put(path, formdata, (status,data) => {
+                    this.showSuccessMessage('Asset data has been saved')
+                })
+     
             }
+        },
+        showSuccessMessage(msg){
+            this.successAlertMessage = msg
+            this.showSuccessAlertFlag = true
+
+            const self = this
+
+            setTimeout(function() {
+                self.showSuccessAlertFlag = false
+            }, 3000);
         },
 
         clear () {
@@ -310,8 +228,8 @@ export default {
 
             
             // Setup the formschema with the laravel rules converted to local rules
-            const validator = new myValidator(self.formdata,schema)
-            self.schema =  validator.schema_with_rules
+            const validator = new formValidator(self.formdata,schema)
+            self.formschema =  validator.schema_with_rules
                            
 
         }
@@ -320,10 +238,6 @@ export default {
         'asset' (to, from) {
         // react to route changes...
 
-        // Ajax load latest data from server for asset ....
-        // console.log('asset  updated to: ',to)
-        // this.formdata.description = 'my description for ' + this.barcode;
-        // this.formdata.notes = 'my notes for barcode ' + this.barcode;
         this.load()
 
         
@@ -331,8 +245,7 @@ export default {
         }
     },
     mounted() {
-        //this.load()
-        
+              
     }
 }
 

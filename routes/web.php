@@ -16,9 +16,14 @@ Route::get('/', function () {
 });
 
 Auth::routes();
-Route::get('logout','Auth\LoginController@logout');
+Route::get('logout','Auth\LoginController@logout'); // provide a GET logout request option 
 
+
+
+// need to be proteded by auth middleware 
 Route::get('/home', 'HomeController@index')->name('home');
+
+
 
 
 

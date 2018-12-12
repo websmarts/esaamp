@@ -33,7 +33,7 @@ class AuditController extends Controller
         return ['asset'=>$asset->toArray()];
     }
 
-    public function store( $barcode)
+    public function store( )
     {
             // Validate data
             $validatedData = $this->request->validate([
@@ -41,12 +41,13 @@ class AuditController extends Controller
                 ]);
             // Update data
             $data = $this->request->input();
-            $asset = Asset::where('barcode',$barcode)->first();
+            $asset = Asset::where('barcode',$this->request->barcode)->first();
 
             // get the audit data
             $data = $this->getData();
 
             $asset->update($data['assetdata']);
+            
             $audit = $asset->audits()->create($data['auditdata']);
             $audit->update($data['auditdata']);
             

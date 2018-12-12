@@ -7,6 +7,7 @@
     // Global app data
 const $Refdata = @json($refdata);
 const $Clientdata = @json($clientdata);
+const $Barcodes = @json($barcodes);
 
 </script>
  

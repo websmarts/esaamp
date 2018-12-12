@@ -28,6 +28,7 @@
                 <v-card flat>
                     
                         <v-card-text>
+                            <div class="display-1">View/Edit Asset</div>
                             <asset-edit-form :asset="asset"></asset-edit-form>
                         </v-card-text>
                     
@@ -40,6 +41,7 @@
             >
                 <v-card flat>
                 <v-card-text>
+                    <div class="display-1">Audit Asset</div>
                     <asset-audit :asset="asset"  @created="addAudit"></asset-audit>
                     <div>Asset Audit History</div>
                     <audit-history :audits="asset.audits"></audit-history>
@@ -52,15 +54,24 @@
     </v-flex>
 </v-layout>
 </template>
+
 <script>
+import store from './lib/store'
+
 export default {
     data() {
         return {
+            store: store,
             active: null,
             edit: null,
             audit: null,
             barcode: this.$route.params.barcode,
             asset:{}
+        }
+    },
+    computed: {
+        xhr_loading() {
+            return this.store.isActive()
         }
     },
     methods: {
@@ -69,28 +80,13 @@ export default {
             this.asset.audits.push(audit)
         },
         load () {
-            let self = this
+            
+            this.$api.get('/api/asset/'+ this.barcode,(status,data) => {
+                this.asset = Object.assign({},data.asset)
+            })
             
 
-            axios.get('/api/asset/'+ this.barcode)
-            .then(function (response) {
-                // handle success
-                // console.log(response.data);
-
-                self.asset = response.data.asset
-
-                
-                
-            })
-            .catch(function (error) {
-                // handle error
-                console.log(error);
-            })
-            .then(function () {
-                // always executed
-            });
-
-        }
+        },
     },
     mounted() {
         this.load()
