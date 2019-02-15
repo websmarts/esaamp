@@ -20,7 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 // Route::get('slings', 'Api\SlingsController@index');
 // Route::get('sling/{barcode}', 'Api\SlingsController@getSlingByBarcode');
 
-Route::middleware('auth:api')->group( function(){
+Route::group( ['middleware'=>['auth:api']], function(){
 
     Route::get('assets', 'Api\AssetsController@index');
     Route::get('asset/{barcode}', 'Api\AssetsController@getAssetByBarcode');

@@ -11,7 +11,8 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/assets/js/app.js', 'public/js')
+mix.js('resources/assets/js/manager_app.js', 'public/js')
+   .js('resources/assets/js/washer_app.js', 'public/js')
    .js('resources/assets/js/accounts_app.js', 'public/js')
    .js('resources/assets/js/slings.js', 'public/js')
    .sass('resources/assets/sass/app.scss', 'public/css')

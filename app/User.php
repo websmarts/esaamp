@@ -16,7 +16,13 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'client_id',
+        'name', 
+        'title',
+        'email', 
+        'roles',
+        'password',
+
     ];
 
     /**
@@ -33,4 +39,13 @@ class User extends Authenticatable
         'password',
         'remember_token'
     ];
+
+    public function hasRole($role)
+    {
+        // dd([$this->roles,$role]);
+        $roles = explode(',' , $this->roles);
+        return in_array($role,$roles);
+        
+        // return strpos($this->roles,$role) !== false;
+    }
 }

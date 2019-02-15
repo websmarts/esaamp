@@ -20,8 +20,12 @@ class AssetsController extends Controller
     public function __construct(Request $request)
     {
          //$this->user = auth('api')->user();
+
+        
          
         $this->user = $request->user('api');
+
+        
         $this->client = Client::find($this->user->client_id);
         $this->request = $request;    
           

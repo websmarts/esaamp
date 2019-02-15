@@ -8,10 +8,10 @@
         
             <v-toolbar-title>
                 <img src="images/logo-with-tick-white.png" height="45" /><br />
-                <span style="font-size:13px">Equipment Safety Audit &amp; Asset Management Portal</span>
+                <span style="font-size:13px">eSAAMP Washer Portal</span>
             </v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-toolbar-title class="title" >{{ clientname }} {{ loading }}</v-toolbar-title>
+            <v-toolbar-title class="title" >{{ clientname }}</v-toolbar-title>
             <v-spacer></v-spacer>
 
             <v-toolbar-items class="hidden-sm-and-down">
@@ -33,7 +33,7 @@
                 <v-layout row align-center justify-center >
                     <v-flex xs12 sm11 md7>
 
-                    <asset-toolbar :currentroute="currentroute"></asset-toolbar>
+                   Washer  Toolbar
                             
                     </v-flex>
                 </v-layout>
@@ -44,9 +44,7 @@
         
             <v-layout row align-center>
             <v-flex text-xs-center>
-                <transition name="fade" >
-                    <router-view :key="$route.params.barcode"></router-view>
-                </transition>
+                WASHER APP
             </v-flex>
             
 
@@ -66,30 +64,10 @@ export default {
     data() {
         return {
             clientname: $Clientdata['name'],
-            currentroute: '',
-            loading: window.loading
+            
         }
     },
-    methods: {
-        setCurrentRoute(){
-            let action = this.$route.path
-            let res = action.match(/\/([^\/]*)/)
-            this.currentroute = res[1]
-
-        }
-    },
-    watch: {
-        '$route' (to, from) {
-            // react to route changes...
-            // console.log('re-routed to: ',to.path)
-            this.barcode = to.params.barcode
-
-            this.setCurrentRoute()
-        }
-    },
-    mounted() {
-        this.setCurrentRoute()
-    }
+   
 }
 
 </script>

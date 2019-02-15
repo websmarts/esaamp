@@ -11,6 +11,9 @@ const $Barcodes = @json($barcodes);
 
 </script>
  
-  
-<script src="{{ asset('js/app.js') }}"></script>
+@if(!empty($role)) 
+    <script src="{{ asset('js/'. $role . '_app.js') }}"></script>
+@endif
+
+
 @endsection

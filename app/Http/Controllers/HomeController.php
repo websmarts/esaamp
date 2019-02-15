@@ -33,16 +33,28 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        $this->user = $request->user();
+        // $this->user = $request->user();
 
-    
+        // dd($this->user->hasRole('user'));
+
+        // Display the correct app for the user role
+        // Role options - manager, washer
+
+        $role = 'manager'; // default
+
+        if (auth()->user()->hasRole('washer')) {
+            $role = 'washer';
+        }
+        
+
+
 
         $clientdata = $this->clientdata();
         $refdata = $this->referenceData();
         $barcodes = $this->getBarcodes();
 
 
-        return view('home',compact('clientdata','refdata','barcodes'));
+        return view('home',compact('clientdata','refdata','barcodes','role'));
     }
 
     protected function clientdata()
@@ -80,7 +92,7 @@ class HomeController extends Controller
     
     protected function getAssetTypes()
     {
-        $col =  AssetType::where('client_id',Auth::user()->client_id)->get();
+        $col =  AssetType::where('client_id',auth()->user()->client_id)->get();
 
         return $col->keyBy('id')->toArray();
     }
@@ -88,7 +100,7 @@ class HomeController extends Controller
     protected function getBarcodes()
     {
         $barcodes = Asset::select('barcode')
-                    ->where('client_id',$this->user->client_id)
+                    ->where('client_id',auth()->user()->client_id)
                     ->get()
                     ->pluck('barcode')
                     ->all();

@@ -57,7 +57,7 @@ export default class {
       case 500:
         // do something when your server exploded
         alert('Server returned 500 error, it may just be busy, close this alert to try again')
-        return axios.request(error.config);// re-issue request
+        //return axios.request(error.config);// re-issue request
         break;
 
       case 405:

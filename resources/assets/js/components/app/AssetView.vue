@@ -1,7 +1,7 @@
 <template>
 <v-layout justify-center>
     
-    <v-flex xs12 sm10 md8 lg6>
+    <v-flex xs12 sm11 md7>
         <v-tabs
             v-model="active"
             color="green lighten-2"
@@ -28,7 +28,7 @@
                 <v-card flat>
                     
                         <v-card-text>
-                            <div class="display-1">View/Edit Asset</div>
+                            <div class="display-1">View/Edit {{ assettypeName }} Asset</div>
                             <asset-edit-form :asset="asset"></asset-edit-form>
                         </v-card-text>
                     
@@ -72,7 +72,15 @@ export default {
     computed: {
         xhr_loading() {
             return this.store.isActive()
+        },
+
+        assettypeName() {
+            if(typeof(this.asset.assettype) != "undefined"){
+                return '( ' + this.asset.assettype.name + ' )'
+            }
         }
+
+    
     },
     methods: {
         addAudit(audit){
@@ -80,10 +88,14 @@ export default {
             this.asset.audits.push(audit)
         },
         load () {
+
             
             this.$api.get('/api/asset/'+ this.barcode,(status,data) => {
                 this.asset = Object.assign({},data.asset)
             })
+            
+            
+            
             
 
         },
@@ -96,9 +108,11 @@ export default {
             // react to route changes...
             // console.log('re-routed to: ',to.params.barcode)
             this.barcode = to.params.barcode
+            if(typeof(this.barcode) !== 'undefined'){
+                this.load()
+            }
 
-
-            this.load()
+            
         }
     }
 }

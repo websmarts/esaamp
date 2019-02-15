@@ -11,16 +11,24 @@ class SitesTableSeeder extends Seeder
      */
     public function run()
     {
-        $sites = ['Site 1','Site 2','Site 3'];
-        $clients = [1,2,3];
-        foreach($clients as $clientId){
-            foreach($sites as $site){
-                Site::create([
-                    'client_id'=> $clientId,
-                    'name'=>$site
-                ]);
-            }
+        $sites[1] = ['Alfred','Caulfield','Sandringham'];
+
+        foreach($sites[1] as $site){
+            Site::create([
+                'client_id'=> 1,
+                'name'=>$site
+            ]);
         }
+
+        // $clients = [1,2,3];
+        // foreach($clients as $clientId){
+        //     foreach($sites as $site){
+        //         Site::create([
+        //             'client_id'=> $clientId,
+        //             'name'=>$site
+        //         ]);
+        //     }
+        // }
         
         
         

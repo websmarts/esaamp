@@ -47,7 +47,7 @@ class AssetTypesTableSeeder extends Seeder
             [
                 'name'=> 'cost_price',
                 'input'=>'v-text-field',
-                'label'=> 'Cost price',
+                'label'=> 'Cost price ($)',
                 
                             
             ],
@@ -65,12 +65,7 @@ class AssetTypesTableSeeder extends Seeder
                 'label' =>'Condition'
             ],
 
-            [
-                'name'=> 'quarantined',
-                'input'=>'v-switch',
-                'label'=> 'Quarantined',   
-                
-            ],
+            
             [
                 'name'=> 'retire_from_service',
                 'input'=>'v-switch',
@@ -83,6 +78,15 @@ class AssetTypesTableSeeder extends Seeder
                 'landscape'=>false,
                 'reactive'=>true,
                 'label'=> 'Commissioned date',
+                
+                
+            ],
+            [
+                'name'=> 'next_audit_due',
+                'input'=>'v-date-picker',
+                'landscape'=>false,
+                'reactive'=>true,
+                'label'=> 'Next audit due',
                 
                 
             ]
@@ -129,13 +133,15 @@ class AssetTypesTableSeeder extends Seeder
                 'label' =>'Condition',
                 'rules'=>  'required'
             ],
-
             [
-                'name'=> 'quarantined',
-                'input'=>'v-switch',
-                'label'=> 'Quarantined',   
-                
+                'name'=> 'next_audit_due',
+                'input'=>'v-date-picker',
+                'landscape'=>false,
+                'reactive'=>true,
+                'label'=> 'Next audit due',
             ],
+
+            
             [
                 'name'=> 'retire_from_service',
                 'input'=>'v-switch',
@@ -151,10 +157,28 @@ class AssetTypesTableSeeder extends Seeder
         // Base metaschema is empty
         $metaSchema =[];
 
-        // Create basic asset type
+        // Create basic asset type for Hoists
         AssetType::create([
             'client_id'=>1 ,
-            'name' => 'Basic', 
+            'name' => 'Hoist', 
+            'dataschema' => $formSchema, 
+            'metaschema' => $metaSchema,
+            'auditschema'=> $auditSchema // TODO need to update to real auditschema 
+            ]);
+
+        // Create basic asset type for Restriants
+        // metaschema for restraints type
+        $metaSchema = [
+            
+            ['name'=>'current_location','label'=>'Current location','input'=>'v-text-field','validate'=>''],
+            ['name'=>'comments','label'=>'Comments','input'=>'v-text-field','validate'=>''],
+            ['name'=>'date_out','label'=>'Date out','input'=>'v-date-picker','validate'=>''],
+
+        ];
+
+        AssetType::create([
+            'client_id'=>1 ,
+            'name' => 'Restraint', 
             'dataschema' => $formSchema, 
             'metaschema' => $metaSchema,
             'auditschema'=> $auditSchema // TODO need to update to real auditschema 
@@ -172,7 +196,9 @@ class AssetTypesTableSeeder extends Seeder
         $metaSchema = [
             
             ['name'=>'last_washed_date','label'=>'Last wash date','input'=>'v-date-picker','validate'=>''],
-            ['name'=>'wash_count','label'=>'Wash count','input'=>'v-text-field','validate'=>'']
+            ['name'=>'wash_count','label'=>'Wash count','input'=>'v-text-field','validate'=>''],
+            ['name'=>'quarantined','label'=>'Quarantined','input'=>'v-switch','validate'=>''],
+
         ];
 
 

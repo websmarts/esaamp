@@ -1,52 +1,67 @@
 <template>
 
-      <v-card dark flat  color="grey lighten-2">
+      <v-card dark flat  color="grey" >
           <v-layout row align-center>
-              <v-flex xs4 >
-                        
-                        <v-autocomplete
-                            :loading="loading"
-                            :items="barcodes"
-                            
-                            v-model="barcode"
-                            @change="assetSelected"
-                            clearable
-                            cache-items
-                            light
-                            flat
-                            hide-details
-                            label="Enter barcode..."
-                            solo
-                        ></v-autocomplete>
-                </v-flex>
-                <v-flex ><v-btn :disabled="!barcode" color="blue darken-2" @click="view">
-                    View<v-icon dark right v-show="btn_selected.view">check_circle</v-icon>
-                    </v-btn></v-flex>
-
-                <v-flex >
-                    <v-menu offset-y>
-                    <v-btn slot="activator"  color="blue darken-2">
-                        Add<v-icon dark right v-show="btn_selected.add">check_circle</v-icon>
-                        </v-btn>
-
-                        <v-list>
-                            <v-list-tile
-                            v-for="(item, index) in assetTypes"
-                            :key="index"
-                            @click="add(item.id)"
-                            >
-                            <v-list-tile-title>{{ item.name }}</v-list-tile-title>
-                            </v-list-tile>
-                        </v-list>
-
-                    </v-menu>
-                </v-flex>
-
-
-                <v-flex ><v-btn color="blue darken-2" @click="reports">
-                    Reports<v-icon dark right v-show="btn_selected.reports">check_circle</v-icon>
+                <v-flex xs3 style="text-align:left;"><v-btn color="blue darken-2" @click="reports" style=" height:80px">
+                    Dashboard<v-icon dark right v-show="btn_selected.reports">check_circle</v-icon>
                     </v-btn>
                 </v-flex>
+
+                 
+                <v-flex xs9>
+                    <v-card dark flat  color="grey darken-2" > 
+                        <v-layout row align-center>
+                            <v-flex style="padding-left:30px">
+                                <span style="color: #ddd; font-size:120%"> Asset &nbsp;</span>
+                            </v-flex> 
+                        </v-layout>
+                        <v-layout row align-center style="padding-bottom:10px">
+                            
+                            <v-flex xs4 style="padding-left:30px">
+                                    
+                                    <v-autocomplete
+                                        :loading="loading"
+                                        :items="barcodes"
+                                        
+                                        v-model="barcode"
+                                        @change="assetSelected"
+                                        clearable
+                                        cache-items
+                                        light
+                                        flat
+                                        hide-details
+                                        label="Enter Asset ID..."
+                                        solo
+                                    ></v-autocomplete>
+                            </v-flex>
+                            <v-flex ><v-btn :disabled="!barcode" color="blue darken-2" @click="view">
+                                Select<v-icon dark right v-show="btn_selected.view">check_circle</v-icon>
+                                </v-btn></v-flex>
+
+                            <v-flex >
+                                <v-menu offset-y>
+                                <v-btn slot="activator"  color="blue darken-2">
+                                    Add<v-icon dark right v-show="btn_selected.add">check_circle</v-icon>
+                                    </v-btn>
+
+                                    <v-list>
+                                        <v-list-tile
+                                        v-for="(item, index) in assetTypes"
+                                        :key="index"
+                                        @click="add(item.id)"
+                                        >
+                                        <v-list-tile-title>{{ item.name }}</v-list-tile-title>
+                                        </v-list-tile>
+                                    </v-list>
+
+                                </v-menu>
+                            </v-flex>
+                        </v-layout>
+                    </v-card>
+                </v-flex>
+
+
+                
           </v-layout>
         </v-card>
                         
@@ -102,7 +117,10 @@ export default {
          this.view();
         },
         view() {
-            this.$router.push('/view/'+this.barcode);
+            if(typeof(this.barcode) != "undefined") {
+                this.$router.push('/view/'+this.barcode);
+            }
+            
             //this.updateButtonSelectIndicators('select')
             
         },

@@ -1631,107 +1631,6 @@ module.exports = {
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/app/App.vue":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    data: function data() {
-        return {
-            clientname: $Clientdata['name'],
-            currentroute: '',
-            loading: window.loading
-        };
-    },
-
-    methods: {
-        setCurrentRoute: function setCurrentRoute() {
-            var action = this.$route.path;
-            var res = action.match(/\/([^\/]*)/);
-            this.currentroute = res[1];
-        }
-    },
-    watch: {
-        '$route': function $route(to, from) {
-            // react to route changes...
-            // console.log('re-routed to: ',to.path)
-            this.barcode = to.params.barcode;
-
-            this.setCurrentRoute();
-        }
-    },
-    mounted: function mounted() {
-        this.setCurrentRoute();
-    }
-});
-
-/***/ }),
-
 /***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/app/AssetAdd.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2690,7 +2589,10 @@ __WEBPACK_IMPORTED_MODULE_0__lib_eventbus_js__["a" /* EventBus */].$on('new_barc
             this.view();
         },
         view: function view() {
-            this.$router.push('/view/' + this.barcode);
+            if (typeof this.barcode != "undefined") {
+                this.$router.push('/view/' + this.barcode);
+            }
+
             //this.updateButtonSelectIndicators('select')
         },
         add: function add(assetTypeId) {
@@ -2799,6 +2701,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     computed: {
         xhr_loading: function xhr_loading() {
             return this.store.isActive();
+        },
+        assettypeName: function assettypeName() {
+            if (typeof this.asset.assettype != "undefined") {
+                return '( ' + this.asset.assettype.name + ' )';
+            }
         }
     },
     methods: {
@@ -2823,8 +2730,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             // react to route changes...
             // console.log('re-routed to: ',to.params.barcode)
             this.barcode = to.params.barcode;
-
-            this.load();
+            if (typeof this.barcode !== 'undefined') {
+                this.load();
+            }
         }
     }
 });
@@ -2888,6 +2796,107 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 value: 'meta.condition'
             }]
         };
+    }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/app/ManagerApp.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            clientname: $Clientdata['name'],
+            currentroute: '',
+            loading: window.loading
+        };
+    },
+
+    methods: {
+        setCurrentRoute: function setCurrentRoute() {
+            var action = this.$route.path;
+            var res = action.match(/\/([^\/]*)/);
+            this.currentroute = res[1];
+        }
+    },
+    watch: {
+        '$route': function $route(to, from) {
+            // react to route changes...
+            // console.log('re-routed to: ',to.path)
+            this.barcode = to.params.barcode;
+
+            this.setCurrentRoute();
+        }
+    },
+    mounted: function mounted() {
+        this.setCurrentRoute();
     }
 });
 
@@ -37730,6 +37739,158 @@ if (false) {
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-3eb9c0f4\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/app/ManagerApp.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "v-app",
+    { attrs: { id: "inspire" } },
+    [
+      _vm._v("\n    " + _vm._s(_vm.clientname) + "\n\n    \n    "),
+      _c(
+        "v-toolbar",
+        {
+          attrs: {
+            color: "primary",
+            height: "85",
+            dark: "",
+            fixed: "",
+            app: ""
+          }
+        },
+        [
+          _c("v-toolbar-title", [
+            _c("img", {
+              attrs: { src: "images/logo-with-tick-white.png", height: "45" }
+            }),
+            _c("br"),
+            _vm._v(" "),
+            _c("span", { staticStyle: { "font-size": "13px" } }, [
+              _vm._v("Equipment Safety Audit & Asset Management Portal")
+            ])
+          ]),
+          _vm._v(" "),
+          _c("v-spacer"),
+          _vm._v(" "),
+          _c("v-toolbar-title", { staticClass: "title" }, [
+            _vm._v(_vm._s(_vm.clientname) + " " + _vm._s(_vm.loading))
+          ]),
+          _vm._v(" "),
+          _c("v-spacer"),
+          _vm._v(" "),
+          _c(
+            "v-toolbar-items",
+            { staticClass: "hidden-sm-and-down" },
+            [
+              _c("v-btn", { attrs: { flat: "" } }, [
+                _c(
+                  "a",
+                  {
+                    staticStyle: { color: "white", "text-decoration": "none" },
+                    attrs: { href: "/logout" }
+                  },
+                  [_vm._v("Logout")]
+                )
+              ])
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-content",
+        [
+          _c(
+            "v-toolbar",
+            {
+              attrs: {
+                tile: "",
+                dark: "",
+                flat: "",
+                color: "grey",
+                height: "94"
+              }
+            },
+            [
+              _c(
+                "v-layout",
+                {
+                  attrs: { row: "", "align-center": "", "justify-center": "" }
+                },
+                [
+                  _c(
+                    "v-flex",
+                    { attrs: { xs12: "", sm11: "", md7: "" } },
+                    [
+                      _c("asset-toolbar", {
+                        attrs: { currentroute: _vm.currentroute }
+                      })
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-container",
+            { attrs: { fluid: "" } },
+            [
+              _c(
+                "v-layout",
+                { attrs: { row: "", "align-center": "" } },
+                [
+                  _c(
+                    "v-flex",
+                    { attrs: { "text-xs-center": "" } },
+                    [
+                      _c(
+                        "transition",
+                        { attrs: { name: "fade" } },
+                        [_c("router-view", { key: _vm.$route.params.barcode })],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("v-footer", { attrs: { color: "primary", app: "" } }, [
+        _c("span", { staticClass: "white--text" }, [_vm._v("© 2018")])
+      ])
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-3eb9c0f4", module.exports)
+  }
+}
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-412978bd\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/app/AssetToolbar.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -38060,7 +38221,11 @@ var render = function() {
                         "v-card-text",
                         [
                           _c("div", { staticClass: "display-1" }, [
-                            _vm._v("View/Edit Asset")
+                            _vm._v(
+                              "View/Edit " +
+                                _vm._s(_vm.assettypeName) +
+                                " Asset"
+                            )
                           ]),
                           _vm._v(" "),
                           _c("asset-edit-form", { attrs: { asset: _vm.asset } })
@@ -38125,158 +38290,6 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-63b6a2d3", module.exports)
-  }
-}
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-667a21bf\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/app/App.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "v-app",
-    { attrs: { id: "inspire" } },
-    [
-      _vm._v("\n    " + _vm._s(_vm.clientname) + "\n\n    \n    "),
-      _c(
-        "v-toolbar",
-        {
-          attrs: {
-            color: "primary",
-            height: "85",
-            dark: "",
-            fixed: "",
-            app: ""
-          }
-        },
-        [
-          _c("v-toolbar-title", [
-            _c("img", {
-              attrs: { src: "images/logo-with-tick-white.png", height: "45" }
-            }),
-            _c("br"),
-            _vm._v(" "),
-            _c("span", { staticStyle: { "font-size": "13px" } }, [
-              _vm._v("Equipment Safety Audit & Asset Management Portal")
-            ])
-          ]),
-          _vm._v(" "),
-          _c("v-spacer"),
-          _vm._v(" "),
-          _c("v-toolbar-title", { staticClass: "title" }, [
-            _vm._v(_vm._s(_vm.clientname) + " " + _vm._s(_vm.loading))
-          ]),
-          _vm._v(" "),
-          _c("v-spacer"),
-          _vm._v(" "),
-          _c(
-            "v-toolbar-items",
-            { staticClass: "hidden-sm-and-down" },
-            [
-              _c("v-btn", { attrs: { flat: "" } }, [
-                _c(
-                  "a",
-                  {
-                    staticStyle: { color: "white", "text-decoration": "none" },
-                    attrs: { href: "/logout" }
-                  },
-                  [_vm._v("Logout")]
-                )
-              ])
-            ],
-            1
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "v-content",
-        [
-          _c(
-            "v-toolbar",
-            {
-              attrs: {
-                tile: "",
-                dark: "",
-                flat: "",
-                color: "grey",
-                height: "94"
-              }
-            },
-            [
-              _c(
-                "v-layout",
-                {
-                  attrs: { row: "", "align-center": "", "justify-center": "" }
-                },
-                [
-                  _c(
-                    "v-flex",
-                    { attrs: { xs12: "", sm11: "", md7: "" } },
-                    [
-                      _c("asset-toolbar", {
-                        attrs: { currentroute: _vm.currentroute }
-                      })
-                    ],
-                    1
-                  )
-                ],
-                1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "v-container",
-            { attrs: { fluid: "" } },
-            [
-              _c(
-                "v-layout",
-                { attrs: { row: "", "align-center": "" } },
-                [
-                  _c(
-                    "v-flex",
-                    { attrs: { "text-xs-center": "" } },
-                    [
-                      _c(
-                        "transition",
-                        { attrs: { name: "fade" } },
-                        [_c("router-view", { key: _vm.$route.params.barcode })],
-                        1
-                      )
-                    ],
-                    1
-                  )
-                ],
-                1
-              )
-            ],
-            1
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c("v-footer", { attrs: { color: "primary", app: "" } }, [
-        _c("span", { staticClass: "white--text" }, [_vm._v("© 2018")])
-      ])
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-667a21bf", module.exports)
   }
 }
 
@@ -75643,94 +75656,6 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ "./resources/assets/js/app.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__("./node_modules/vue/dist/vue.common.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__("./node_modules/vue-router/dist/vue-router.esm.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuetify__ = __webpack_require__("./node_modules/vuetify/dist/vuetify.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuetify___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vuetify__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vuetify_es5_util_colors__ = __webpack_require__("./node_modules/vuetify/es5/util/colors.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vuetify_es5_util_colors___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_vuetify_es5_util_colors__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_app_lib_apiServiceClass_js__ = __webpack_require__("./resources/assets/js/components/app/lib/apiServiceClass.js");
-
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
-
-__webpack_require__("./resources/assets/js/bootstrap.js");
-
-
-
-
-
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]);
-
-// Helpers
-
-//import apiService from './components/app/lib/apiService';
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_2_vuetify___default.a, {
-    theme: {
-        primary: __WEBPACK_IMPORTED_MODULE_3_vuetify_es5_util_colors___default.a.indigo.darken1, // #E53935
-        secondary: __WEBPACK_IMPORTED_MODULE_3_vuetify_es5_util_colors___default.a.indigo.lighten4, // #FFCDD2
-        accent: __WEBPACK_IMPORTED_MODULE_3_vuetify_es5_util_colors___default.a.indigo.base // #3F51B5
-    }
-});
-
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('asset-toolbar', __webpack_require__("./resources/assets/js/components/app/AssetToolbar.vue"));
-
-var Dashboard = { template: '<div>Dashboard</div>' };
-var AddAsset = __webpack_require__("./resources/assets/js/components/app/AssetAdd.vue");
-var ViewAsset = __webpack_require__("./resources/assets/js/components/app/AssetView.vue");
-var Reports = { template: '<div>Reports</div>' };
-
-var assetEditForm = __webpack_require__("./resources/assets/js/components/app/AssetEditForm.vue");
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('assetEditForm', assetEditForm);
-
-var assetAudit = __webpack_require__("./resources/assets/js/components/app/AssetAudit.vue");
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('assetAudit', assetAudit);
-
-var auditHistory = __webpack_require__("./resources/assets/js/components/app/AuditHistory.vue");
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('auditHistory', auditHistory);
-
-var routes = [{ path: '/', component: Dashboard }, { path: '/view/:barcode', component: ViewAsset }, { path: '/add/:assettype', component: AddAsset }, { path: '/reports', component: Reports }];
-
-var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
-    routes: routes
-
-});
-
-var App = __webpack_require__("./resources/assets/js/components/app/App.vue");
-
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.config.productionTip = false;
-
-// import api from './components/app/lib/apiService.js';
-
-
-var api = new __WEBPACK_IMPORTED_MODULE_4__components_app_lib_apiServiceClass_js__["a" /* default */]();
-
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.prototype.$api = api;
-
-new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
-    el: '#app',
-    router: router,
-    template: '<App/>',
-    components: { App: App },
-    data: function data() {
-        return {
-            clientname: $Clientdata.name
-
-        };
-    }
-});
-
-/***/ }),
-
 /***/ "./resources/assets/js/bootstrap.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -75787,54 +75712,6 @@ window.moment = __webpack_require__("./node_modules/moment/moment.js");
 //     defaultIconPack: 'fas'
 
 // });
-
-/***/ }),
-
-/***/ "./resources/assets/js/components/app/App.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
-/* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/app/App.vue")
-/* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-667a21bf\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/app/App.vue")
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources\\assets\\js\\components\\app\\App.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-667a21bf", Component.options)
-  } else {
-    hotAPI.reload("data-v-667a21bf", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
 
 /***/ }),
 
@@ -76115,6 +75992,54 @@ if (false) {(function () {
     hotAPI.createRecord("data-v-1badbb8b", Component.options)
   } else {
     hotAPI.reload("data-v-1badbb8b", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/app/ManagerApp.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/app/ManagerApp.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-3eb9c0f4\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/app/ManagerApp.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\app\\ManagerApp.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-3eb9c0f4", Component.options)
+  } else {
+    hotAPI.reload("data-v-3eb9c0f4", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -76508,6 +76433,94 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 /***/ }),
 
+/***/ "./resources/assets/js/manager_app.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__("./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__("./node_modules/vue-router/dist/vue-router.esm.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuetify__ = __webpack_require__("./node_modules/vuetify/dist/vuetify.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuetify___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vuetify__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vuetify_es5_util_colors__ = __webpack_require__("./node_modules/vuetify/es5/util/colors.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vuetify_es5_util_colors___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_vuetify_es5_util_colors__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_app_lib_apiServiceClass_js__ = __webpack_require__("./resources/assets/js/components/app/lib/apiServiceClass.js");
+
+/**
+ * First we will load all of this project's JavaScript dependencies which
+ * includes Vue and other libraries. It is a great starting point when
+ * building robust, powerful web applications using Vue and Laravel.
+ */
+
+__webpack_require__("./resources/assets/js/bootstrap.js");
+
+
+
+
+
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]);
+
+// Helpers
+
+//import apiService from './components/app/lib/apiService';
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_2_vuetify___default.a, {
+    theme: {
+        primary: __WEBPACK_IMPORTED_MODULE_3_vuetify_es5_util_colors___default.a.indigo.darken1, // #E53935
+        secondary: __WEBPACK_IMPORTED_MODULE_3_vuetify_es5_util_colors___default.a.indigo.lighten4, // #FFCDD2
+        accent: __WEBPACK_IMPORTED_MODULE_3_vuetify_es5_util_colors___default.a.indigo.base // #3F51B5
+    }
+});
+
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('asset-toolbar', __webpack_require__("./resources/assets/js/components/app/AssetToolbar.vue"));
+
+var Dashboard = { template: '<div>Dashboard with Reports and User Mgt</div>' };
+var AddAsset = __webpack_require__("./resources/assets/js/components/app/AssetAdd.vue");
+var ViewAsset = __webpack_require__("./resources/assets/js/components/app/AssetView.vue");
+var Reports = { template: '<div>Reports & Users mgt</div>' };
+
+var assetEditForm = __webpack_require__("./resources/assets/js/components/app/AssetEditForm.vue");
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('assetEditForm', assetEditForm);
+
+var assetAudit = __webpack_require__("./resources/assets/js/components/app/AssetAudit.vue");
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('assetAudit', assetAudit);
+
+var auditHistory = __webpack_require__("./resources/assets/js/components/app/AuditHistory.vue");
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('auditHistory', auditHistory);
+
+var routes = [{ path: '/', component: Dashboard }, { path: '/view/:barcode', component: ViewAsset }, { path: '/add/:assettype', component: AddAsset }, { path: '/reports', component: Reports }];
+
+var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
+    routes: routes
+
+});
+
+var App = __webpack_require__("./resources/assets/js/components/app/ManagerApp.vue");
+
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.config.productionTip = false;
+
+// import api from './components/app/lib/apiService.js';
+
+
+var api = new __WEBPACK_IMPORTED_MODULE_4__components_app_lib_apiServiceClass_js__["a" /* default */]();
+
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.prototype.$api = api;
+
+new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
+    el: '#app',
+    router: router,
+    template: '<App/>',
+    components: { App: App },
+    data: function data() {
+        return {
+            clientname: $Clientdata.name
+
+        };
+    }
+});
+
+/***/ }),
+
 /***/ "./resources/assets/sass/app.scss":
 /***/ (function(module, exports) {
 
@@ -76518,7 +76531,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 /***/ 0:
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__("./resources/assets/js/app.js");
+__webpack_require__("./resources/assets/js/manager_app.js");
 module.exports = __webpack_require__("./resources/assets/sass/app.scss");
 
 

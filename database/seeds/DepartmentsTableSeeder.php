@@ -12,21 +12,34 @@ class DepartmentsTableSeeder extends Seeder
      */
     public function run()
     {
-        $departments =['ICU','Physio','2 West','AC','2F'];
-        $clients = [1,2,3];
+        
+        $departments = \DB::table('assman_departments')->get();
 
-        $sites = Site::all();
-
-        foreach($sites as $site)  {
-            foreach($departments as $department){
-                Department::create([
-                    
-                    'site_id' => $site->id,
-                    'name' => $department
-                ]);
-            }
+        foreach ($departments as $department) {
+            
+            Department::create([             
+                'site_id' => $department->site_id,
+                'name' => $department->name
+            ]);
 
         }
+        
+        
+        // $departments =['ICU','Physio','2 West','AC','2F'];
+        // $clients = [1,2,3];
+
+        // $sites = Site::all();
+
+        // foreach($sites as $site)  {
+        //     foreach($departments as $department){
+        //         Department::create([
+                    
+        //             'site_id' => $site->id,
+        //             'name' => $department
+        //         ]);
+        //     }
+
+        // }
 
         
     }

@@ -23,14 +23,14 @@ class CreateAssetsTable extends Migration
             $table->string('size')->nullable();
             $table->float('cost_price')->nullable();
             $table->integer('site_id')->unsigned();
-            $table->integer('department_id')->unsigned();
+            $table->integer('department_id')->unsigned()->nullable();
             $table->string('cost_centre')->nullable();
 
             $table->integer('asset_type_id')->unsigned();
             $table->json('meta')->nullable();
             
             $table->enum('condition', ['Excellent', 'Good', 'Satisfactory','Unsatisfactory'])->nullable();
-            $table->tinyInteger('quarantined')->default(0);
+            //$table->tinyInteger('quarantined')->default(0);
             $table->tinyInteger('retire_from_service')->default(0);
 
             $table->date('commissioned_date')->nullable();

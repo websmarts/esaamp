@@ -12,24 +12,24 @@ class ClientsTableSeeder extends Seeder
     public function run()
     {
         Client::create( [
-            'name'=>'Alfred Hospital',
+            'name'=>'Alfred Health',
             'status'=>'active',
             'timezone'=>'Australia/Melbourne'
 
         ]);
 
-        Client::create( [
-            'name'=>'Caulfield Hospital',
-            'status'=>'active',
-            'timezone'=>'Australia/Melbourne'
+        // Client::create( [
+        //     'name'=>'Caulfield Hospital',
+        //     'status'=>'active',
+        //     'timezone'=>'Australia/Melbourne'
 
-        ]);
+        // ]);
 
-        Client::create( [
-            'name'=>'Sandringham Hospital',
-            'status'=>'active',
-            'timezone'=>'Australia/Melbourne'
+        // Client::create( [
+        //     'name'=>'Sandringham Hospital',
+        //     'status'=>'active',
+        //     'timezone'=>'Australia/Melbourne'
 
-        ]);
+        // ]);
     }
 }
