@@ -178,6 +178,8 @@ export default {
         },
         
         submit () {
+
+
             if (this.$refs.auditform.validate()) {
 
             let self=this

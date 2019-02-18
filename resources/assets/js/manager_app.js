@@ -36,7 +36,7 @@ Vue.component(
 const Dashboard = {template:'<div>Dashboard with Reports and User Mgt</div>'};
 const AddAsset = require('./components/app/AssetAdd.vue');
 const ViewAsset = require('./components/app/AssetView.vue');
-const Reports = {template:'<div>Reports & Users mgt</div>'};
+const Reports = require('./components/app/ReportsIndex.vue');
 
 const assetEditForm = require('./components/app/AssetEditForm.vue');
 Vue.component('assetEditForm',assetEditForm);
@@ -47,9 +47,12 @@ Vue.component('assetAudit',assetAudit);
 const auditHistory = require('./components/app/AuditHistory.vue');
 Vue.component('auditHistory',auditHistory);
 
+const auditsDue = require('./components/app/AuditsDue.vue');
+Vue.component('auditsDue', auditsDue);
+
 const routes = [
     { path: '/', component: Dashboard },
-    { path: '/view/:barcode', component: ViewAsset },
+    { path: '/view/:assetid', component: ViewAsset },
     { path: '/add/:assettype', component: AddAsset },
     { path: '/reports', component: Reports }
   ];

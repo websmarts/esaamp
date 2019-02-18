@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Client;
-
-
-use Illuminate\Http\Request;
-use App\AssetType;
-use Illuminate\Support\Facades\Auth;
 use App\Asset;
+
+
+use App\Client;
+use App\AssetType;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -32,29 +33,25 @@ class HomeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {
-        // $this->user = $request->user();
+    {  
 
-        // dd($this->user->hasRole('user'));
-
-        // Display the correct app for the user role
-        // Role options - manager, washer
-
-        $role = 'manager'; // default
-
-        if (auth()->user()->hasRole('washer')) {
-            $role = 'washer';
-        }
-        
-
-
-
+        $user = auth()->user();
         $clientdata = $this->clientdata();
         $refdata = $this->referenceData();
-        $barcodes = $this->getBarcodes();
+        $assetids = $this->getAssetIds();
 
 
-        return view('home',compact('clientdata','refdata','barcodes','role'));
+        // $cutoffDate = Carbon::now();
+        // $auditsdue = Asset::with('assettype:id,name')
+        //                 ->select('asset_id','asset_type_id','next_audit_due')
+        //                 ->whereNotNull('next_audit_due')
+        //                 ->where('next_audit_due','<', $cutoffDate)
+        //                 ->limit(10)->get();
+
+        // dd($auditsdue);
+
+
+        return view('home',compact('clientdata','refdata','assetids','user'));
     }
 
     protected function clientdata()
@@ -97,14 +94,14 @@ class HomeController extends Controller
         return $col->keyBy('id')->toArray();
     }
 
-    protected function getBarcodes()
+    protected function getAssetIds()
     {
-        $barcodes = Asset::select('barcode')
+        $assetIds = Asset::select('asset_id')
                     ->where('client_id',auth()->user()->client_id)
                     ->get()
-                    ->pluck('barcode')
+                    ->pluck('asset_id')
                     ->all();
 
-        return $barcodes;
+        return $assetIds;
     }
 }

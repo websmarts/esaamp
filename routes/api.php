@@ -23,14 +23,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group( ['middleware'=>['auth:api']], function(){
 
     Route::get('assets', 'Api\AssetsController@index');
-    Route::get('asset/{barcode}', 'Api\AssetsController@getAssetByBarcode');
+    Route::get('asset/{assetid}', 'Api\AssetsController@getAssetByAssetId');
     Route::post('asset/','Api\AssetsController@store');
-    Route::put('asset/{barcode}', 'Api\AssetsController@update');
+    Route::put('asset/{assetid}', 'Api\AssetsController@update');
 
     
-    Route::get('audit/{barcode}', 'Api\AuditController@getAssetByBarcode');
+    Route::get('audit/{assetid}', 'Api\AuditController@getAssetByAssetId');
     Route::post('audit/', 'Api\AuditController@store');
-    Route::put('audit/{barcode}', 'Api\AuditController@update');
+    Route::put('audit/{assetid}', 'Api\AuditController@update');
+
+    Route::get('audits/', 'Api\AuditsController@index');
 
 
 

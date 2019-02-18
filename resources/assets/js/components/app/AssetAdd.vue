@@ -9,7 +9,7 @@
                    
                    
                     <v-flex  xs12>
-                        <v-text-field label="Barcode" v-model="formdata.barcode" :rules="barcodeRules"></v-text-field>
+                        <v-text-field label="Asset ID" v-model="formdata.asset_id" :rules="assetRules"></v-text-field>
                     </v-flex>
                     <v-flex xs12>
                         <v-select
@@ -155,9 +155,9 @@ export default {
         return {
             
             assetTypeId: parseInt(this.$route.params.assettype),
-            barcodes: $Barcodes,
+            assetIds: $AssetIds,
 
-            barcodeRules: [this.barcodeRuleset],
+            assetRules: [this.assetIdRuleset],
 
             
         }
@@ -183,17 +183,17 @@ export default {
         }
     },
     methods: {
-        barcodeRuleset(v){
+        assetIdRuleset(v){
 
             
             if(!v) {
-                return 'Barcode is required'
+                return 'Asset ID is required'
             }
 
 
             // is unique
-            if(this.barcodes.includes(v)){
-                return 'This barcode is already in use, '
+            if(this.assetIds.includes(v)){
+                return 'This Asset ID is already in use, '
             }
             
             return true
@@ -205,7 +205,7 @@ export default {
 
             const data = this.formdata
 
-            const newBarcode = data.barcode
+            const newAssetId = data.asset_id
 
             data['asset_type_id'] = this.assetTypeId
             data['client_id'] = $Clientdata.id
@@ -213,6 +213,8 @@ export default {
             let self=this
 
             self.saving = true
+            
+            
 
             axios.post('/api/asset', data)
             .then(function (response) {
@@ -222,7 +224,7 @@ export default {
                  self.showSuccessAlertFlag = true
 
                  // emit event to update the list of barcodes
-                 EventBus.$emit('new_barcode',newBarcode)
+                 EventBus.$emit('newAssetId',newAssetId)
                 
                 
             })

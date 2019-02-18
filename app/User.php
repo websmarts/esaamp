@@ -20,7 +20,7 @@ class User extends Authenticatable
         'name', 
         'title',
         'email', 
-        'roles',
+        'role',
         'password',
 
     ];
@@ -40,12 +40,5 @@ class User extends Authenticatable
         'remember_token'
     ];
 
-    public function hasRole($role)
-    {
-        // dd([$this->roles,$role]);
-        $roles = explode(',' , $this->roles);
-        return in_array($role,$roles);
-        
-        // return strpos($this->roles,$role) !== false;
-    }
+    
 }

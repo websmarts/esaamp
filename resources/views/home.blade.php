@@ -3,16 +3,18 @@
 @section('content')
 <div id="app"></div>
 
+{{-- dump($user) --}}
+
 <script>
     // Global app data
-const $Refdata = @json($refdata);
-const $Clientdata = @json($clientdata);
-const $Barcodes = @json($barcodes);
-
+    const $User = @json($user);
+    const $Refdata = @json($refdata);
+    const $Clientdata = @json($clientdata);
+    const $AssetIds = @json($assetids);
 </script>
  
-@if(!empty($role)) 
-    <script src="{{ asset('js/'. $role . '_app.js') }}"></script>
+@if(!empty($user->role)) 
+    <script src="{{ asset('js/'. $user->role . '_app.js') }}"></script>
 @endif
 
 

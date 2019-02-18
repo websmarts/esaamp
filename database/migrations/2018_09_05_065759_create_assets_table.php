@@ -16,7 +16,7 @@ class CreateAssetsTable extends Migration
         Schema::create('assets', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('client_id')->unsigned();
-            $table->string('barcode');
+            $table->string('asset_id');
             $table->string('vendor')->nullable();
             $table->string('vendor_part_reference')->nullable();
             $table->string('description')->nullable();

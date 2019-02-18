@@ -6,7 +6,7 @@
                 <v-layout row wrap>
                    
                     <v-flex xs12>
-                        <v-text-field label="Barcode" :value="formdata.barcode" :rules="barcodeRules" ></v-text-field>
+                        <v-text-field label="Asset ID" :value="formdata.asset_id" :rules="assetIdRules" ></v-text-field>
                     </v-flex>
                     <v-flex xs12>
                         <v-select
@@ -164,7 +164,7 @@ export default {
                 // console.log('Form is valid and I am submitting it now with this data',this.data)
 
                 const formdata = this.formdata
-                const path = '/api/asset/'+ this.asset.barcode
+                const path = '/api/asset/'+ this.asset.asset_id
 
                 
 

@@ -1795,9 +1795,9 @@ var formValidator = __webpack_require__("./resources/assets/js/components/app/li
         return {
 
             assetTypeId: parseInt(this.$route.params.assettype),
-            barcodes: $Barcodes,
+            assetIds: $AssetIds,
 
-            barcodeRules: [this.barcodeRuleset]
+            assetRules: [this.assetIdRuleset]
 
         };
     },
@@ -1822,15 +1822,15 @@ var formValidator = __webpack_require__("./resources/assets/js/components/app/li
         }
     },
     methods: {
-        barcodeRuleset: function barcodeRuleset(v) {
+        assetIdRuleset: function assetIdRuleset(v) {
 
             if (!v) {
-                return 'Barcode is required';
+                return 'Asset ID is required';
             }
 
             // is unique
-            if (this.barcodes.includes(v)) {
-                return 'This barcode is already in use, ';
+            if (this.assetIds.includes(v)) {
+                return 'This Asset ID is already in use, ';
             }
 
             return true;
@@ -1842,7 +1842,7 @@ var formValidator = __webpack_require__("./resources/assets/js/components/app/li
 
                 var data = this.formdata;
 
-                var newBarcode = data.barcode;
+                var newAssetId = data.asset_id;
 
                 data['asset_type_id'] = this.assetTypeId;
                 data['client_id'] = $Clientdata.id;
@@ -1858,7 +1858,7 @@ var formValidator = __webpack_require__("./resources/assets/js/components/app/li
                     _self.showSuccessAlertFlag = true;
 
                     // emit event to update the list of barcodes
-                    __WEBPACK_IMPORTED_MODULE_0__lib_eventbus_js__["a" /* EventBus */].$emit('new_barcode', newBarcode);
+                    __WEBPACK_IMPORTED_MODULE_0__lib_eventbus_js__["a" /* EventBus */].$emit('newAssetId', newAssetId);
                 }).catch(function (error) {
                     // handle error
                     console.log(error);
@@ -2119,6 +2119,7 @@ var formValidator = __webpack_require__("./resources/assets/js/components/app/li
             this.formdata[field] = e;
         },
         submit: function submit() {
+
             if (this.$refs.auditform.validate()) {
 
                 var self = this;
@@ -2391,7 +2392,7 @@ var formValidator = __webpack_require__("./resources/assets/js/components/app/li
                 // console.log('Form is valid and I am submitting it now with this data',this.data)
 
                 var formdata = this.formdata;
-                var path = '/api/asset/' + this.asset.barcode;
+                var path = '/api/asset/' + this.asset.asset_id;
 
                 this.$api.put(path, formdata, function (status, data) {
                     _this.showSuccessMessage('Asset data has been saved');
@@ -2546,9 +2547,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-__WEBPACK_IMPORTED_MODULE_0__lib_eventbus_js__["a" /* EventBus */].$on('new_barcode', function (barcode) {
-    console.log('Toolbar says - Oh, that\'s nice we have a new barcode  ' + barcode + '! :)');
-    $Barcodes.push(barcode);
+__WEBPACK_IMPORTED_MODULE_0__lib_eventbus_js__["a" /* EventBus */].$on('newAssetId', function (newAssetId) {
+    console.log('Toolbar says - Oh, that\'s nice we have a new asset  ' + newAssetId + '! :)');
+    $AssetIds.push(newAssetId);
 });
 
 
@@ -2559,8 +2560,8 @@ __WEBPACK_IMPORTED_MODULE_0__lib_eventbus_js__["a" /* EventBus */].$on('new_barc
 
         return {
             store: __WEBPACK_IMPORTED_MODULE_1__lib_store_js__["a" /* default */],
-            barcode: this.$route.params.barcode,
-            barcodes: $Barcodes,
+            assetId: this.$route.params.assetid,
+            assetIds: $AssetIds,
 
             loading: false,
             isEditing: false,
@@ -2589,8 +2590,8 @@ __WEBPACK_IMPORTED_MODULE_0__lib_eventbus_js__["a" /* EventBus */].$on('new_barc
             this.view();
         },
         view: function view() {
-            if (typeof this.barcode != "undefined") {
-                this.$router.push('/view/' + this.barcode);
+            if (typeof this.assetId != "undefined") {
+                this.$router.push('/view/' + this.assetId);
             }
 
             //this.updateButtonSelectIndicators('select')
@@ -2693,7 +2694,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             active: null,
             edit: null,
             audit: null,
-            barcode: this.$route.params.barcode,
+            assetId: this.$route.params.assetid,
             asset: {}
         };
     },
@@ -2716,7 +2717,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         load: function load() {
             var _this = this;
 
-            this.$api.get('/api/asset/' + this.barcode, function (status, data) {
+            this.$api.get('/api/asset/' + this.assetId, function (status, data) {
                 _this.asset = Object.assign({}, data.asset);
             });
         }
@@ -2729,8 +2730,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         '$route': function $route(to, from) {
             // react to route changes...
             // console.log('re-routed to: ',to.params.barcode)
-            this.barcode = to.params.barcode;
-            if (typeof this.barcode !== 'undefined') {
+            this.assetId = to.params.assetid;
+            if (typeof this.assetId !== 'undefined') {
                 this.load();
             }
         }
@@ -2796,6 +2797,70 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 value: 'meta.condition'
             }]
         };
+    }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/app/AuditsDue.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            items: [],
+            headers: [{
+                text: 'Asset ID',
+                align: 'left',
+                sortable: true,
+                value: 'asset_id'
+            }, {
+                text: 'Asset type',
+                align: 'left',
+                sortable: true,
+                value: 'name'
+            }, {
+                text: 'Next audit due',
+                align: 'left',
+                sortable: true,
+                value: 'next_audit_due'
+            }]
+        };
+    },
+
+    methods: {
+        load: function load() {
+            var _this = this;
+
+            this.$api.get('/api/audits', function (status, data) {
+                _this.items = data.items;
+            });
+        }
+    },
+    mounted: function mounted() {
+        this.load();
     }
 });
 
@@ -2874,6 +2939,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             clientname: $Clientdata['name'],
+            user: $User,
             currentroute: '',
             loading: window.loading
         };
@@ -2890,7 +2956,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         '$route': function $route(to, from) {
             // react to route changes...
             // console.log('re-routed to: ',to.path)
-            this.barcode = to.params.barcode;
+            this.assetId = to.params.assetid;
 
             this.setCurrentRoute();
         }
@@ -37408,16 +37474,13 @@ var render = function() {
                         { attrs: { xs12: "" } },
                         [
                           _c("v-text-field", {
-                            attrs: {
-                              label: "Barcode",
-                              rules: _vm.barcodeRules
-                            },
+                            attrs: { label: "Asset ID", rules: _vm.assetRules },
                             model: {
-                              value: _vm.formdata.barcode,
+                              value: _vm.formdata.asset_id,
                               callback: function($$v) {
-                                _vm.$set(_vm.formdata, "barcode", $$v)
+                                _vm.$set(_vm.formdata, "asset_id", $$v)
                               },
-                              expression: "formdata.barcode"
+                              expression: "formdata.asset_id"
                             }
                           })
                         ],
@@ -37777,7 +37840,7 @@ var render = function() {
           _c("v-spacer"),
           _vm._v(" "),
           _c("v-toolbar-title", { staticClass: "title" }, [
-            _vm._v(_vm._s(_vm.clientname) + " " + _vm._s(_vm.loading))
+            _vm._v(_vm._s(_vm.clientname))
           ]),
           _vm._v(" "),
           _c("v-spacer"),
@@ -37793,7 +37856,11 @@ var render = function() {
                     staticStyle: { color: "white", "text-decoration": "none" },
                     attrs: { href: "/logout" }
                   },
-                  [_vm._v("Logout")]
+                  [
+                    _vm._v("Logout"),
+                    _c("br"),
+                    _c("small", [_vm._v(_vm._s(_vm.user.name))])
+                  ]
                 )
               ])
             ],
@@ -37856,7 +37923,7 @@ var render = function() {
                       _c(
                         "transition",
                         { attrs: { name: "fade" } },
-                        [_c("router-view", { key: _vm.$route.params.barcode })],
+                        [_c("router-view", { key: _vm.$route.params.assetid })],
                         1
                       )
                     ],
@@ -37990,7 +38057,7 @@ var render = function() {
                           _c("v-autocomplete", {
                             attrs: {
                               loading: _vm.loading,
-                              items: _vm.barcodes,
+                              items: _vm.assetIds,
                               clearable: "",
                               "cache-items": "",
                               light: "",
@@ -38001,11 +38068,11 @@ var render = function() {
                             },
                             on: { change: _vm.assetSelected },
                             model: {
-                              value: _vm.barcode,
+                              value: _vm.assetId,
                               callback: function($$v) {
-                                _vm.barcode = $$v
+                                _vm.assetId = $$v
                               },
-                              expression: "barcode"
+                              expression: "assetId"
                             }
                           })
                         ],
@@ -38019,7 +38086,7 @@ var render = function() {
                             "v-btn",
                             {
                               attrs: {
-                                disabled: !_vm.barcode,
+                                disabled: !_vm.assetId,
                                 color: "blue darken-2"
                               },
                               on: { click: _vm.view }
@@ -38198,7 +38265,7 @@ var render = function() {
                     padding: "5px"
                   }
                 },
-                [_vm._v(_vm._s(_vm.barcode))]
+                [_vm._v(_vm._s(_vm.assetId))]
               ),
               _vm._v(" "),
               _c("v-tab", { key: _vm.edit, attrs: { ripple: "" } }, [
@@ -38295,6 +38362,50 @@ if (false) {
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7736bf0c\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/app/AuditsDue.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("v-data-table", {
+    staticClass: "elevation-1",
+    attrs: { headers: _vm.headers, items: _vm.items },
+    scopedSlots: _vm._u([
+      {
+        key: "items",
+        fn: function(props) {
+          return [
+            _c("td", { staticClass: "text-xs-left" }, [
+              _vm._v(_vm._s(props.item.asset_id))
+            ]),
+            _vm._v(" "),
+            _c("td", { staticClass: "text-xs-left" }, [
+              _vm._v(_vm._s(props.item.assettype.name))
+            ]),
+            _vm._v(" "),
+            _c("td", { staticClass: "text-xs-left" }, [
+              _vm._v(_vm._s(props.item.next_audit_due))
+            ])
+          ]
+        }
+      }
+    ])
+  })
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-7736bf0c", module.exports)
+  }
+}
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7e817a9c\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/app/AssetEditForm.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -38331,9 +38442,9 @@ var render = function() {
                     [
                       _c("v-text-field", {
                         attrs: {
-                          label: "Barcode",
-                          value: _vm.formdata.barcode,
-                          rules: _vm.barcodeRules
+                          label: "Asset ID",
+                          value: _vm.formdata.asset_id,
+                          rules: _vm.assetIdRules
                         }
                       })
                     ],
@@ -38808,6 +38919,31 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-7efe5b9d", module.exports)
+  }
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-cb753eb6\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/app/ReportsIndex.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [_c("h3", [_vm._v("Reports Index")]), _vm._v(" "), _c("audits-due")],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-cb753eb6", module.exports)
   }
 }
 
@@ -76003,6 +76139,54 @@ module.exports = Component.exports
 
 /***/ }),
 
+/***/ "./resources/assets/js/components/app/AuditsDue.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/app/AuditsDue.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7736bf0c\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/app/AuditsDue.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\app\\AuditsDue.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-7736bf0c", Component.options)
+  } else {
+    hotAPI.reload("data-v-7736bf0c", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
 /***/ "./resources/assets/js/components/app/ManagerApp.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -76040,6 +76224,54 @@ if (false) {(function () {
     hotAPI.createRecord("data-v-3eb9c0f4", Component.options)
   } else {
     hotAPI.reload("data-v-3eb9c0f4", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/app/ReportsIndex.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = null
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-cb753eb6\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/app/ReportsIndex.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\app\\ReportsIndex.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-cb753eb6", Component.options)
+  } else {
+    hotAPI.reload("data-v-cb753eb6", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -76269,6 +76501,11 @@ var myValidator = function () {
                         obj.rules.push(makeRule(obj, { key: 'required' }));
                     }
 
+                    // check for numeric
+                    if (/numeric/.exec(rulesStr)) {
+                        obj.rules.push(makeRule(obj, { key: 'numeric' }));
+                    }
+
                     // check for min
                     var minResult = /min:(\d+)/.exec(rulesStr);
                     if (minResult && minResult[1] > 0) {
@@ -76312,6 +76549,15 @@ var myValidator = function () {
                     };
                     break;
 
+                case 'numeric':
+                    return function (v) {
+                        if (typeof v === 'undefined') {
+                            return false;
+                        }
+                        return !isNaN(v) || field.label + ' may only contain numbers';
+                    };
+                    break;
+
             }
         }
     }, {
@@ -76340,8 +76586,8 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
             formdata: {}, // form data
             formschema: [], // form scheme
             valid: true, // form valid flag
-            barcodeRules: [function (v) {
-                return !!v || 'Barcode is required';
+            assetIdRules: [function (v) {
+                return !!v || 'Asset ID is required';
             }],
             siteRules: [function (v) {
                 return !!v || 'Site is required';
@@ -76477,7 +76723,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('asset-toolbar', __webpack
 var Dashboard = { template: '<div>Dashboard with Reports and User Mgt</div>' };
 var AddAsset = __webpack_require__("./resources/assets/js/components/app/AssetAdd.vue");
 var ViewAsset = __webpack_require__("./resources/assets/js/components/app/AssetView.vue");
-var Reports = { template: '<div>Reports & Users mgt</div>' };
+var Reports = __webpack_require__("./resources/assets/js/components/app/ReportsIndex.vue");
 
 var assetEditForm = __webpack_require__("./resources/assets/js/components/app/AssetEditForm.vue");
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('assetEditForm', assetEditForm);
@@ -76488,7 +76734,10 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('assetAudit', assetAudit);
 var auditHistory = __webpack_require__("./resources/assets/js/components/app/AuditHistory.vue");
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('auditHistory', auditHistory);
 
-var routes = [{ path: '/', component: Dashboard }, { path: '/view/:barcode', component: ViewAsset }, { path: '/add/:assettype', component: AddAsset }, { path: '/reports', component: Reports }];
+var auditsDue = __webpack_require__("./resources/assets/js/components/app/AuditsDue.vue");
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('auditsDue', auditsDue);
+
+var routes = [{ path: '/', component: Dashboard }, { path: '/view/:assetid', component: ViewAsset }, { path: '/add/:assettype', component: AddAsset }, { path: '/reports', component: Reports }];
 
 var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
     routes: routes

@@ -22,7 +22,7 @@ class AssetsTableSeeder extends Seeder
 
             $data = [];
            
-            $data['barcode'] = $a->barcode;
+            $data['asset_id'] = $a->barcode;
             $data['description'] = $a->description;
             $data['size'] = $a->size;
             $data['vendor'] = $a->vendor;
@@ -62,7 +62,7 @@ class AssetsTableSeeder extends Seeder
 
             $data =[];
            
-            $data['barcode'] = $a->barcode;
+            $data['asset_id'] = $a->barcode;
             $data['description'] = $a->description;
             // $data['size'] = $a->size; // restraints table does not have a size field
             // $data['vendor'] = $a->vendor; // restraints did not have a vendor field
@@ -90,7 +90,7 @@ class AssetsTableSeeder extends Seeder
                 ];
 
             // Delete any asset with this barcode because it is being replaced with the restraint
-            Asset::where('barcode',$a->barcode)->delete();
+            Asset::where('asset_id',$a->barcode)->delete();
             
             Asset::create($data);
 

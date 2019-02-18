@@ -11,11 +11,11 @@
                 <span style="font-size:13px">Equipment Safety Audit &amp; Asset Management Portal</span>
             </v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-toolbar-title class="title" >{{ clientname }} {{ loading }}</v-toolbar-title>
+            <v-toolbar-title class="title" >{{ clientname }}</v-toolbar-title>
             <v-spacer></v-spacer>
 
             <v-toolbar-items class="hidden-sm-and-down">
-                <v-btn  flat><a href="/logout" style="color:white;text-decoration: none">Logout</a></v-btn>
+                <v-btn  flat><a href="/logout" style="color:white;text-decoration: none">Logout<br /><small>{{ user.name }}</small></a></v-btn>
             </v-toolbar-items>
             
         </v-toolbar>
@@ -45,7 +45,7 @@
             <v-layout row align-center>
             <v-flex text-xs-center>
                 <transition name="fade" >
-                    <router-view :key="$route.params.barcode"></router-view>
+                    <router-view :key="$route.params.assetid"></router-view>
                 </transition>
             </v-flex>
             
@@ -66,6 +66,7 @@ export default {
     data() {
         return {
             clientname: $Clientdata['name'],
+            user: $User,
             currentroute: '',
             loading: window.loading
         }
@@ -82,7 +83,7 @@ export default {
         '$route' (to, from) {
             // react to route changes...
             // console.log('re-routed to: ',to.path)
-            this.barcode = to.params.barcode
+            this.assetId = to.params.assetid
 
             this.setCurrentRoute()
         }

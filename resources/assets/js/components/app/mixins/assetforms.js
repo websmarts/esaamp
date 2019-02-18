@@ -4,7 +4,7 @@ export default {
             formdata: {}, // form data
             formschema: [], // form scheme
             valid: true, // form valid flag
-            barcodeRules: [v => !!v || 'Barcode is required'],
+            assetIdRules: [v => !!v || 'Asset ID is required'],
             siteRules: [v => !!v || 'Site is required'],
             departmentRules: [this.siteDepartmentRule ],         
             dateMenus: {},// Object keyed by datepicker names 

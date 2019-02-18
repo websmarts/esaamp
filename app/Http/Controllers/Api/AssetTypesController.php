@@ -15,23 +15,23 @@ class AssetTypesController extends Controller
         return AssetType::where('client_id',Auth::user()->client_id)->get();
     }
 
-    public function getAssetByBarcode($barcode)
+    public function getAssetByAssetId($assetId)
     {
         
-        $asset = Asset::with('assettype')->where('barcode',$barcode)->first();  
+        $asset = Asset::with('assettype')->where('asset_id',$assetId)->first();  
        
         return ['asset'=>$asset->toArray()];
     }
 
-    public function update(Request $request, $barcode)
+    public function update(Request $request, $assetid)
     {
             // Validate data
             $validatedData = $request->validate([
-                'barcode' => 'required',
+                'asset_id' => 'required',
                 'body' => 'required'
                 ]);
             // Update data
-            $asset = Asset::where('barcode',$barcode)->first();
+            $asset = Asset::where('asset_id',$assetid)->first();
 
             $data = $this->transform($request,$asset);
 

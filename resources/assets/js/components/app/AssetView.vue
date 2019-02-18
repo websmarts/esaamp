@@ -9,7 +9,7 @@
             slider-color="grey darken-2"
             >
             <v-flex xs2 class="grey darken-2" style="text-align: right;font-size:120%;color:#fff; padding:5px" >Asset ID</v-flex>
-            <v-flex  class="grey darken-2" style="font-size:120%;color:#fff; padding:5px" >{{barcode}}</v-flex>
+            <v-flex  class="grey darken-2" style="font-size:120%;color:#fff; padding:5px" >{{assetId}}</v-flex>
             <v-tab  
                 :key="edit"
                 ripple
@@ -65,7 +65,7 @@ export default {
             active: null,
             edit: null,
             audit: null,
-            barcode: this.$route.params.barcode,
+            assetId: this.$route.params.assetid,
             asset:{}
         }
     },
@@ -90,7 +90,7 @@ export default {
         load () {
 
             
-            this.$api.get('/api/asset/'+ this.barcode,(status,data) => {
+            this.$api.get('/api/asset/'+ this.assetId,(status,data) => {
                 this.asset = Object.assign({},data.asset)
             })
             
@@ -107,8 +107,8 @@ export default {
         '$route' (to, from) {
             // react to route changes...
             // console.log('re-routed to: ',to.params.barcode)
-            this.barcode = to.params.barcode
-            if(typeof(this.barcode) !== 'undefined'){
+            this.assetId = to.params.assetid
+            if(typeof(this.assetId) !== 'undefined'){
                 this.load()
             }
 

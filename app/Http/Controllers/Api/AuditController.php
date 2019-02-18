@@ -25,23 +25,28 @@ class AuditController extends Controller
         
     }
 
-    public function getAssetByBarcode($barcode)
+    public function getAssetByAssetId($assetid)
     {
         
-        $asset = Asset::with('assettype')->where('barcode',$barcode)->first();  
+        $asset = Asset::with('assettype')->where('asset_id',$assetid)->first();  
        
         return ['asset'=>$asset->toArray()];
+    }
+
+    public function update($assetid)
+    {
+        dd('audit update function is still a TODO');
     }
 
     public function store( )
     {
             // Validate data
             $validatedData = $this->request->validate([
-                'barcode' => 'required'
+                'asset_id' => 'required'
                 ]);
             // Update data
             $data = $this->request->input();
-            $asset = Asset::where('barcode',$this->request->barcode)->first();
+            $asset = Asset::where('asset_id',$this->request->asset_id)->first();
 
             // get the audit data
             $data = $this->getData();

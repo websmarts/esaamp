@@ -21,9 +21,9 @@
                                     
                                     <v-autocomplete
                                         :loading="loading"
-                                        :items="barcodes"
+                                        :items="assetIds"
                                         
-                                        v-model="barcode"
+                                        v-model="assetId"
                                         @change="assetSelected"
                                         clearable
                                         cache-items
@@ -34,7 +34,7 @@
                                         solo
                                     ></v-autocomplete>
                             </v-flex>
-                            <v-flex ><v-btn :disabled="!barcode" color="blue darken-2" @click="view">
+                            <v-flex ><v-btn :disabled="!assetId" color="blue darken-2" @click="view">
                                 Select<v-icon dark right v-show="btn_selected.view">check_circle</v-icon>
                                 </v-btn></v-flex>
 
@@ -74,9 +74,9 @@
 <script>
 
 import { EventBus } from './lib/eventbus.js';
-EventBus.$on('new_barcode', barcode => {
-  console.log(`Toolbar says - Oh, that's nice we have a new barcode  ${barcode}! :)`)
-  $Barcodes.push(barcode)
+EventBus.$on('newAssetId', newAssetId => {
+  console.log(`Toolbar says - Oh, that's nice we have a new asset  ${newAssetId}! :)`)
+  $AssetIds.push(newAssetId)
 });
 
 import store from './lib/store.js';
@@ -87,8 +87,8 @@ export default {
 
         return {
             store: store,
-            barcode: this.$route.params.barcode,
-            barcodes: $Barcodes,
+            assetId: this.$route.params.assetid,
+            assetIds: $AssetIds,
             
             loading: false,
             isEditing: false,
@@ -117,8 +117,8 @@ export default {
          this.view();
         },
         view() {
-            if(typeof(this.barcode) != "undefined") {
-                this.$router.push('/view/'+this.barcode);
+            if(typeof(this.assetId) != "undefined") {
+                this.$router.push('/view/'+this.assetId);
             }
             
             //this.updateButtonSelectIndicators('select')

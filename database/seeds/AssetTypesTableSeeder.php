@@ -48,6 +48,7 @@ class AssetTypesTableSeeder extends Seeder
                 'name'=> 'cost_price',
                 'input'=>'v-text-field',
                 'label'=> 'Cost price ($)',
+                'rules' => 'numeric',
                 
                             
             ],
@@ -196,7 +197,7 @@ class AssetTypesTableSeeder extends Seeder
         $metaSchema = [
             
             ['name'=>'last_washed_date','label'=>'Last wash date','input'=>'v-date-picker','validate'=>''],
-            ['name'=>'wash_count','label'=>'Wash count','input'=>'v-text-field','validate'=>''],
+            ['name'=>'wash_count','label'=>'Wash count','input'=>'v-text-field','validate'=>'','rules'=>'numeric'],
             ['name'=>'quarantined','label'=>'Quarantined','input'=>'v-switch','validate'=>''],
 
         ];

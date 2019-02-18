@@ -38,13 +38,13 @@ class AssetsController extends Controller
               
         $clientId = $this->user->client_id;
         
-        return Asset::where('client_id',$clientId)->select('barcode')->get()->pluck('barcode');
+        return Asset::where('client_id',$clientId)->select('asset_id')->get()->pluck('asset_id');
     }
 
-    public function getAssetByBarcode($barcode)
+    public function getAssetByAssetId($assetid)
     {
         
-        $asset = Asset::with(['audits','assettype'])->where('barcode',$barcode)->first();  
+        $asset = Asset::with(['audits','assettype'])->where('asset_id',$assetid)->first();  
 
        //dd($asset);
 
@@ -62,20 +62,20 @@ class AssetsController extends Controller
 
     }
 
-    public function update( $barcode)
+    public function update( $assetid)
     {
             // Validate data
             $validatedData = $this->request->validate([
-                'barcode' => 'required'
+                'asset_id' => 'required'
                 ]);
             // Update data
-            $asset = Asset::where('barcode',$barcode)->first();
+            $asset = Asset::where('asset_id',$assetid)->first();
 
             $data = $this->getData($this->request->input());
 
             $asset->update($data);
 
-            sleep(2);
+            //sleep(2);
             
             return ['data'=>'success','record'=>$data];
 

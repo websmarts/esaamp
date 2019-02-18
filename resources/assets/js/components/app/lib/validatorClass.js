@@ -37,6 +37,11 @@ class myValidator {
                     obj.rules.push(makeRule( obj,{key:'required'}))
                 }
 
+                 // check for numeric
+                 if (/numeric/.exec(rulesStr)){                      
+                    obj.rules.push(makeRule( obj,{key:'numeric'}))
+                }
+
                 // check for min
                 const minResult = /min:(\d+)/.exec(rulesStr)
                 if ( minResult && minResult[1] > 0 ) {                      
@@ -48,6 +53,8 @@ class myValidator {
                     if ( maxResult && maxResult[1] ) {                      
                         obj.rules.push(makeRule(obj, {key:'max',length: maxResult[1]}) )
                 }
+
+                
                 
             }
 
@@ -83,6 +90,15 @@ class myValidator {
                             return v.length <= rule.length || field.label + ' must be less than  ' + rule.length + ' characters'
                         } 
                         break;
+
+            case 'numeric':
+            return function (v) {
+                    if(typeof v ==='undefined'){
+                        return false;
+                    }
+                        return !isNaN(v) || field.label + ' may only contain numbers'
+                    } 
+                    break;
         
 
         }

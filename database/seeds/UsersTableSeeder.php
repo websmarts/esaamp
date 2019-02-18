@@ -17,7 +17,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'admin@here.com', 
             'name' => 'admin',
             'title' => 'Charge Sister', 
-            'roles'=>'user', 
+            'role'=>'user', 
             'password' => bcrypt('pass')]);
 
         User::create([
@@ -25,7 +25,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'washer@here.com', 
             'name' => 'washer',
             'title' => 'Wash Manager', 
-            'roles'=>'washer', 
+            'role'=>'washer', 
             'password' => bcrypt('pass')]);
 
         User::create([
@@ -33,7 +33,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'caroline@here.com', 
             'name' => 'Caroline Chong',
             'title' => 'Associate Nurse Manager', 
-            'roles'=>'manager', 
+            'role'=>'manager', 
             'password' => bcrypt('pass')]);
     
         User::create([
@@ -41,7 +41,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'tarryn@here.com', 
             'name' => 'Tarryn McConnell',
             'title' => 'Manager Inpatient Medical Equipment', 
-            'roles'=>'manager', 
+            'role'=>'manager', 
             'password' => bcrypt('pass')]); 
 
         User::create([
@@ -49,7 +49,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'jamie@here.com', 
             'name' => 'Jamie Ayo',
             'title' => 'Manager Inpatient Medical Equipment', 
-            'roles'=>'manager', 
+            'role'=>'manager', 
             'password' => bcrypt('pass')]);    
 
         User::create([
@@ -57,7 +57,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'admin2@here.com', 
             'name' => 'admin',
             'title' => 'Charge Sister', 
-            'roles'=>'manager', 
+            'role'=>'manager', 
             'password' => bcrypt('pass')]);
 
     }

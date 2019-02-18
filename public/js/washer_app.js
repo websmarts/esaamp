@@ -148,9 +148,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-__WEBPACK_IMPORTED_MODULE_0__lib_eventbus_js__["a" /* EventBus */].$on('new_barcode', function (barcode) {
-    console.log('Toolbar says - Oh, that\'s nice we have a new barcode  ' + barcode + '! :)');
-    $Barcodes.push(barcode);
+__WEBPACK_IMPORTED_MODULE_0__lib_eventbus_js__["a" /* EventBus */].$on('newAssetId', function (newAssetId) {
+    console.log('Toolbar says - Oh, that\'s nice we have a new asset  ' + newAssetId + '! :)');
+    $AssetIds.push(newAssetId);
 });
 
 
@@ -161,8 +161,8 @@ __WEBPACK_IMPORTED_MODULE_0__lib_eventbus_js__["a" /* EventBus */].$on('new_barc
 
         return {
             store: __WEBPACK_IMPORTED_MODULE_1__lib_store_js__["a" /* default */],
-            barcode: this.$route.params.barcode,
-            barcodes: $Barcodes,
+            assetId: this.$route.params.assetid,
+            assetIds: $AssetIds,
 
             loading: false,
             isEditing: false,
@@ -191,8 +191,8 @@ __WEBPACK_IMPORTED_MODULE_0__lib_eventbus_js__["a" /* EventBus */].$on('new_barc
             this.view();
         },
         view: function view() {
-            if (typeof this.barcode != "undefined") {
-                this.$router.push('/view/' + this.barcode);
+            if (typeof this.assetId != "undefined") {
+                this.$router.push('/view/' + this.assetId);
             }
 
             //this.updateButtonSelectIndicators('select')
@@ -292,7 +292,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            clientname: $Clientdata['name']
+            clientname: $Clientdata['name'],
+            user: $User
 
         };
     }
@@ -34832,7 +34833,7 @@ var render = function() {
                           _c("v-autocomplete", {
                             attrs: {
                               loading: _vm.loading,
-                              items: _vm.barcodes,
+                              items: _vm.assetIds,
                               clearable: "",
                               "cache-items": "",
                               light: "",
@@ -34843,11 +34844,11 @@ var render = function() {
                             },
                             on: { change: _vm.assetSelected },
                             model: {
-                              value: _vm.barcode,
+                              value: _vm.assetId,
                               callback: function($$v) {
-                                _vm.barcode = $$v
+                                _vm.assetId = $$v
                               },
-                              expression: "barcode"
+                              expression: "assetId"
                             }
                           })
                         ],
@@ -34861,7 +34862,7 @@ var render = function() {
                             "v-btn",
                             {
                               attrs: {
-                                disabled: !_vm.barcode,
+                                disabled: !_vm.assetId,
                                 color: "blue darken-2"
                               },
                               on: { click: _vm.view }
@@ -35037,7 +35038,11 @@ var render = function() {
                     staticStyle: { color: "white", "text-decoration": "none" },
                     attrs: { href: "/logout" }
                   },
-                  [_vm._v("Logout")]
+                  [
+                    _vm._v("Logout"),
+                    _c("br"),
+                    _c("small", [_vm._v(_vm._s(_vm.user.name))])
+                  ]
                 )
               ])
             ],

@@ -15,7 +15,7 @@
             <v-spacer></v-spacer>
 
             <v-toolbar-items class="hidden-sm-and-down">
-                <v-btn  flat><a href="/logout" style="color:white;text-decoration: none">Logout</a></v-btn>
+                <v-btn  flat><a href="/logout" style="color:white;text-decoration: none">Logout<br /><small>{{ user.name }}</small></a></v-btn>
             </v-toolbar-items>
             
         </v-toolbar>
@@ -64,6 +64,7 @@ export default {
     data() {
         return {
             clientname: $Clientdata['name'],
+            user: $User,
             
         }
     },

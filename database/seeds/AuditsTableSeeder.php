@@ -34,7 +34,7 @@ class AuditsTableSeeder extends Seeder
             // dd($sling->barcode);
 
             // echo 'SLING: '.$sling->barcode .' ';
-            $asset = Asset::where('barcode',$sling->barcode)->first(); // The new sling asset record
+            $asset = Asset::where('asset_id',$sling->barcode)->first(); // The new sling asset record
             if(!$asset){
                 echo '...asset not found ....'."\n";
                 continue;
