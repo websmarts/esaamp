@@ -37,18 +37,12 @@ class AssetTypesTableSeeder extends Seeder
                 
                             
             ],
-            [
-                'name'=> 'size',
-                'input'=>'v-text-field',
-                'label'=> 'Size',
-                
-                            
-            ],
+            
             [
                 'name'=> 'cost_price',
                 'input'=>'v-text-field',
                 'label'=> 'Cost price ($)',
-                'rules' => 'numeric',
+                'rules' => 'nullable|numeric',
                 
                             
             ],
@@ -59,13 +53,6 @@ class AssetTypesTableSeeder extends Seeder
                 
                 
             ],
-            [
-                'name'=>'condition',
-                'input' =>'v-select',
-                'items' =>'condition_options', // vue form will load select options from refData[condition_options]
-                'label' =>'Condition'
-            ],
-
             
             [
                 'name'=> 'retire_from_service',
@@ -81,6 +68,12 @@ class AssetTypesTableSeeder extends Seeder
                 'label'=> 'Commissioned date',
                 
                 
+            ],
+            [
+                'name'=>'condition',
+                'input' =>'v-select',
+                'options' =>'Excellent,Good,Satisfactory,Unsatisfactory', // vue form will use these options for select input 
+                'label' =>'Condition'
             ],
             [
                 'name'=> 'next_audit_due',
@@ -130,7 +123,7 @@ class AssetTypesTableSeeder extends Seeder
             [
                 'name'=>'condition',
                 'input' =>'v-select',
-                'items' =>'condition_options', // vue form will load select options from refData[condition_options]
+                'options' =>'Select ...:,Excellent:Excellent,Good:Good,Satisfactory:Satisfactory,Unsatisfactory:Unsatisfactory', 
                 'label' =>'Condition',
                 'rules'=>  'required'
             ],
@@ -196,8 +189,14 @@ class AssetTypesTableSeeder extends Seeder
         // metaschema for sling type
         $metaSchema = [
             
+            [
+                'name'=> 'size',
+                'input'=>'v-select',
+                'options' => 'Select ...:,Small:S,Medium:M,Medium Large:ML,Large:L,Extra Large:XL,Extra Extra Large:XXL,Extra Extra Extra Large:XXXL',
+                'label'=> 'Size'
+            ],    
             ['name'=>'last_washed_date','label'=>'Last wash date','input'=>'v-date-picker','validate'=>''],
-            ['name'=>'wash_count','label'=>'Wash count','input'=>'v-text-field','validate'=>'','rules'=>'numeric'],
+            ['name'=>'wash_count','label'=>'Wash count','input'=>'v-text-field','validate'=>'','rules'=>'nullable|numeric'],
             ['name'=>'quarantined','label'=>'Quarantined','input'=>'v-switch','validate'=>''],
 
         ];

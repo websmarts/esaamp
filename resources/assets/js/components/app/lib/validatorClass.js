@@ -32,14 +32,21 @@ class myValidator {
                 
                 obj.rules = [];  // init object rules array
 
+                // check for nullable
+                let nullable = false
+                if (/nullable/.exec(rulesStr)){                      
+                    nullable = true
+                }
+
+
                 // check for required
                 if (/required/.exec(rulesStr)){                      
-                    obj.rules.push(makeRule( obj,{key:'required'}))
+                    obj.rules.push(makeRule( obj,{key:'required'}, nullable))
                 }
 
                  // check for numeric
                  if (/numeric/.exec(rulesStr)){                      
-                    obj.rules.push(makeRule( obj,{key:'numeric'}))
+                    obj.rules.push(makeRule( obj,{key:'numeric'},nullable))
                 }
 
                 // check for min
@@ -63,7 +70,7 @@ class myValidator {
     }
 
     
-    makeRule(field,rule)   {
+    makeRule(field,rule,nullable = false)   {
 
         switch(rule.key){
             case 'required':
@@ -94,7 +101,7 @@ class myValidator {
             case 'numeric':
             return function (v) {
                     if(typeof v ==='undefined'){
-                        return false;
+                        return nullable; // can be blank if nullable
                     }
                         return !isNaN(v) || field.label + ' may only contain numbers'
                     } 

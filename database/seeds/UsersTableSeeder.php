@@ -30,7 +30,7 @@ class UsersTableSeeder extends Seeder
 
         User::create([
             'client_id'=>1 ,
-            'email' => 'caroline@here.com', 
+            'email' => 'C.Chong@alfred.org.au', 
             'name' => 'Caroline Chong',
             'title' => 'Associate Nurse Manager', 
             'role'=>'manager', 
@@ -38,7 +38,7 @@ class UsersTableSeeder extends Seeder
     
         User::create([
             'client_id'=>1 ,
-            'email' => 'tarryn@here.com', 
+            'email' => 'T.McConnell@alfred.org.au', 
             'name' => 'Tarryn McConnell',
             'title' => 'Manager Inpatient Medical Equipment', 
             'role'=>'manager', 
@@ -46,7 +46,7 @@ class UsersTableSeeder extends Seeder
 
         User::create([
             'client_id'=>1 ,
-            'email' => 'jamie@here.com', 
+            'email' => 'J.Ayo@alfred.org.au', 
             'name' => 'Jamie Ayo',
             'title' => 'Manager Inpatient Medical Equipment', 
             'role'=>'manager', 

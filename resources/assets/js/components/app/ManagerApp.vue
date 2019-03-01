@@ -1,20 +1,19 @@
 <template>
 
     <v-app id="inspire">
-        {{ clientname }}
     
         
-        <v-toolbar color="primary" height="85" dark fixed app>
+        <v-toolbar color="grey darken-2" height="85" dark fixed app>
         
             <v-toolbar-title>
-                <img src="images/logo-with-tick-white.png" height="45" /><br />
-                <span style="font-size:13px">Equipment Safety Audit &amp; Asset Management Portal</span>
+                <img src="images/saamlogo-with-checkbox.png" height="45" /><br />
+                <span style="font-size:13px">Safety Audit &amp; Asset Management</span>
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-title class="title" >{{ clientname }}</v-toolbar-title>
             <v-spacer></v-spacer>
 
-            <v-toolbar-items class="hidden-sm-and-down">
+            <v-toolbar-items>
                 <v-btn  flat><a href="/logout" style="color:white;text-decoration: none">Logout<br /><small>{{ user.name }}</small></a></v-btn>
             </v-toolbar-items>
             
@@ -25,9 +24,8 @@
 
 
 
-        <v-content>
-        
-            <v-toolbar tile dark flat  color="grey" height="94">
+        <v-content style="padding-top:64px">
+            <v-toolbar tile dark flat  color="grey lighten-1" height="84">
                 
                     
                 <v-layout row align-center justify-center >
@@ -39,6 +37,8 @@
                 </v-layout>
 
             </v-toolbar>
+        
+            
         
         <v-container fluid >
         
@@ -62,6 +62,10 @@
 </template>
 
 <script>
+
+
+
+
 export default {
     data() {
         return {

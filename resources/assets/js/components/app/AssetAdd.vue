@@ -11,6 +11,7 @@
                     <v-flex  xs12>
                         <v-text-field label="Asset ID" v-model="formdata.asset_id" :rules="assetRules"></v-text-field>
                     </v-flex>
+
                     <v-flex xs12>
                         <v-select
                             v-model="formdata.site_id"
@@ -48,14 +49,30 @@
                                     :rules="s.rules"
                                     :readonly="s.readonly"
                                     :value="formdata[s.name]"
-                                    :items="getOptions(s.items)"
+                            
                                     @change="changed($event,s.name)"
                                     light
                                 ></component>
                             </v-flex>
                         </template>
 
-                        <template v-if="groupB(s)">
+                        <template v-if="groupD(s)">
+                            <v-flex xs12>   
+                                <component 
+                                    
+                                    :is="s.input" 
+                                    :label="s.label"
+                                    :rules="s.rules"
+                                    :readonly="s.readonly"
+                                    :value="formdata[s.name]"
+                                    :items="getOptions(s.options)"
+                                    @change="changed($event,s.name)"
+                                    light
+                                ></component>
+                            </v-flex>
+                        </template>
+
+                        <template v-if="groupB(s)"><!-- datepickers -->
                             <v-flex xs12 sm6 md4>
                                 
                             <v-menu
@@ -63,8 +80,6 @@
                                 :close-on-content-click="false"
                                 v-model="dateMenus[s.name]"
                                 :nudge-right="80"
-                                
-                                xlazy
                                 transition="scale-transition"
                                 offset-y
                                 full-width
@@ -72,11 +87,9 @@
                             >
                                 <v-text-field
                                 slot="activator"
-                                :value="formatDate(formdata[s.name])"
-
+                                :value ="formatDate(formdata[s.name])"
                                 :label="s.label"
-                                :rules = "s.rules"
-                                
+                                :rules = "s.rules"  
                                 append-icon="event"
                                 readonly
                                 ></v-text-field>
@@ -86,12 +99,10 @@
                                 :label="s.label"
                                 :rules="s.rules"
                                 :readonly="s.readonly"
-                                :items="getOptions(s.items)"
-                               
+                    
                                 no-title
                                 light
-                                scrollable>
-                                
+                                scrollable>  
                                 </v-date-picker>
                             </v-menu>
                             </v-flex>
@@ -105,7 +116,7 @@
                                     :label="s.label"
                                     :rules="s.rules"
                                     :readonly="s.readonly"
-                                    :items="getOptions(s.items)"
+                                    
                                     @change="changed($event,s.name)"
                                     light
                                 ></component>
@@ -126,13 +137,21 @@
                     <v-btn @click="load">reset</v-btn> -->
 
                     <v-flex xs12>
-                             <v-alert
-                            :value="showSuccessAlertFlag"
+                            <v-alert
+                            v-model="showSuccessAlertFlag"
+                            outline
                             dismissible
                             type="success"
                             >
                             {{ successAlertMessage }}
                             </v-alert>
+
+                            <div style="background:red; padding:15px; color:#fff" v-show="showErrorsAlertFlag" >
+                                <div  v-html="errorsAlertMessage"></div>
+                                    <v-btn @click="showErrorsAlertFlag = false">Close</v-btn>
+                            </div>
+
+                            
 
                     </v-flex>
                 </v-layout>
@@ -200,42 +219,40 @@ export default {
         },
         submit () {
             if (this.$refs.add_asset_form.validate()) {
-            // Native form submission is not yet supported
-            // console.log('Form is valid and I am submitting it now with this data',this.data)
+                // Native form submission is not yet supported
+                // console.log('Form is valid and I am submitting it now with this data',this.data)
 
-            const data = this.formdata
+                const data = this.formdata
 
-            const newAssetId = data.asset_id
+                const newAssetId = data.asset_id
 
-            data['asset_type_id'] = this.assetTypeId
-            data['client_id'] = $Clientdata.id
-            
-            let self=this
+                data['asset_type_id'] = this.assetTypeId
+                data['client_id'] = $Clientdata.id
+                
+                let self=this
 
-            self.saving = true
-            
-            
-
-            axios.post('/api/asset', data)
-            .then(function (response) {
-                // handle success
-                // console.log(response.data);
-                 self.successAlertMessage = 'Record update successful'
-                 self.showSuccessAlertFlag = true
-
-                 // emit event to update the list of barcodes
-                 EventBus.$emit('newAssetId',newAssetId)
+                self.saving = true
                 
                 
-            })
-            .catch(function (error) {
-                // handle error
-                console.log(error);
-            })
-            .then(function () {
-                // always executed
-                self.saving = false
-            });
+                const path = '/api/asset'
+
+                
+
+                this.$api.post(path, data, (status,data) => {
+
+                    // emit event to update the list of barcodes
+                    EventBus.$emit('newAssetId',data.record.asset_id)
+
+                    this.showSuccessMessage('Asset has been saved')
+
+                }).catch( (err)=> {
+                    this.showRequestErrors(err.response.data)
+                }).then(function () {
+                    // always executed
+                    self.saving = false
+                })
+
+            
             }
         },
 

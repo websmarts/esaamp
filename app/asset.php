@@ -29,7 +29,6 @@ class Asset extends Model
         'asset_type_id',
         'meta', 
         'condition',   
-        'quarantined',
         'retire_from_service',
         'commissioned_date', 
         'retired_date', 
@@ -49,6 +48,7 @@ class Asset extends Model
     {
         return collect($this->assettype->metaschema)->pluck('name')->all();
     }
+
     
 
 

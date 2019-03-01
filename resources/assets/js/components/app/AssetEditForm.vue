@@ -6,7 +6,7 @@
                 <v-layout row wrap>
                    
                     <v-flex xs12>
-                        <v-text-field label="Asset ID" :value="formdata.asset_id" :rules="assetIdRules" ></v-text-field>
+                        <v-text-field label="Asset ID" :value="formdata.asset_id"  :disabled=true></v-text-field>
                     </v-flex>
                     <v-flex xs12>
                         <v-select
@@ -45,7 +45,23 @@
                                     :rules="s.rules"
                                     :readonly="s.readonly"
                                     :value="formdata[s.name]"
-                                    :items="getOptions(s.items)"
+                            
+                                    @change="changed($event,s.name)"
+                                    light
+                                ></component>
+                            </v-flex>
+                        </template>
+
+                        <template v-if="groupD(s)">
+                            <v-flex xs12>   
+                                <component 
+                                    
+                                    :is="s.input" 
+                                    :label="s.label"
+                                    :rules="s.rules"
+                                    :readonly="s.readonly"
+                                    :value="formdata[s.name]"
+                                    :items="getOptions(s.options)"
                                     @change="changed($event,s.name)"
                                     light
                                 ></component>
@@ -79,7 +95,7 @@
                                 :label="s.label"
                                 :rules="s.rules"
                                 :readonly="s.readonly"
-                                :items="getOptions(s.items)"
+                    
                                 no-title
                                 light
                                 scrollable>  
@@ -96,7 +112,7 @@
                                     :label="s.label"
                                     :rules="s.rules"
                                     :readonly="s.readonly"
-                                    :items="getOptions(s.items)"
+                                    
                                     @change="changed($event,s.name)"
                                     light
                                 ></component>
@@ -107,7 +123,7 @@
                    
 
                     <v-btn
-                        :disabled="!valid"
+                        :xdisabled="!valid"
                         :loading="xhr_loading"
                         @click="submit"
                         >
@@ -117,7 +133,7 @@
                     <v-btn @click="load">reset</v-btn> -->
 
                     <v-flex xs12>
-                             <v-alert
+                            <v-alert
                             v-model="showSuccessAlertFlag"
                             outline
                             dismissible
@@ -125,6 +141,13 @@
                             >
                             {{ successAlertMessage }}
                             </v-alert>
+
+                            <div style="background:red; padding:15px; color:#fff" v-show="showErrorsAlertFlag" >
+                                <div  v-html="errorsAlertMessage"></div>
+                                    <v-btn @click="showErrorsAlertFlag = false">Close</v-btn>
+                            </div>
+
+                            
 
                     </v-flex>
                 </v-layout>
@@ -159,7 +182,7 @@ export default {
     },
     methods: {
         submit () {
-            if (this.$refs.form.validate()) {
+            if (1 || this.$refs.form.validate()) {
                 // Native form submission is not yet supported
                 // console.log('Form is valid and I am submitting it now with this data',this.data)
 
@@ -170,20 +193,13 @@ export default {
 
                 this.$api.put(path, formdata, (status,data) => {
                     this.showSuccessMessage('Asset data has been saved')
+                }).catch( (err)=> {
+                    this.showRequestErrors(err.response.data)
                 })
      
             }
         },
-        showSuccessMessage(msg){
-            this.successAlertMessage = msg
-            this.showSuccessAlertFlag = true
-
-            const self = this
-
-            setTimeout(function() {
-                self.showSuccessAlertFlag = false
-            }, 3000);
-        },
+        
 
         clear () {
             

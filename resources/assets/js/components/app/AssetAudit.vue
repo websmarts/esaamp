@@ -10,24 +10,42 @@
 
                 <v-flex  v-for="s in formschema" :key="s.name" xs12 >
 
-                    <template v-if="groupA(s)">
-                        <v-flex xs12>   
-                            <component 
-                                
-                                :is="s.input" 
-                                :label="s.label"
-                                :rules="s.rules"
-                                :readonly="s.readonly"
-                                :value="formdata[s.name]"
-                                :items="getOptions(s.items)"
-                                @change="changed($event,s.name)"
-                                light
-                            ></component>
-                        </v-flex>
-                    </template>
 
-                    <template v-if="groupB(s)">
-                        <v-flex xs12 sm6 md4>
+                        <template v-if="groupA(s)">
+                            <v-flex xs12>   
+                                <component 
+                                    
+                                    :is="s.input" 
+                                    :label="s.label"
+                                    :rules="s.rules"
+                                    :readonly="s.readonly"
+                                    :value="formdata[s.name]"
+                            
+                                    @change="changed($event,s.name)"
+                                    light
+                                ></component>
+                            </v-flex>
+                        </template>
+
+                        <template v-if="groupD(s)">
+                            <v-flex xs12>   
+                                <component 
+                                    
+                                    :is="s.input" 
+                                    :label="s.label"
+                                    :rules="s.rules"
+                                    :readonly="s.readonly"
+                                    :value="formdata[s.name]"
+                                    :items="getOptions(s.options)"
+                                    @change="changed($event,s.name)"
+                                    light
+                                ></component>
+                            </v-flex>
+                        </template>
+
+                        <template v-if="groupB(s)"><!-- datepickers -->
+                            <v-flex xs12 sm6 md4>
+                                
                             <v-menu
                                 :ref="s.name"
                                 :close-on-content-click="false"
@@ -40,9 +58,9 @@
                             >
                                 <v-text-field
                                 slot="activator"
-                                :value="formatDate(formdata[s.name])"
+                                :value ="formatDate(formdata[s.name])"
                                 :label="s.label"
-                                :rules = "s.rules"                               
+                                :rules = "s.rules"  
                                 append-icon="event"
                                 readonly
                                 ></v-text-field>
@@ -52,33 +70,31 @@
                                 :label="s.label"
                                 :rules="s.rules"
                                 :readonly="s.readonly"
-                                :items="getOptions(s.items)"                              
+                    
                                 no-title
                                 light
-                                scrollable>                               
+                                scrollable>  
                                 </v-date-picker>
                             </v-menu>
                             </v-flex>
-                        
-                    </template>
+                        </template>
 
-                    <template v-if="groupC(s)">
-                        
-                        <v-flex xs12>   
-                            <component 
-                                :is="s.input" 
-                                :label="s.label"
-                                :rules="s.rules"
-                                :readonly="s.readonly"
-                                v-model="formdata[s.name]"
-                                :items="getOptions(s.items)"
-                                @change="changed($event,s.name)"
-                                light
-                            ></component>
-                        </v-flex>
-                    </template>
+                        <template v-if="groupC(s)"><!-- switches -->
+                            <v-flex xs12>   
+                                <component 
+                                    v-model="formdata[s.name]"
+                                    :is="s.input" 
+                                    :label="s.label"
+                                    :rules="s.rules"
+                                    :readonly="s.readonly"
+                                    
+                                    @change="changed($event,s.name)"
+                                    light
+                                ></component>
+                            </v-flex>
+                        </template>
 
-                </v-flex>
+                    </v-flex>
 
                 <v-btn
                     :disabled="!valid"
@@ -91,14 +107,22 @@
 
                 <v-flex xs12>
                             <v-alert
-                        :value="showSuccessAlertFlag"
-                        dismissible
-                        type="success"
-                        >
-                        {{ successAlertMessage }}
-                        </v-alert>
+                            v-model="showSuccessAlertFlag"
+                            outline
+                            dismissible
+                            type="success"
+                            >
+                            {{ successAlertMessage }}
+                            </v-alert>
 
-                </v-flex>
+                            <div style="background:red; padding:15px; color:#fff" v-show="showErrorsAlertFlag" >
+                                <div  v-html="errorsAlertMessage"></div>
+                                    <v-btn @click="showErrorsAlertFlag = false">Close</v-btn>
+                            </div>
+
+                            
+
+                    </v-flex>
             </v-layout>
         </v-container>
         </v-form>
@@ -110,102 +134,66 @@
 <script>
 
 const formValidator = require('./lib/validatorClass') ;
-
+import assetforms from './mixins/assetforms.js';
+import { EventBus } from './lib/eventbus.js';
 
 export default {
+    mixins:[assetforms],
     props: ['asset'],
     data() {
         return {
             
-            valid: true,
-            
             dateMenus: { // flags for datepicker popups
                 audit_date: false,
             },
-            
-            
-            formdata: {},
-            
-
-            formschema: [],
-            
-            showSuccessAlertFlag: false,
-            successAlertMessage: ''        
+                 
+                  
         }
     },
     computed: {
         
     },
     methods: {
-        formatDate (date) {
-            if (!date) return null
-
-            const [year, month, day] = date.split('-')
-            return `${day}-${month}-${year}`
-        },
-        groupA(s) {
-            // return true if input is one of the following
-            
-            const options = ['v-text-field','v-select']
-            return options.indexOf(s.input) > -1
-           
-        },
-        groupB(s) {
-            
-            const options = ['v-date-picker']
-            return options.indexOf(s.input) > -1
-
-        },
-        groupC(s) {
-            const options = ['v-switch']
-            return options.indexOf(s.input) > -1
-        },
-        getOptions(key){
-            // console.log('Refdata Options Key',key)
-
-            // Could update to check if key is a string of options and if it is then return
-            // them as an array
-
-            // But for now we assume key is a key into the global refdata array
-            if($Refdata.hasOwnProperty(key)){
-                return $Refdata[key]
-            }
-
-        },
-        changed(e,field) {
-            // console.log('changed',e,field)
-            this.formdata[field]=e
-        },
+        
+        
         
         submit () {
 
 
             if (this.$refs.auditform.validate()) {
 
-            let self=this
+                let self=this
 
-            axios.post('/api/audit', self.formdata)
-            .then(function (response) {
-                // handle success
-                // console.log(response.data);
-                 self.successAlertMessage = 'Success ... audit record saved'
-                 self.showSuccessAlertFlag = true
-
-                 // push the new audit onto the audits stack
-                 // should emit an event so parent can update the record TODO
-                 self.$emit('created',response.data.record)
-                // this.asset.audits.push(response.data.record)
+                self.saving = true
                 
                 
-            })
-            .catch(function (error) {
-                // handle error
-                console.log(error);
-            })
-            .then(function () {
-                // always executed
-            });
+                const path = '/api/audit'
+
+                let data = this.formdata
+                data['asset_id'] = this.asset['asset_id']
+
+                this.$api.post(path, data, (status,data) => {
+
+                    // emit event to update the list of barcodes
+                    EventBus.$emit('newAudit')
+
+                    this.showSuccessMessage('Audit has been saved')
+
+                }).catch( (err)=> {
+                   
+                    
+                        this.showRequestErrors(err.response.data)
+                    
+                    
+                }).then(function () {
+                    // always executed
+                    self.saving = false
+                })
+
+
             }
+
+            
         },
 
         clear () {

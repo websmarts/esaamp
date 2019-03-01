@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Asset;
+use App\Audit;
 use App\Client;
 use App\AssetType;
 use Illuminate\Http\Request;
@@ -30,13 +31,33 @@ class AuditsController extends Controller
     {
         
         $cutoffDate = Carbon::now();
-        $auditsdue = Asset::with('assettype:id,name')
-                        ->whereNotNull('next_audit_due')
-                        ->where('next_audit_due','<', $cutoffDate)
-                        ->get();
 
         
-        return ['items'=>$auditsdue];
+        $assets = Asset::where('assets.client_id',$this->user->client_id)
+                        ->whereNotNull('next_audit_due')
+                        ->where('retire_from_service',0)
+                        ->whereDate('next_audit_due','<', $cutoffDate)
+                        ->leftJoin('asset_types','assets.asset_type_id','=','asset_types.id')
+                        ->leftJoin('sites','assets.site_id','=','sites.id')
+                        ->leftJoin('departments','assets.department_id','=','departments.id')
+                        ->get([
+                            'asset_types.name as type',
+                            'sites.name as site',
+                            'departments.name as department',
+                            'assets.*']);
+
+        foreach($assets as $asset) {
+            $lastAudit = Audit::where('asset_id',$asset->id)->latest()->first();
+            if($lastAudit){
+                $asset->last_audit_date = $lastAudit->created_at->toFormattedDateString();
+            }
+            
+        }
+
+        
+
+        
+        return ['items'=>$assets];
     }
 
     

@@ -24,4 +24,17 @@ class AssetType extends Model
         'auditschema' => 'array',
         'metaschema' => 'array'
     ];
+
+
+    public function validationRules()
+    {
+
+        $dataschema = collect($this->dataschema);
+        $metaschema = collect($this->metaschema);
+
+        return $dataschema->merge($metaschema)->pluck('rules','name')->filter()->toArray();
+
+      
+    }
+    
 }

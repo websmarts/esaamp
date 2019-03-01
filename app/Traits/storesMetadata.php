@@ -29,16 +29,24 @@ trait storesMetadata {
         $metakeys = collect( $this->metakeys() ); 
         
         $metakeys->each(function($metakey,$x) use(&$metadata,&$data) {
-           if(isSet($data[$metakey])){
-               $metadata[$metakey] = $data[$metakey];
-               unSet($data[$metakey]);
-           }
+
+            
+
+            if(isSet($data[$metakey])){
+                $metadata[$metakey] = $data[$metakey];
+                unSet($data[$metakey]);
+            } elseif($this->meta && isSet($this->meta[$metakey] )){ // preserve any old metakey:value data
+                $metadata[$metakey] = $this->meta[$metakey];
+
+            }
        });
 
        $data[$metaFieldName] = $metadata;
        
        return $data;
     }
+
+    
 
     /**
      * Override this method in the Model to use a differnt fieldname

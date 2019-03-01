@@ -18,13 +18,94 @@ class AssetsTableSeeder extends Seeder
         
         $slings = \DB::table('assman_slings')->get();
 
+        function convertSlingSize($size) {
+
+            $newsize='';
+
+            switch( trim(strtolower($size)) ) {
+
+                case 'small':
+                case 'small short':
+                case 's':
+                case 'fat s':
+                case 'thin small':
+                    $newsize='S';
+                    break;
+
+                case 'medium':
+                case 'regular':
+                case 'm':
+                case 'med':
+                case 'reg':
+                case 'standard': 
+                case 'thin medium':
+                case 'fat medium':
+                case 'medium fat':
+                case 'medium thin':
+                case 'thin m':
+                case 'm m':
+                case 'm l':
+                case 'fat m':
+                    $newsize = 'M';
+                    break;
+
+                case 'medium/large':
+                case 'm-l':
+                    $newsize = 'ML';
+                    break;
+
+                case 'large':
+                case 'large long':
+                case 'l':
+                case 'thin large':
+                case 'fat large':
+                case 'large size thin belt':
+                case 'large size':
+                case 'large size belt fat':
+                case 'large size fat belt':
+                    $newsize ='L';
+                    break;
+
+                case 'x-large':
+                case 'x large':
+                case 'xl':
+                case 'fat xl':
+                case 'thin xl':
+                case 'xl size':
+                case 'blue xl fat':
+                case 'fat extra large':
+                case 'thin extra large':
+                case 'extra large fat':       
+                    $newsize = 'XL';
+                    break;
+
+                case 'xxl':
+                case 'extra extra large':
+                case 'xx large':
+                    $newsize = 'XXL';
+                    break;
+                
+                case 'xxxl':
+                case 'xxx large':
+                    $newsize = 'XXXL';
+                    break;
+
+
+
+
+            }
+
+            return $newsize;
+
+        }
+
         foreach ($slings as $a) {
 
             $data = [];
            
             $data['asset_id'] = $a->barcode;
             $data['description'] = $a->description;
-            $data['size'] = $a->size;
+            // $data['size'] = $a->size; // size now moved into meta
             $data['vendor'] = $a->vendor;
             $data['vendor_part_reference'] = $a->vendor_part_reference;
 
@@ -36,7 +117,7 @@ class AssetsTableSeeder extends Seeder
             $data['cost_centre'] = $a->cost_centre;
             $data['asset_type_id'] = 3; // 1=hoist asset, 2 = restraint asset , 3 = Sling asset
 
-            $data['commissioned_date']=substr($a->commissioned_date,0,4) !='0000'? $a->commissioned_date : null;
+            $data['commissioned_date']=substr($a->commissioned_date,0,1) !='0'? $a->commissioned_date : null;
 
             $data['condition']=$a->condition > '' ? $a->condition : null;
             $data['retire_from_service']=$a->retire_from_service == 'yes' ? 1: 0;
@@ -44,7 +125,9 @@ class AssetsTableSeeder extends Seeder
             $data['next_audit_due'] = $a->next_audit_due;
 
 
+
             $data['meta'] = [
+                'size' => convertSlingSize($a->size),
                 'wash_count'=>$a->wash_count,
                 'last_washed_date'=>$a->last_washed_date,
                 'quarantined' => $a->quarantined == 'yes' ? 1 : 0

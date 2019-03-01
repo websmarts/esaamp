@@ -29,7 +29,7 @@ class CreateAssetsTable extends Migration
             $table->integer('asset_type_id')->unsigned();
             $table->json('meta')->nullable();
             
-            $table->enum('condition', ['Excellent', 'Good', 'Satisfactory','Unsatisfactory'])->nullable();
+            $table->string('condition')->nullable();
             //$table->tinyInteger('quarantined')->default(0);
             $table->tinyInteger('retire_from_service')->default(0);
 

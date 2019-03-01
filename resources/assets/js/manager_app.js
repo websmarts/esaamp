@@ -12,9 +12,6 @@ import Router from 'vue-router';
 import Vuetify from 'vuetify';
 
 
-
-
-
 Vue.use(Router)
 
 // Helpers
@@ -37,6 +34,8 @@ const Dashboard = {template:'<div>Dashboard with Reports and User Mgt</div>'};
 const AddAsset = require('./components/app/AssetAdd.vue');
 const ViewAsset = require('./components/app/AssetView.vue');
 const Reports = require('./components/app/ReportsIndex.vue');
+const AuditsDue = require('./components/app/AuditsDue.vue');
+
 
 const assetEditForm = require('./components/app/AssetEditForm.vue');
 Vue.component('assetEditForm',assetEditForm);
@@ -47,13 +46,13 @@ Vue.component('assetAudit',assetAudit);
 const auditHistory = require('./components/app/AuditHistory.vue');
 Vue.component('auditHistory',auditHistory);
 
-const auditsDue = require('./components/app/AuditsDue.vue');
-Vue.component('auditsDue', auditsDue);
+
 
 const routes = [
     { path: '/', component: Dashboard },
     { path: '/view/:assetid', component: ViewAsset },
     { path: '/add/:assettype', component: AddAsset },
+    { path: '/auditsdue', component: AuditsDue },
     { path: '/reports', component: Reports }
   ];
 
@@ -65,7 +64,7 @@ const router = new Router({
 const App = require('./components/app/ManagerApp.vue');
 
 
-Vue.config.productionTip = false
+Vue.config.productionTip = true
 
 // import api from './components/app/lib/apiService.js';
 import apiService from './components/app/lib/apiServiceClass.js';
@@ -74,7 +73,14 @@ const api =  new apiService;
 
 Vue.prototype.$api = api;
 
+import { EventBus } from './components/app/lib/eventbus.js';
 
+EventBus.$on('newAssetId', newAssetId => {
+  console.log(`Toolbar says - Oh, that's nice we have a new asset  ${newAssetId}! :)`)
+  // if ID does not exist then push it
+
+  $AssetIds.push(newAssetId)
+});
 
 new Vue(
     { 

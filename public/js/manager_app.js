@@ -1783,6 +1783,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -1836,6 +1855,8 @@ var formValidator = __webpack_require__("./resources/assets/js/components/app/li
             return true;
         },
         submit: function submit() {
+            var _this = this;
+
             if (this.$refs.add_asset_form.validate()) {
                 // Native form submission is not yet supported
                 // console.log('Form is valid and I am submitting it now with this data',this.data)
@@ -1851,17 +1872,16 @@ var formValidator = __webpack_require__("./resources/assets/js/components/app/li
 
                 _self.saving = true;
 
-                axios.post('/api/asset', data).then(function (response) {
-                    // handle success
-                    // console.log(response.data);
-                    _self.successAlertMessage = 'Record update successful';
-                    _self.showSuccessAlertFlag = true;
+                var path = '/api/asset';
+
+                this.$api.post(path, data, function (status, data) {
 
                     // emit event to update the list of barcodes
-                    __WEBPACK_IMPORTED_MODULE_0__lib_eventbus_js__["a" /* EventBus */].$emit('newAssetId', newAssetId);
-                }).catch(function (error) {
-                    // handle error
-                    console.log(error);
+                    __WEBPACK_IMPORTED_MODULE_0__lib_eventbus_js__["a" /* EventBus */].$emit('newAssetId', data.record.asset_id);
+
+                    _this.showSuccessMessage('Asset has been saved');
+                }).catch(function (err) {
+                    _this.showRequestErrors(err.response.data);
                 }).then(function () {
                     // always executed
                     _self.saving = false;
@@ -1940,8 +1960,32 @@ var formValidator = __webpack_require__("./resources/assets/js/components/app/li
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_assetforms_js__ = __webpack_require__("./resources/assets/js/components/app/mixins/assetforms.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_eventbus_js__ = __webpack_require__("./resources/assets/js/components/app/lib/eventbus.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2055,91 +2099,49 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 var formValidator = __webpack_require__("./resources/assets/js/components/app/lib/validatorClass.js");
 
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+    mixins: [__WEBPACK_IMPORTED_MODULE_0__mixins_assetforms_js__["a" /* default */]],
     props: ['asset'],
     data: function data() {
         return {
 
-            valid: true,
-
             dateMenus: { // flags for datepicker popups
                 audit_date: false
-            },
+            }
 
-            formdata: {},
-
-            formschema: [],
-
-            showSuccessAlertFlag: false,
-            successAlertMessage: ''
         };
     },
 
     computed: {},
     methods: {
-        formatDate: function formatDate(date) {
-            if (!date) return null;
-
-            var _date$split = date.split('-'),
-                _date$split2 = _slicedToArray(_date$split, 3),
-                year = _date$split2[0],
-                month = _date$split2[1],
-                day = _date$split2[2];
-
-            return day + '-' + month + '-' + year;
-        },
-        groupA: function groupA(s) {
-            // return true if input is one of the following
-
-            var options = ['v-text-field', 'v-select'];
-            return options.indexOf(s.input) > -1;
-        },
-        groupB: function groupB(s) {
-
-            var options = ['v-date-picker'];
-            return options.indexOf(s.input) > -1;
-        },
-        groupC: function groupC(s) {
-            var options = ['v-switch'];
-            return options.indexOf(s.input) > -1;
-        },
-        getOptions: function getOptions(key) {
-            // console.log('Refdata Options Key',key)
-
-            // Could update to check if key is a string of options and if it is then return
-            // them as an array
-
-            // But for now we assume key is a key into the global refdata array
-            if ($Refdata.hasOwnProperty(key)) {
-                return $Refdata[key];
-            }
-        },
-        changed: function changed(e, field) {
-            // console.log('changed',e,field)
-            this.formdata[field] = e;
-        },
         submit: function submit() {
+            var _this = this;
 
             if (this.$refs.auditform.validate()) {
 
                 var self = this;
 
-                axios.post('/api/audit', self.formdata).then(function (response) {
-                    // handle success
-                    // console.log(response.data);
-                    self.successAlertMessage = 'Success ... audit record saved';
-                    self.showSuccessAlertFlag = true;
+                self.saving = true;
 
-                    // push the new audit onto the audits stack
-                    // should emit an event so parent can update the record TODO
-                    self.$emit('created', response.data.record);
-                    // this.asset.audits.push(response.data.record)
+                var path = '/api/audit';
 
-                }).catch(function (error) {
-                    // handle error
-                    console.log(error);
+                var data = this.formdata;
+                data['asset_id'] = this.asset['asset_id'];
+
+                this.$api.post(path, data, function (status, data) {
+
+                    // emit event to update the list of barcodes
+                    __WEBPACK_IMPORTED_MODULE_1__lib_eventbus_js__["a" /* EventBus */].$emit('newAudit');
+
+                    _this.showSuccessMessage('Audit has been saved');
+                }).catch(function (err) {
+
+                    _this.showRequestErrors(err.response.data);
                 }).then(function () {
                     // always executed
+                    self.saving = false;
                 });
             }
         },
@@ -2362,6 +2364,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 var formValidator = __webpack_require__("./resources/assets/js/components/app/lib/validatorClass.js");
@@ -2387,7 +2412,7 @@ var formValidator = __webpack_require__("./resources/assets/js/components/app/li
         submit: function submit() {
             var _this = this;
 
-            if (this.$refs.form.validate()) {
+            if (true) {
                 // Native form submission is not yet supported
                 // console.log('Form is valid and I am submitting it now with this data',this.data)
 
@@ -2396,18 +2421,10 @@ var formValidator = __webpack_require__("./resources/assets/js/components/app/li
 
                 this.$api.put(path, formdata, function (status, data) {
                     _this.showSuccessMessage('Asset data has been saved');
+                }).catch(function (err) {
+                    _this.showRequestErrors(err.response.data);
                 });
             }
-        },
-        showSuccessMessage: function showSuccessMessage(msg) {
-            this.successAlertMessage = msg;
-            this.showSuccessAlertFlag = true;
-
-            var self = this;
-
-            setTimeout(function () {
-                self.showSuccessAlertFlag = false;
-            }, 3000);
         },
         clear: function clear() {
 
@@ -2469,17 +2486,7 @@ var formValidator = __webpack_require__("./resources/assets/js/components/app/li
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_eventbus_js__ = __webpack_require__("./resources/assets/js/components/app/lib/eventbus.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_store_js__ = __webpack_require__("./resources/assets/js/components/app/lib/store.js");
-//
-//
-//
-//
-//
-//
-//
-//
-//
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_store_js__ = __webpack_require__("./resources/assets/js/components/app/lib/store.js");
 //
 //
 //
@@ -2545,12 +2552,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
-
-
-__WEBPACK_IMPORTED_MODULE_0__lib_eventbus_js__["a" /* EventBus */].$on('newAssetId', function (newAssetId) {
-    console.log('Toolbar says - Oh, that\'s nice we have a new asset  ' + newAssetId + '! :)');
-    $AssetIds.push(newAssetId);
-});
 
 
 
@@ -2559,9 +2560,11 @@ __WEBPACK_IMPORTED_MODULE_0__lib_eventbus_js__["a" /* EventBus */].$on('newAsset
     data: function data() {
 
         return {
-            store: __WEBPACK_IMPORTED_MODULE_1__lib_store_js__["a" /* default */],
-            assetId: this.$route.params.assetid,
-            assetIds: $AssetIds,
+            store: __WEBPACK_IMPORTED_MODULE_0__lib_store_js__["a" /* default */],
+            assetId: null,
+            search: null,
+            assetIds: [],
+            auditsDueCount: $Refdata['audits_due_count'],
 
             loading: false,
             isEditing: false,
@@ -2573,7 +2576,8 @@ __WEBPACK_IMPORTED_MODULE_0__lib_eventbus_js__["a" /* EventBus */].$on('newAsset
             btn_selected: {
                 view: false,
                 add: false,
-                reports: false
+                reports: false,
+                auditsdue: false
             }
 
         };
@@ -2585,24 +2589,49 @@ __WEBPACK_IMPORTED_MODULE_0__lib_eventbus_js__["a" /* EventBus */].$on('newAsset
         }
     },
     methods: {
+        querySelections: function querySelections(val) {
+
+            // console.log('querySelections with val=',val)
+
+            if (val) {
+                var opts = $AssetIds.filter(function (opt) {
+
+                    return opt.substr(0, val.length + 1) == val;
+                });
+
+                if (opts.length > 0) {
+                    this.assetIds = opts; // show only ones 
+                } else {
+                    this.assetIds = $AssetIds; // make all available
+                }
+            }
+        },
         assetSelected: function assetSelected(e) {
             //this.goBtnDisabled = false
             this.view();
         },
         view: function view() {
+            // view asset
             if (typeof this.assetId != "undefined") {
+
+                // issue an event to route to view_asset
                 this.$router.push('/view/' + this.assetId);
             }
 
             //this.updateButtonSelectIndicators('select')
         },
         add: function add(assetTypeId) {
+            // add asset
             this.$router.push('/add/' + assetTypeId);
             //this.updateButtonSelectIndicators('add')
         },
         reports: function reports() {
             this.$router.push('/reports');
             //this.updateButtonSelectIndicators('reports')
+        },
+        auditsdue: function auditsdue() {
+            // audits due report
+            this.$router.push('/auditsdue');
         },
         updateButtons: function updateButtons(btn) {
             var self = this;
@@ -2613,7 +2642,20 @@ __WEBPACK_IMPORTED_MODULE_0__lib_eventbus_js__["a" /* EventBus */].$on('newAsset
     },
     watch: {
         'currentroute': function currentroute(to, from) {
+            // Update the tooldar buttons to show what is active
             this.updateButtons(to);
+
+            // Update the current assetId
+            this.assetId = this.$route.params.assetid;
+
+            this.search = this.assetid;
+            if (this.assetId) {
+                // provide some items for autocomplete
+                this.querySelections(this.assetId);
+            }
+        },
+        'search': function search(val) {
+            val && val !== this.assetId && this.querySelections(val);
         }
     }
 
@@ -2627,6 +2669,8 @@ __WEBPACK_IMPORTED_MODULE_0__lib_eventbus_js__["a" /* EventBus */].$on('newAsset
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_store__ = __webpack_require__("./resources/assets/js/components/app/lib/store.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_eventbus_js__ = __webpack_require__("./resources/assets/js/components/app/lib/eventbus.js");
+//
 //
 //
 //
@@ -2685,16 +2729,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+
+
+// LISTEN for NEW ASSET AUDIT
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
             store: __WEBPACK_IMPORTED_MODULE_0__lib_store__["a" /* default */],
-            active: null,
+            active: 0,
             edit: null,
             audit: null,
-            assetId: this.$route.params.assetid,
+            assetId: null,
             asset: {}
         };
     },
@@ -2705,7 +2752,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         assettypeName: function assettypeName() {
             if (typeof this.asset.assettype != "undefined") {
-                return '( ' + this.asset.assettype.name + ' )';
+                return this.asset.assettype.name;
             }
         }
     },
@@ -2723,16 +2770,42 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     mounted: function mounted() {
+
+        this.assetId = this.$route.params.assetid;
+
+        // if route query m=audit then make audit tab the active one
+        if (this.$route.query && this.$route.query.tab) {
+            if (this.$route.query.tab == 'audit') {
+                this.active = 1; // select the audit tab
+            }
+        }
+
         this.load();
+    },
+    created: function created() {
+        var _this2 = this;
+
+        // when a new audit is created we reload the asset to get the 
+        __WEBPACK_IMPORTED_MODULE_1__lib_eventbus_js__["a" /* EventBus */].$on('newAudit', function () {
+            _this2.load();
+        });
     },
 
     watch: {
         '$route': function $route(to, from) {
             // react to route changes...
-            // console.log('re-routed to: ',to.params.barcode)
+            console.log('re-routed to: ', to.params.assetid, 'query', to.query);
             this.assetId = to.params.assetid;
             if (typeof this.assetId !== 'undefined') {
                 this.load();
+            }
+
+            if (to.query && to.query.tab) {
+
+                if (to.query.tab == 'audit') {
+
+                    this.active = 1; // select the audit tab
+                }
             }
         }
     }
@@ -2825,11 +2898,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
+            search: '',
             items: [],
             headers: [{
                 text: 'Asset ID',
@@ -2837,20 +2928,49 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 sortable: true,
                 value: 'asset_id'
             }, {
+                text: 'Site',
+                align: 'left',
+                sortable: true,
+                value: 'site'
+            }, {
+                text: 'Department',
+                align: 'left',
+                sortable: true,
+                value: 'department'
+            }, {
                 text: 'Asset type',
                 align: 'left',
                 sortable: true,
-                value: 'name'
+                value: 'type'
             }, {
-                text: 'Next audit due',
+                text: 'Condition',
+                align: 'left',
+                sortable: true,
+                value: 'condition'
+            }, {
+                text: 'Last audit',
+                align: 'left',
+                sortable: true,
+                value: 'last_audit_done'
+            }, {
+                text: 'Audit due',
                 align: 'left',
                 sortable: true,
                 value: 'next_audit_due'
+            }, {
+                text: 'Action',
+                align: 'right',
+                sortable: false,
+                value: null
             }]
         };
     },
 
     methods: {
+        goto: function goto(assetId) {
+            // console.log('GOT0 asset ID',assetId)
+            this.$router.push({ path: '/view/' + assetId, query: { 'tab': 'audit' } });
+        },
         load: function load() {
             var _this = this;
 
@@ -2934,6 +3054,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -37554,7 +37675,34 @@ var render = function() {
                                           rules: s.rules,
                                           readonly: s.readonly,
                                           value: _vm.formdata[s.name],
-                                          items: _vm.getOptions(s.items),
+                                          light: ""
+                                        },
+                                        on: {
+                                          change: function($event) {
+                                            _vm.changed($event, s.name)
+                                          }
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  )
+                                ]
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm.groupD(s)
+                              ? [
+                                  _c(
+                                    "v-flex",
+                                    { attrs: { xs12: "" } },
+                                    [
+                                      _c(s.input, {
+                                        tag: "component",
+                                        attrs: {
+                                          label: s.label,
+                                          rules: s.rules,
+                                          readonly: s.readonly,
+                                          value: _vm.formdata[s.name],
+                                          items: _vm.getOptions(s.options),
                                           light: ""
                                         },
                                         on: {
@@ -37583,7 +37731,6 @@ var render = function() {
                                           attrs: {
                                             "close-on-content-click": false,
                                             "nudge-right": 80,
-                                            xlazy: "",
                                             transition: "scale-transition",
                                             "offset-y": "",
                                             "full-width": "",
@@ -37621,7 +37768,6 @@ var render = function() {
                                               label: s.label,
                                               rules: s.rules,
                                               readonly: s.readonly,
-                                              items: _vm.getOptions(s.items),
                                               "no-title": "",
                                               light: "",
                                               scrollable: ""
@@ -37659,7 +37805,6 @@ var render = function() {
                                           label: s.label,
                                           rules: s.rules,
                                           readonly: s.readonly,
-                                          items: _vm.getOptions(s.items),
                                           light: ""
                                         },
                                         on: {
@@ -37706,9 +37851,16 @@ var render = function() {
                             "v-alert",
                             {
                               attrs: {
-                                value: _vm.showSuccessAlertFlag,
+                                outline: "",
                                 dismissible: "",
                                 type: "success"
+                              },
+                              model: {
+                                value: _vm.showSuccessAlertFlag,
+                                callback: function($$v) {
+                                  _vm.showSuccessAlertFlag = $$v
+                                },
+                                expression: "showSuccessAlertFlag"
                               }
                             },
                             [
@@ -37718,6 +37870,45 @@ var render = function() {
                                   "\n                            "
                               )
                             ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: _vm.showErrorsAlertFlag,
+                                  expression: "showErrorsAlertFlag"
+                                }
+                              ],
+                              staticStyle: {
+                                background: "red",
+                                padding: "15px",
+                                color: "#fff"
+                              }
+                            },
+                            [
+                              _c("div", {
+                                domProps: {
+                                  innerHTML: _vm._s(_vm.errorsAlertMessage)
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "v-btn",
+                                {
+                                  on: {
+                                    click: function($event) {
+                                      _vm.showErrorsAlertFlag = false
+                                    }
+                                  }
+                                },
+                                [_vm._v("Close")]
+                              )
+                            ],
+                            1
                           )
                         ],
                         1
@@ -37813,12 +38004,11 @@ var render = function() {
     "v-app",
     { attrs: { id: "inspire" } },
     [
-      _vm._v("\n    " + _vm._s(_vm.clientname) + "\n\n    \n    "),
       _c(
         "v-toolbar",
         {
           attrs: {
-            color: "primary",
+            color: "grey darken-2",
             height: "85",
             dark: "",
             fixed: "",
@@ -37828,12 +38018,12 @@ var render = function() {
         [
           _c("v-toolbar-title", [
             _c("img", {
-              attrs: { src: "images/logo-with-tick-white.png", height: "45" }
+              attrs: { src: "images/saamlogo-with-checkbox.png", height: "45" }
             }),
             _c("br"),
             _vm._v(" "),
             _c("span", { staticStyle: { "font-size": "13px" } }, [
-              _vm._v("Equipment Safety Audit & Asset Management Portal")
+              _vm._v("Safety Audit & Asset Management")
             ])
           ]),
           _vm._v(" "),
@@ -37847,7 +38037,6 @@ var render = function() {
           _vm._v(" "),
           _c(
             "v-toolbar-items",
-            { staticClass: "hidden-sm-and-down" },
             [
               _c("v-btn", { attrs: { flat: "" } }, [
                 _c(
@@ -37872,6 +38061,7 @@ var render = function() {
       _vm._v(" "),
       _c(
         "v-content",
+        { staticStyle: { "padding-top": "64px" } },
         [
           _c(
             "v-toolbar",
@@ -37880,8 +38070,8 @@ var render = function() {
                 tile: "",
                 dark: "",
                 flat: "",
-                color: "grey",
-                height: "94"
+                color: "grey lighten-1",
+                height: "84"
               }
             },
             [
@@ -37966,26 +38156,63 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "v-card",
-    { attrs: { dark: "", flat: "", color: "grey" } },
+    "v-layout",
+    { attrs: { row: "", "align-center": "" } },
     [
       _c(
-        "v-layout",
-        { attrs: { row: "", "align-center": "" } },
+        "v-flex",
+        { staticStyle: { "padding-left": "30px" }, attrs: { xs4: "" } },
+        [
+          _c("v-autocomplete", {
+            attrs: {
+              loading: _vm.loading,
+              items: _vm.assetIds,
+              "search-input": _vm.search,
+              clearable: "",
+              light: "",
+              flat: "",
+              "hide-details": "",
+              label: "Enter Asset ID...",
+              solo: ""
+            },
+            on: {
+              change: _vm.assetSelected,
+              "update:searchInput": function($event) {
+                _vm.search = $event
+              }
+            },
+            model: {
+              value: _vm.assetId,
+              callback: function($$v) {
+                _vm.assetId = $$v
+              },
+              expression: "assetId"
+            }
+          })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("v-flex"),
+      _vm._v(" "),
+      _c(
+        "v-flex",
         [
           _c(
-            "v-flex",
-            { staticStyle: { "text-align": "left" }, attrs: { xs3: "" } },
+            "v-menu",
+            { attrs: { "offset-y": "" } },
             [
               _c(
                 "v-btn",
                 {
-                  staticStyle: { height: "80px" },
-                  attrs: { color: "blue darken-2" },
-                  on: { click: _vm.reports }
+                  staticStyle: { height: "60px" },
+                  attrs: { slot: "activator", color: "blue darken-2" },
+                  slot: "activator"
                 },
                 [
-                  _vm._v("\n              Dashboard"),
+                  _vm._v("\n            Add"),
+                  _c("br"),
+                  _vm._v(" asset"),
                   _c(
                     "v-icon",
                     {
@@ -37993,8 +38220,8 @@ var render = function() {
                         {
                           name: "show",
                           rawName: "v-show",
-                          value: _vm.btn_selected.reports,
-                          expression: "btn_selected.reports"
+                          value: _vm.btn_selected.add,
+                          expression: "btn_selected.add"
                         }
                       ],
                       attrs: { dark: "", right: "" }
@@ -38003,188 +38230,96 @@ var render = function() {
                   )
                 ],
                 1
+              ),
+              _vm._v(" "),
+              _c(
+                "v-list",
+                _vm._l(_vm.assetTypes, function(item, index) {
+                  return _c(
+                    "v-list-tile",
+                    {
+                      key: index,
+                      on: {
+                        click: function($event) {
+                          _vm.add(item.id)
+                        }
+                      }
+                    },
+                    [_c("v-list-tile-title", [_vm._v(_vm._s(item.name))])],
+                    1
+                  )
+                })
               )
             ],
             1
-          ),
-          _vm._v(" "),
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-flex",
+        [
           _c(
-            "v-flex",
-            { attrs: { xs9: "" } },
+            "v-btn",
+            {
+              staticStyle: { height: "60px" },
+              attrs: { color: "blue darken-2" },
+              on: { click: _vm.auditsdue }
+            },
             [
+              _vm._v("\n        Audits"),
+              _c("br"),
+              _vm._v("due (" + _vm._s(_vm.auditsDueCount) + ")\n        "),
               _c(
-                "v-card",
-                { attrs: { dark: "", flat: "", color: "grey darken-2" } },
-                [
-                  _c(
-                    "v-layout",
-                    { attrs: { row: "", "align-center": "" } },
-                    [
-                      _c(
-                        "v-flex",
-                        { staticStyle: { "padding-left": "30px" } },
-                        [
-                          _c(
-                            "span",
-                            {
-                              staticStyle: {
-                                color: "#ddd",
-                                "font-size": "120%"
-                              }
-                            },
-                            [_vm._v(" Asset  ")]
-                          )
-                        ]
-                      )
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "v-layout",
+                "v-icon",
+                {
+                  directives: [
                     {
-                      staticStyle: { "padding-bottom": "10px" },
-                      attrs: { row: "", "align-center": "" }
-                    },
-                    [
-                      _c(
-                        "v-flex",
-                        {
-                          staticStyle: { "padding-left": "30px" },
-                          attrs: { xs4: "" }
-                        },
-                        [
-                          _c("v-autocomplete", {
-                            attrs: {
-                              loading: _vm.loading,
-                              items: _vm.assetIds,
-                              clearable: "",
-                              "cache-items": "",
-                              light: "",
-                              flat: "",
-                              "hide-details": "",
-                              label: "Enter Asset ID...",
-                              solo: ""
-                            },
-                            on: { change: _vm.assetSelected },
-                            model: {
-                              value: _vm.assetId,
-                              callback: function($$v) {
-                                _vm.assetId = $$v
-                              },
-                              expression: "assetId"
-                            }
-                          })
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "v-flex",
-                        [
-                          _c(
-                            "v-btn",
-                            {
-                              attrs: {
-                                disabled: !_vm.assetId,
-                                color: "blue darken-2"
-                              },
-                              on: { click: _vm.view }
-                            },
-                            [
-                              _vm._v("\n                          Select"),
-                              _c(
-                                "v-icon",
-                                {
-                                  directives: [
-                                    {
-                                      name: "show",
-                                      rawName: "v-show",
-                                      value: _vm.btn_selected.view,
-                                      expression: "btn_selected.view"
-                                    }
-                                  ],
-                                  attrs: { dark: "", right: "" }
-                                },
-                                [_vm._v("check_circle")]
-                              )
-                            ],
-                            1
-                          )
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "v-flex",
-                        [
-                          _c(
-                            "v-menu",
-                            { attrs: { "offset-y": "" } },
-                            [
-                              _c(
-                                "v-btn",
-                                {
-                                  attrs: {
-                                    slot: "activator",
-                                    color: "blue darken-2"
-                                  },
-                                  slot: "activator"
-                                },
-                                [
-                                  _vm._v("\n                              Add"),
-                                  _c(
-                                    "v-icon",
-                                    {
-                                      directives: [
-                                        {
-                                          name: "show",
-                                          rawName: "v-show",
-                                          value: _vm.btn_selected.add,
-                                          expression: "btn_selected.add"
-                                        }
-                                      ],
-                                      attrs: { dark: "", right: "" }
-                                    },
-                                    [_vm._v("check_circle")]
-                                  )
-                                ],
-                                1
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "v-list",
-                                _vm._l(_vm.assetTypes, function(item, index) {
-                                  return _c(
-                                    "v-list-tile",
-                                    {
-                                      key: index,
-                                      on: {
-                                        click: function($event) {
-                                          _vm.add(item.id)
-                                        }
-                                      }
-                                    },
-                                    [
-                                      _c("v-list-tile-title", [
-                                        _vm._v(_vm._s(item.name))
-                                      ])
-                                    ],
-                                    1
-                                  )
-                                })
-                              )
-                            ],
-                            1
-                          )
-                        ],
-                        1
-                      )
-                    ],
-                    1
-                  )
-                ],
-                1
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.btn_selected.auditsdue,
+                      expression: "btn_selected.auditsdue"
+                    }
+                  ],
+                  attrs: { dark: "", right: "" }
+                },
+                [_vm._v("check_circle")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-flex",
+        { staticStyle: { "text-align": "left" }, attrs: { xs3: "" } },
+        [
+          _c(
+            "v-btn",
+            {
+              staticStyle: { height: "60px" },
+              attrs: { color: "blue darken-2" },
+              on: { click: _vm.reports }
+            },
+            [
+              _vm._v("\n        Reports"),
+              _c(
+                "v-icon",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.btn_selected.reports,
+                      expression: "btn_selected.reports"
+                    }
+                  ],
+                  attrs: { dark: "", right: "" }
+                },
+                [_vm._v("check_circle")]
               )
             ],
             1
@@ -38227,7 +38362,7 @@ var render = function() {
             "v-tabs",
             {
               attrs: {
-                color: "green lighten-2",
+                color: "grey lighten-2",
                 light: "",
                 "slider-color": "grey darken-2"
               },
@@ -38243,7 +38378,7 @@ var render = function() {
               _c(
                 "v-flex",
                 {
-                  staticClass: "grey darken-2",
+                  staticClass: "purple darken-1",
                   staticStyle: {
                     "text-align": "right",
                     "font-size": "120%",
@@ -38258,14 +38393,22 @@ var render = function() {
               _c(
                 "v-flex",
                 {
-                  staticClass: "grey darken-2",
+                  staticClass: "purple darken-1",
                   staticStyle: {
                     "font-size": "120%",
                     color: "#fff",
-                    padding: "5px"
+                    padding: "5px",
+                    "text-align": "left"
                   }
                 },
-                [_vm._v(_vm._s(_vm.assetId))]
+                [
+                  _vm._v(_vm._s(_vm.assetId) + " \r\n                 "),
+                  _c(
+                    "span",
+                    { staticStyle: { color: "#ccc", "font-style": "italic" } },
+                    [_vm._v(_vm._s(_vm.assettypeName))]
+                  )
+                ]
               ),
               _vm._v(" "),
               _c("v-tab", { key: _vm.edit, attrs: { ripple: "" } }, [
@@ -38287,12 +38430,8 @@ var render = function() {
                       _c(
                         "v-card-text",
                         [
-                          _c("div", { staticClass: "display-1" }, [
-                            _vm._v(
-                              "View/Edit " +
-                                _vm._s(_vm.assettypeName) +
-                                " Asset"
-                            )
+                          _c("div", { staticClass: "title" }, [
+                            _vm._v("Edit asset")
                           ]),
                           _vm._v(" "),
                           _c("asset-edit-form", { attrs: { asset: _vm.asset } })
@@ -38317,8 +38456,8 @@ var render = function() {
                       _c(
                         "v-card-text",
                         [
-                          _c("div", { staticClass: "display-1" }, [
-                            _vm._v("Audit Asset")
+                          _c("div", { staticClass: "title" }, [
+                            _vm._v("Audit asset")
                           ]),
                           _vm._v(" "),
                           _c("asset-audit", {
@@ -38326,7 +38465,18 @@ var render = function() {
                             on: { created: _vm.addAudit }
                           }),
                           _vm._v(" "),
-                          _c("div", [_vm._v("Asset Audit History")]),
+                          _c(
+                            "div",
+                            {
+                              staticClass: "title",
+                              staticStyle: {
+                                "margin-top": "20x",
+                                padding: "5px",
+                                "border-top": "1px dashed #ccc"
+                              }
+                            },
+                            [_vm._v("Asset Audit History")]
+                          ),
                           _vm._v(" "),
                           _c("audit-history", {
                             attrs: { audits: _vm.asset.audits }
@@ -38369,30 +38519,92 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("v-data-table", {
-    staticClass: "elevation-1",
-    attrs: { headers: _vm.headers, items: _vm.items },
-    scopedSlots: _vm._u([
-      {
-        key: "items",
-        fn: function(props) {
-          return [
-            _c("td", { staticClass: "text-xs-left" }, [
-              _vm._v(_vm._s(props.item.asset_id))
-            ]),
-            _vm._v(" "),
-            _c("td", { staticClass: "text-xs-left" }, [
-              _vm._v(_vm._s(props.item.assettype.name))
-            ]),
-            _vm._v(" "),
-            _c("td", { staticClass: "text-xs-left" }, [
-              _vm._v(_vm._s(props.item.next_audit_due))
-            ])
-          ]
-        }
-      }
-    ])
-  })
+  return _c(
+    "div",
+    [
+      _c(
+        "v-flex",
+        {
+          staticStyle: { "margin-bottom": "2em" },
+          attrs: { xs8: "", md4: "", "offset-md8": "", "offset-xs4": "" }
+        },
+        [
+          _c("v-text-field", {
+            attrs: {
+              "append-icon": "search",
+              label: "Search",
+              "single-line": "",
+              "hide-details": ""
+            },
+            model: {
+              value: _vm.search,
+              callback: function($$v) {
+                _vm.search = $$v
+              },
+              expression: "search"
+            }
+          })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("v-data-table", {
+        staticClass: "elevation-1",
+        attrs: { headers: _vm.headers, items: _vm.items, search: _vm.search },
+        scopedSlots: _vm._u([
+          {
+            key: "items",
+            fn: function(props) {
+              return [
+                _c("td", { staticClass: "text-xs-left" }, [
+                  _vm._v(_vm._s(props.item.asset_id))
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-xs-left" }, [
+                  _vm._v(_vm._s(props.item.site))
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-xs-left" }, [
+                  _vm._v(_vm._s(props.item.department))
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-xs-left" }, [
+                  _vm._v(_vm._s(props.item.type))
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-xs-left" }, [
+                  _vm._v(_vm._s(props.item.condition))
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-xs-left" }, [
+                  _vm._v(_vm._s(props.item.last_audit_done))
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-xs-left" }, [
+                  _vm._v(_vm._s(props.item.next_audit_due))
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-xs-left" }, [
+                  _c(
+                    "a",
+                    {
+                      on: {
+                        click: function($event) {
+                          _vm.goto(props.item.asset_id)
+                        }
+                      }
+                    },
+                    [_vm._v("audit")]
+                  )
+                ])
+              ]
+            }
+          }
+        ])
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -38444,7 +38656,7 @@ var render = function() {
                         attrs: {
                           label: "Asset ID",
                           value: _vm.formdata.asset_id,
-                          rules: _vm.assetIdRules
+                          disabled: true
                         }
                       })
                     ],
@@ -38518,7 +38730,34 @@ var render = function() {
                                       rules: s.rules,
                                       readonly: s.readonly,
                                       value: _vm.formdata[s.name],
-                                      items: _vm.getOptions(s.items),
+                                      light: ""
+                                    },
+                                    on: {
+                                      change: function($event) {
+                                        _vm.changed($event, s.name)
+                                      }
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            ]
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.groupD(s)
+                          ? [
+                              _c(
+                                "v-flex",
+                                { attrs: { xs12: "" } },
+                                [
+                                  _c(s.input, {
+                                    tag: "component",
+                                    attrs: {
+                                      label: s.label,
+                                      rules: s.rules,
+                                      readonly: s.readonly,
+                                      value: _vm.formdata[s.name],
+                                      items: _vm.getOptions(s.options),
                                       light: ""
                                     },
                                     on: {
@@ -38580,7 +38819,6 @@ var render = function() {
                                           label: s.label,
                                           rules: s.rules,
                                           readonly: s.readonly,
-                                          items: _vm.getOptions(s.items),
                                           "no-title": "",
                                           light: "",
                                           scrollable: ""
@@ -38614,7 +38852,6 @@ var render = function() {
                                       label: s.label,
                                       rules: s.rules,
                                       readonly: s.readonly,
-                                      items: _vm.getOptions(s.items),
                                       light: ""
                                     },
                                     on: {
@@ -38643,7 +38880,10 @@ var render = function() {
                   _c(
                     "v-btn",
                     {
-                      attrs: { disabled: !_vm.valid, loading: _vm.xhr_loading },
+                      attrs: {
+                        xdisabled: !_vm.valid,
+                        loading: _vm.xhr_loading
+                      },
                       on: { click: _vm.submit }
                     },
                     [_vm._v("\n                    Save\n                ")]
@@ -38676,6 +38916,45 @@ var render = function() {
                               "\n                        "
                           )
                         ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: _vm.showErrorsAlertFlag,
+                              expression: "showErrorsAlertFlag"
+                            }
+                          ],
+                          staticStyle: {
+                            background: "red",
+                            padding: "15px",
+                            color: "#fff"
+                          }
+                        },
+                        [
+                          _c("div", {
+                            domProps: {
+                              innerHTML: _vm._s(_vm.errorsAlertMessage)
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "v-btn",
+                            {
+                              on: {
+                                click: function($event) {
+                                  _vm.showErrorsAlertFlag = false
+                                }
+                              }
+                            },
+                            [_vm._v("Close")]
+                          )
+                        ],
+                        1
                       )
                     ],
                     1
@@ -38744,7 +39023,34 @@ var render = function() {
                                       rules: s.rules,
                                       readonly: s.readonly,
                                       value: _vm.formdata[s.name],
-                                      items: _vm.getOptions(s.items),
+                                      light: ""
+                                    },
+                                    on: {
+                                      change: function($event) {
+                                        _vm.changed($event, s.name)
+                                      }
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            ]
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.groupD(s)
+                          ? [
+                              _c(
+                                "v-flex",
+                                { attrs: { xs12: "" } },
+                                [
+                                  _c(s.input, {
+                                    tag: "component",
+                                    attrs: {
+                                      label: s.label,
+                                      rules: s.rules,
+                                      readonly: s.readonly,
+                                      value: _vm.formdata[s.name],
+                                      items: _vm.getOptions(s.options),
                                       light: ""
                                     },
                                     on: {
@@ -38806,7 +39112,6 @@ var render = function() {
                                           label: s.label,
                                           rules: s.rules,
                                           readonly: s.readonly,
-                                          items: _vm.getOptions(s.items),
                                           "no-title": "",
                                           light: "",
                                           scrollable: ""
@@ -38840,7 +39145,6 @@ var render = function() {
                                       label: s.label,
                                       rules: s.rules,
                                       readonly: s.readonly,
-                                      items: _vm.getOptions(s.items),
                                       light: ""
                                     },
                                     on: {
@@ -38883,18 +39187,64 @@ var render = function() {
                         "v-alert",
                         {
                           attrs: {
-                            value: _vm.showSuccessAlertFlag,
+                            outline: "",
                             dismissible: "",
                             type: "success"
+                          },
+                          model: {
+                            value: _vm.showSuccessAlertFlag,
+                            callback: function($$v) {
+                              _vm.showSuccessAlertFlag = $$v
+                            },
+                            expression: "showSuccessAlertFlag"
                           }
                         },
                         [
                           _vm._v(
-                            "\n                    " +
+                            "\n                        " +
                               _vm._s(_vm.successAlertMessage) +
-                              "\n                    "
+                              "\n                        "
                           )
                         ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: _vm.showErrorsAlertFlag,
+                              expression: "showErrorsAlertFlag"
+                            }
+                          ],
+                          staticStyle: {
+                            background: "red",
+                            padding: "15px",
+                            color: "#fff"
+                          }
+                        },
+                        [
+                          _c("div", {
+                            domProps: {
+                              innerHTML: _vm._s(_vm.errorsAlertMessage)
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "v-btn",
+                            {
+                              on: {
+                                click: function($event) {
+                                  _vm.showErrorsAlertFlag = false
+                                }
+                              }
+                            },
+                            [_vm._v("Close")]
+                          )
+                        ],
+                        1
                       )
                     ],
                     1
@@ -76359,6 +76709,10 @@ var _class = function () {
           alert('Method not allowed');
           break;
 
+        case 422:
+          // unprocessable entity - eg failed validation
+          break;
+
         default:
           // handle normal errors with some alert or whatever
           alert('default error handler');
@@ -76496,14 +76850,20 @@ var myValidator = function () {
 
                     obj.rules = []; // init object rules array
 
+                    // check for nullable
+                    var nullable = false;
+                    if (/nullable/.exec(rulesStr)) {
+                        nullable = true;
+                    }
+
                     // check for required
                     if (/required/.exec(rulesStr)) {
-                        obj.rules.push(makeRule(obj, { key: 'required' }));
+                        obj.rules.push(makeRule(obj, { key: 'required' }, nullable));
                     }
 
                     // check for numeric
                     if (/numeric/.exec(rulesStr)) {
-                        obj.rules.push(makeRule(obj, { key: 'numeric' }));
+                        obj.rules.push(makeRule(obj, { key: 'numeric' }, nullable));
                     }
 
                     // check for min
@@ -76523,6 +76883,8 @@ var myValidator = function () {
     }, {
         key: 'makeRule',
         value: function makeRule(field, rule) {
+            var nullable = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
 
             switch (rule.key) {
                 case 'required':
@@ -76552,7 +76914,7 @@ var myValidator = function () {
                 case 'numeric':
                     return function (v) {
                         if (typeof v === 'undefined') {
-                            return false;
+                            return nullable; // can be blank if nullable
                         }
                         return !isNaN(v) || field.label + ' may only contain numbers';
                     };
@@ -76596,6 +76958,8 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
             dateMenus: {}, // Object keyed by datepicker names 
             showSuccessAlertFlag: false,
             successAlertMessage: '',
+            showErrorsAlertFlag: false,
+            errorsAlertMessage: '',
             saving: false // xhr save indicator on submit button
         };
     },
@@ -76610,9 +76974,10 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
                 return site.departments;
             }
         },
-        conditionOptions: function conditionOptions() {
-            return $Refdata.condition_options;
-        },
+
+        // conditionOptions() {
+        //     return $Refdata.condition_options
+        // },
         myRefData: function myRefData() {
             return $Refdata;
         }
@@ -76640,7 +77005,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
         groupA: function groupA(s) {
             // return true if input is one of the following
 
-            var options = ['v-text-field', 'v-select'];
+            var options = ['v-text-field'];
             return options.indexOf(s.input) > -1;
         },
         groupB: function groupB(s) {
@@ -76652,7 +77017,13 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
             var options = ['v-switch'];
             return options.indexOf(s.input) > -1;
         },
-        getOptions: function getOptions(key) {
+        groupD: function groupD(s) {
+            // return true if input is one of the following
+
+            var options = ['v-select'];
+            return options.indexOf(s.input) > -1;
+        },
+        getRefdata: function getRefdata(key) {
             // console.log('Refdata Options Key',key)
 
             // Could update to check if key is a string of options and if it is then return
@@ -76662,6 +77033,26 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
             if ($Refdata.hasOwnProperty(key)) {
                 return $Refdata[key];
             }
+        },
+        getOptions: function getOptions(csv) {
+
+            // console.log('CSV',csv)
+
+            var options = [];
+            if (typeof csv !== 'undefined') {
+                var items = csv.split(',');
+
+                items.forEach(function (i) {
+
+                    if (i.indexOf(':') != -1) {
+                        var parts = i.split(':');
+                        options.push({ text: parts[0], value: parts[1] });
+                    } else {
+                        options.push({ text: i, value: i });
+                    }
+                });
+            }
+            return options;
         },
         changed: function changed(e, field) {
             // console.log('changed',e,field)
@@ -76673,6 +77064,32 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
             // current list of site.departments then clear value
             var found = _.find(this.siteDepartments, ['id', this.formdata.department_id]);
             if (!found) this.formdata.department_id = null;
+        },
+        showSuccessMessage: function showSuccessMessage(msg) {
+            this.successAlertMessage = msg;
+            this.showSuccessAlertFlag = true;
+
+            var self = this;
+
+            setTimeout(function () {
+                self.showSuccessAlertFlag = false;
+            }, 3000);
+        },
+        showRequestErrors: function showRequestErrors(data) {
+            this.showErrorsAlertFlag = true;
+
+            // console.log('DATA',data)
+
+            var message = data.message;
+
+            // Iterate through error object display object key and explode its array value
+            for (var key in data.errors) {
+                if (data.errors.hasOwnProperty(key)) {
+                    message += "<br />" + data.errors[key].join(',');
+                }
+            }
+
+            this.errorsAlertMessage = message;
         }
     }
 });
@@ -76692,6 +77109,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vuetify_es5_util_colors__ = __webpack_require__("./node_modules/vuetify/es5/util/colors.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vuetify_es5_util_colors___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_vuetify_es5_util_colors__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_app_lib_apiServiceClass_js__ = __webpack_require__("./resources/assets/js/components/app/lib/apiServiceClass.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_app_lib_eventbus_js__ = __webpack_require__("./resources/assets/js/components/app/lib/eventbus.js");
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -76724,6 +77142,7 @@ var Dashboard = { template: '<div>Dashboard with Reports and User Mgt</div>' };
 var AddAsset = __webpack_require__("./resources/assets/js/components/app/AssetAdd.vue");
 var ViewAsset = __webpack_require__("./resources/assets/js/components/app/AssetView.vue");
 var Reports = __webpack_require__("./resources/assets/js/components/app/ReportsIndex.vue");
+var AuditsDue = __webpack_require__("./resources/assets/js/components/app/AuditsDue.vue");
 
 var assetEditForm = __webpack_require__("./resources/assets/js/components/app/AssetEditForm.vue");
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('assetEditForm', assetEditForm);
@@ -76734,10 +77153,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('assetAudit', assetAudit);
 var auditHistory = __webpack_require__("./resources/assets/js/components/app/AuditHistory.vue");
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('auditHistory', auditHistory);
 
-var auditsDue = __webpack_require__("./resources/assets/js/components/app/AuditsDue.vue");
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('auditsDue', auditsDue);
-
-var routes = [{ path: '/', component: Dashboard }, { path: '/view/:assetid', component: ViewAsset }, { path: '/add/:assettype', component: AddAsset }, { path: '/reports', component: Reports }];
+var routes = [{ path: '/', component: Dashboard }, { path: '/view/:assetid', component: ViewAsset }, { path: '/add/:assettype', component: AddAsset }, { path: '/auditsdue', component: AuditsDue }, { path: '/reports', component: Reports }];
 
 var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
     routes: routes
@@ -76746,7 +77162,7 @@ var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
 
 var App = __webpack_require__("./resources/assets/js/components/app/ManagerApp.vue");
 
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.config.productionTip = false;
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.config.productionTip = true;
 
 // import api from './components/app/lib/apiService.js';
 
@@ -76754,6 +77170,15 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.config.productionTip = false;
 var api = new __WEBPACK_IMPORTED_MODULE_4__components_app_lib_apiServiceClass_js__["a" /* default */]();
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.prototype.$api = api;
+
+
+
+__WEBPACK_IMPORTED_MODULE_5__components_app_lib_eventbus_js__["a" /* EventBus */].$on('newAssetId', function (newAssetId) {
+    console.log('Toolbar says - Oh, that\'s nice we have a new asset  ' + newAssetId + '! :)');
+    // if ID does not exist then push it
+
+    $AssetIds.push(newAssetId);
+});
 
 new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
     el: '#app',

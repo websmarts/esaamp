@@ -34,6 +34,9 @@ Route::group( ['middleware'=>['auth:api']], function(){
 
     Route::get('audits/', 'Api\AuditsController@index');
 
+    Route::get('washes/{date}', 'Api\WashController@washes');
+    Route::post('washes/', 'Api\WashController@store');
+
 
 
 });

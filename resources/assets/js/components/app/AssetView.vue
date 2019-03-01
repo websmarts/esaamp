@@ -4,12 +4,13 @@
     <v-flex xs12 sm11 md7>
         <v-tabs
             v-model="active"
-            color="green lighten-2"
+            color="grey lighten-2"
             light
             slider-color="grey darken-2"
             >
-            <v-flex xs2 class="grey darken-2" style="text-align: right;font-size:120%;color:#fff; padding:5px" >Asset ID</v-flex>
-            <v-flex  class="grey darken-2" style="font-size:120%;color:#fff; padding:5px" >{{assetId}}</v-flex>
+            <v-flex xs2 class="purple darken-1" style="text-align: right;font-size:120%;color:#fff; padding:5px" >Asset ID</v-flex>
+            <v-flex  class="purple darken-1" style="font-size:120%;color:#fff; padding:5px; text-align: left" >{{assetId}} 
+                 <span style="color: #ccc; font-style: italic">{{ assettypeName }}</span></v-flex>
             <v-tab  
                 :key="edit"
                 ripple
@@ -28,7 +29,7 @@
                 <v-card flat>
                     
                         <v-card-text>
-                            <div class="display-1">View/Edit {{ assettypeName }} Asset</div>
+                            <div class="title">Edit asset</div>
                             <asset-edit-form :asset="asset"></asset-edit-form>
                         </v-card-text>
                     
@@ -41,10 +42,10 @@
             >
                 <v-card flat>
                 <v-card-text>
-                    <div class="display-1">Audit Asset</div>
+                    <div class="title">Audit asset</div>
                     <asset-audit :asset="asset"  @created="addAudit"></asset-audit>
-                    <div>Asset Audit History</div>
-                    <audit-history :audits="asset.audits"></audit-history>
+                    <div class="title" style="margin-top:20x; padding:5px; border-top: 1px dashed #ccc">Asset Audit History</div>
+                    <audit-history :audits="asset.audits" ></audit-history>
                 </v-card-text>
                 </v-card>
             </v-tab-item>
@@ -58,14 +59,18 @@
 <script>
 import store from './lib/store'
 
+// LISTEN for NEW ASSET AUDIT
+import { EventBus } from './lib/eventbus.js';
+
+
 export default {
     data() {
         return {
             store: store,
-            active: null,
+            active: 0,
             edit: null,
             audit: null,
-            assetId: this.$route.params.assetid,
+            assetId: null,
             asset:{}
         }
     },
@@ -76,7 +81,7 @@ export default {
 
         assettypeName() {
             if(typeof(this.asset.assettype) != "undefined"){
-                return '( ' + this.asset.assettype.name + ' )'
+                return  this.asset.assettype.name 
             }
         }
 
@@ -101,17 +106,44 @@ export default {
         },
     },
     mounted() {
+
+        this.assetId = this.$route.params.assetid
+
+        // if route query m=audit then make audit tab the active one
+        if(this.$route.query && this.$route.query.tab){
+            if(this.$route.query.tab =='audit'){
+                this.active = 1 // select the audit tab
+            }
+        }
+
+
         this.load()
+
+        
+    },
+    created() {
+
+        // when a new audit is created we reload the asset to get the 
+        EventBus.$on('newAudit', () => {
+            this.load()
+        })
     },
     watch: {
         '$route' (to, from) {
             // react to route changes...
-            // console.log('re-routed to: ',to.params.barcode)
+            console.log('re-routed to: ',to.params.assetid,'query',to.query)
             this.assetId = to.params.assetid
             if(typeof(this.assetId) !== 'undefined'){
                 this.load()
             }
 
+            if(to.query && to.query.tab){
+                
+                if(to.query.tab =='audit'){
+                    
+                    this.active = 1 // select the audit tab
+                }
+            }
             
         }
     }

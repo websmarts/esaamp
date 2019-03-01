@@ -64,6 +64,10 @@ export default class {
         alert('Method not allowed')
         break;
 
+      case 422:
+        // unprocessable entity - eg failed validation
+        break;
+
       default:
         // handle normal errors with some alert or whatever
         alert('default error handler')

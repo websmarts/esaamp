@@ -1,21 +1,10 @@
 <template>
 
-      <v-card dark flat  color="grey" >
-          <v-layout row align-center>
-                <v-flex xs3 style="text-align:left;"><v-btn color="blue darken-2" @click="reports" style=" height:80px">
-                    Dashboard<v-icon dark right v-show="btn_selected.reports">check_circle</v-icon>
-                    </v-btn>
-                </v-flex>
+                    
+                        
+                        <v-layout row align-center >
 
-                 
-                <v-flex xs9>
-                    <v-card dark flat  color="grey darken-2" > 
-                        <v-layout row align-center>
-                            <v-flex style="padding-left:30px">
-                                <span style="color: #ddd; font-size:120%"> Asset &nbsp;</span>
-                            </v-flex> 
-                        </v-layout>
-                        <v-layout row align-center style="padding-bottom:10px">
+                            
                             
                             <v-flex xs4 style="padding-left:30px">
                                     
@@ -25,8 +14,8 @@
                                         
                                         v-model="assetId"
                                         @change="assetSelected"
+                                        :search-input.sync="search"
                                         clearable
-                                        cache-items
                                         light
                                         flat
                                         hide-details
@@ -34,14 +23,15 @@
                                         solo
                                     ></v-autocomplete>
                             </v-flex>
-                            <v-flex ><v-btn :disabled="!assetId" color="blue darken-2" @click="view">
-                                Select<v-icon dark right v-show="btn_selected.view">check_circle</v-icon>
-                                </v-btn></v-flex>
+                            <!-- <v-flex ><v-btn :disabled="!assetId" color="blue darken-2" @click="view" style="height:60px"> 
+                                Show <br /> Asset<v-icon dark right v-show="btn_selected.view">check_circle</v-icon>
+                                </v-btn></v-flex> -->
+                            <v-flex></v-flex>
 
                             <v-flex >
                                 <v-menu offset-y>
-                                <v-btn slot="activator"  color="blue darken-2">
-                                    Add<v-icon dark right v-show="btn_selected.add">check_circle</v-icon>
+                                <v-btn slot="activator"  color="blue darken-2" style="height:60px">
+                                    Add<br /> asset<v-icon dark right v-show="btn_selected.add">check_circle</v-icon>
                                     </v-btn>
 
                                     <v-list>
@@ -56,28 +46,27 @@
 
                                 </v-menu>
                             </v-flex>
+
+                            <v-flex ><v-btn color="blue darken-2" @click="auditsdue" style="height:60px">
+                                Audits<br />due ({{ auditsDueCount }})
+                                <v-icon dark right v-show="btn_selected.auditsdue">check_circle</v-icon>
+                                </v-btn></v-flex>
+
+                            <v-flex xs3 style="text-align:left;"><v-btn color="blue darken-2" @click="reports" style=" height:60px">
+                                Reports<v-icon dark right v-show="btn_selected.reports">check_circle</v-icon>
+                                </v-btn>
+                            </v-flex>
                         </v-layout>
-                    </v-card>
-                </v-flex>
-
-
-                
-          </v-layout>
-        </v-card>
-                        
-
                     
-
+  
 
 </template>
 
 <script>
 
-import { EventBus } from './lib/eventbus.js';
-EventBus.$on('newAssetId', newAssetId => {
-  console.log(`Toolbar says - Oh, that's nice we have a new asset  ${newAssetId}! :)`)
-  $AssetIds.push(newAssetId)
-});
+
+
+
 
 import store from './lib/store.js';
 
@@ -87,8 +76,10 @@ export default {
 
         return {
             store: store,
-            assetId: this.$route.params.assetid,
-            assetIds: $AssetIds,
+            assetId: null,
+            search: null,
+            assetIds: [],
+            auditsDueCount: $Refdata['audits_due_count'],
             
             loading: false,
             isEditing: false,
@@ -100,7 +91,8 @@ export default {
             btn_selected: {
                 view: false,
                 add: false,
-                reports: false
+                reports: false,
+                auditsdue:false
             },
             
             
@@ -110,27 +102,58 @@ export default {
         xhr_loading() {
             return this.store.isActive()
         }
+        
+
+            
+        
     },
     methods: {
+        querySelections(val) {
+
+            // console.log('querySelections with val=',val)
+            
+            if(val){
+                let opts = $AssetIds.filter(opt => {
+
+                    return (opt.substr(0,val.length + 1 ) == val)
+                })
+
+                
+                if(opts.length > 0  ){
+                    this.assetIds = opts // show only ones 
+                } else {
+                    this.assetIds = $AssetIds // make all available
+                }
+                
+            }
+            
+            
+        },
         assetSelected(e) {
             //this.goBtnDisabled = false
          this.view();
         },
-        view() {
+        
+        view() { // view asset
             if(typeof(this.assetId) != "undefined") {
+
+                // issue an event to route to view_asset
                 this.$router.push('/view/'+this.assetId);
             }
             
             //this.updateButtonSelectIndicators('select')
             
         },
-        add(assetTypeId) {
+        add(assetTypeId) { // add asset
             this.$router.push('/add/'+ assetTypeId);
             //this.updateButtonSelectIndicators('add')
         },
         reports() {
             this.$router.push('/reports');
             //this.updateButtonSelectIndicators('reports')
+        },
+        auditsdue() { // audits due report
+            this.$router.push('/auditsdue');
         },
         updateButtons(btn){
             let self = this
@@ -144,9 +167,23 @@ export default {
     },
     watch: {
         'currentroute' (to, from) {
+            // Update the tooldar buttons to show what is active
             this.updateButtons(to)
+
+            // Update the current assetId
+            this.assetId = this.$route.params.assetid
+
+            
+            this.search = this.assetid 
+            if(this.assetId){ // provide some items for autocomplete
+                this.querySelections(this.assetId)
+            }   
+        },
+        'search' (val) {
+            val && val !== this.assetId && this.querySelections(val)
         }
-    },
+        
+    }
     
  
     

@@ -41,12 +41,10 @@ const App = require('./components/app/WasherApp.vue');
 
 Vue.config.productionTip = false
 
-// import api from './components/app/lib/apiService.js';
-// import apiService from './components/app/lib/apiServiceClass.js';
 
-// const api =  new apiService;
-
-// Vue.prototype.$api = api;
+import apiService from './components/app/lib/apiServiceClass.js';
+const api =  new apiService;
+Vue.prototype.$api = api;
 
 
 
