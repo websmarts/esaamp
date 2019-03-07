@@ -76687,11 +76687,15 @@ var _class = function () {
 
       __WEBPACK_IMPORTED_MODULE_1__store__["a" /* default */].endRequest();
 
+      // console.log('handleError is handling this')
+
       switch (error.response.status) {
         case 401:
 
           // do something when you're unauthenticated
           alert('Not authenticated request');
+
+          window.location.href = "/home";
           break;
 
         case 403:
@@ -76706,7 +76710,7 @@ var _class = function () {
           break;
 
         case 405:
-          alert('Method not allowed');
+          // alert('Method not allowed')
           break;
 
         case 422:

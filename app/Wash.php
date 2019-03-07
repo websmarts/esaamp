@@ -23,4 +23,10 @@ class Wash extends Model
         'quarantined'
 
     ];
+
+
+    public function asset()
+    {
+        return $this->belongsTo('App\Asset','asset_id','asset_id');
+    }
 }

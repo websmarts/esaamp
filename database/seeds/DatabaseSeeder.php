@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call(AssetsTableSeeder::class);
         $this->call(AuditsTableSeeder::class);
 
-        $this->call(WashesTableSeeder::class);
+        //$this->call(WashesTableSeeder::class);
 
 
 

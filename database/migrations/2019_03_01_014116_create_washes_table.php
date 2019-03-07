@@ -15,7 +15,7 @@ class CreateWashesTable extends Migration
     {
         Schema::create('washes', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('asset_id')->unsigned();
+            $table->string('asset_id');
             $table->integer('client_id')->unsigned();
             $table->date('washdate');
             $table->integer('washcount');

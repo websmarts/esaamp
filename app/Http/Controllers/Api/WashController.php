@@ -16,33 +16,41 @@ class WashController extends Controller
 
     public function __construct(Request $request)
     {
-         //$this->user = auth('api')->user();
-         
-        $this->user = $request->user('api');
-        $this->client = Client::find($this->user->client_id);
-        $this->request = $request;    
+        
+        $this->middleware(function ($request, $next) {
+
+            $this->user = $request->user('api');
+
+            $this->client = Client::find($this->user->client_id);
+
+            $this->request = $request;   
+
+            return $next($request);
+        });
+             
         
     }
 
 
     public function washes($date)
     {
-        $washes = Wash::where('client_id',$this->user->client_id)
-                        ->whereDate('washdate','=', $date)
-                        ->get();
+        
+        $washes = $this->washlist($date);
 
         return ['records'=>$washes];
     }
 
     public function store()
     {
+
+        
         $this->request->validate([ 
             'asset_id'=> 'required',
             'washdate' => 'required'
             ]
         );
         
-        // Okay it is valid
+        // Okay it is a valid request
         $asset = Asset::where('asset_id',$this->request->asset_id)->first();
 
 
@@ -51,16 +59,45 @@ class WashController extends Controller
             'client_id' =>$asset->client_id,
             'washdate' =>$this->request->washdate,
             'washcount' =>$asset->meta['wash_count'] + 1,
-            'condition' => $asset->condition
+            'condition' => $asset->condition,
+            'quarantined' => $asset->quarantined
         ];
 
-        $wash = Wash::create($data);
+        // If wash exists for today then return
+        if($this->isWashRecorded($data['asset_id'],$data['washdate'])){
+            return ['data'=>'duplicate record','record'=>$data];
+        }
 
         
 
-        $asset->update(['wash_count'=>$asset->meta['wash_count'] + 1]);
-        
+        $wash = Wash::create($data);// new wash record
 
-        return ['data'=>'success','record'=>$data];
+        $asset->update(['wash_count'=>$asset->meta['wash_count'] + 1]); // increment asset.washcount
+
+
+
+        return ['data'=>'success','records'=>$this->washlist($data['washdate'])];
+    }
+
+    protected function isWashRecorded($assetId,$date){
+
+        return  Wash::where('client_id',$this->user->client_id)
+                    ->where('asset_id',$assetId)
+                    ->whereDate('washdate','=', $date)
+                    ->first();
+
+    }
+
+    protected function washlist($date)
+    {
+
+
+        return \DB::table('washes')
+           ->join('assets', 'washes.asset_id', '=', 'assets.asset_id')
+           ->where('washes.client_id','=',$this->user->client_id)
+           ->whereDate('washdate','=', $date)
+           ->select('washes.*', 'assets.description as description')
+           ->get();
+
     }
 }

@@ -89,13 +89,13 @@
 
                     </v-flex>
 
-                    <v-flex xs12 text-xs-center>Feedback message area</v-flex>
+                    <v-flex xs12 text-xs-center>{{ message }}</v-flex>
 
                 </v-layout>
                 
                 <v-layout row justify-space-around wrap>
                     
-                    <v-flex xs12 sm6 md5>  
+                    <v-flex xs12 sm10 md8>  
                         <p class="title">Wash list</p>
 
                         <v-data-table
@@ -103,11 +103,14 @@
                             :items="records"
                             class="elevation-1"
                         >
-                            <template slot="items" slot-scope="props">
-                            <td>{{ props.item.asset_id }}</td>
-                            <td class="text-xs-right">{{ props.item.description }}</td>
-                            <td class="text-xs-right">{{ props.item.washcount }}</td>
-                            <td class="text-xs-right">{{ props.item.condition }}</td>
+                            <template slot="items" slot-scope="props" style="color:red">
+                                <tr v-bind:class="{'highlight_row': highlightRow(props)}">
+                                    <td>{{ props.item.asset_id }}</td>
+                                    <!-- <td class="text-xs-right">{{ props.item.description }}</td> -->
+                                    <td class="text-xs-left">{{ props.item.washcount }}</td>
+                                    <!-- <td class="text-xs-right">{{ props.item.condition }}</td> -->
+                                    <td class="text-xs-left">{{ props.item.quarantined }}</td>
+                                </tr>
                             </template>
                         </v-data-table>
 
@@ -139,18 +142,21 @@ export default {
             datemenu: false,
             washdate: moment().format('YYYY-MM-DD'),
             assetId: null,
+            selectedAssetId: null,
+            message:'',
             
             // Data table 
             headers: [
                         { text: 'Asset Id', value: 'asset_id' },
-                        { text: 'Description', value: 'description' },
+                        // { text: 'Description', value: 'asset.description' },
                         {
                             text: 'Wash count',
                             align: 'left',
                             sortable: false,
                             value: 'washcount'
                         },
-                        { text: 'Condition', value: 'condition' },
+                        // { text: 'Condition', value: 'condition' },
+                        { text: 'Quarantined', value: 'quarantined' },
                         
         
                     ],
@@ -159,38 +165,79 @@ export default {
         }
     },
     methods: {
+        highlightRow(props){
+            return props.item.quarantined
+        },
         assetIdInput(val){
             this.assetId = val
+
+            this.setMessage(val)
         },
         assetIdChange(val){
+
+            if(!val) {
+                return
+            }
+
+            this.setMessage('Last Asset ID selected: ' + val )
+
+            this.selectedAssetId = this.assetId
+            this.assetId = null
             this.save()
+        },
+        setMessage(msg) {
+            this.message = msg
         },
         save() {
 
             // check asset Id is valid
 
-            if(!$AssetIds.includes(this.assetId)){
-                console.log('Invalid assetId entered')
+            const aid = this.selectedAssetId
+            this.selectedAssetId=null
+
+            if(!$AssetIds.includes(aid)){
+                alert('Invalid assetId entered')
                 return
             }
+
+            // Check if already in the wash list for today
+            if( _.find(this.records,['asset_id',aid])){
+                alert('Wash has already been entered')
+                return
+            }
+
 
             // Okay it is a valid assetId
             const path = '/api/washes';
             const data = {
-                asset_id: this.assetId,
+                asset_id: aid,
                 washdate: this.washdate,
             }
 
+            this.setMessage('Asset ID: ' + aid + ' saving wash data ...')
+
             this.$api.post(path, data, (status,data) => {
 
-                    console.log('WASH DATA SAVED')
+                    // console.log('WASH DATA SAVED')
 
                     // Update records with new one returnd
+                    if(data.data == 'success'){
+                        this.records = data.records
+
+                        this.setMessage('Asset ID: ' + aid + ' wash data saved')
+                    }
+
+                    if(data.data == 'duplicate record'){
+                        alert('duplicate wash record detected')
+                        this.setMessage('Asset ID: ' + aid + ' wash data, duplicate record not saved')
+                    }
+                    
                     
 
                 }).catch( (err)=> {
                    
-                    
+                    console.log('ERR',err)
+                    this.setMessage('ERROR ' + err)
                     
                 }).then(function () {
                     // always executed
@@ -206,10 +253,12 @@ export default {
 
                     this.records = data.records
 
+                    this.setMessage('Select Wash Date and enter Asset Ids of washed items')
+
                 }).catch( (err)=> {
                    
                     
-                        console.log('Error in washapp.vue load function',err)
+                        //console.log('Error in washapp.vue load function',err)
                     
                     
                 }).then(function () {
@@ -232,3 +281,10 @@ export default {
 }
 
 </script>
+
+<style>
+.highlight_row {
+    background: #fcc;
+}
+
+</style>

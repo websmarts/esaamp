@@ -42,11 +42,15 @@ export default class {
     
     store.endRequest();
 
+    // console.log('handleError is handling this')
+
     switch (error.response.status) {
       case 401:
         
         // do something when you're unauthenticated
         alert('Not authenticated request')
+
+        window.location.href = "/home";
         break;   
         
       case 403:
@@ -61,7 +65,7 @@ export default class {
         break;
 
       case 405:
-        alert('Method not allowed')
+        // alert('Method not allowed')
         break;
 
       case 422:
