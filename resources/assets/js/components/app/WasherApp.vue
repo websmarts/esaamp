@@ -28,7 +28,7 @@
                 <v-layout row align-center justify-center >
                     <v-flex xs12 sm11 md7>
 
-                   Washer  Toolbar
+                   Enter wash data
                             
                     </v-flex>
                 </v-layout>

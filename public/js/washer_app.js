@@ -36937,7 +36937,7 @@ var render = function() {
                 [
                   _c("v-flex", { attrs: { xs12: "", sm11: "", md7: "" } }, [
                     _vm._v(
-                      "\n\n               Washer  Toolbar\n                        \n                "
+                      "\n\n               Enter wash data\n                        \n                "
                     )
                   ])
                 ],

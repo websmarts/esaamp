@@ -24,12 +24,12 @@
 
 
 
-        <v-content style="padding-top:64px">
+        <v-content>
             <v-toolbar tile dark flat  color="grey lighten-1" height="84">
                 
                     
                 <v-layout row align-center justify-center >
-                    <v-flex xs12 sm11 md7>
+                    <v-flex xs12 sm11 md7 style="padding-top:1px">
 
                     <asset-toolbar :currentroute="currentroute"></asset-toolbar>
                             

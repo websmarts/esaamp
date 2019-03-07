@@ -38061,7 +38061,6 @@ var render = function() {
       _vm._v(" "),
       _c(
         "v-content",
-        { staticStyle: { "padding-top": "64px" } },
         [
           _c(
             "v-toolbar",
@@ -38083,7 +38082,10 @@ var render = function() {
                 [
                   _c(
                     "v-flex",
-                    { attrs: { xs12: "", sm11: "", md7: "" } },
+                    {
+                      staticStyle: { "padding-top": "1px" },
+                      attrs: { xs12: "", sm11: "", md7: "" }
+                    },
                     [
                       _c("asset-toolbar", {
                         attrs: { currentroute: _vm.currentroute }

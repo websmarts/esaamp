@@ -72,7 +72,10 @@ class WashController extends Controller
 
         $wash = Wash::create($data);// new wash record
 
-        $asset->update(['wash_count'=>$asset->meta['wash_count'] + 1]); // increment asset.washcount
+        $asset->update([
+            'wash_count'=>$asset->meta['wash_count'] + 1,
+            'last_washed_date'=>$data['washdate']
+            ]); // increment asset.washcount and updat last washed date
 
 
 
