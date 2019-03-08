@@ -1701,6 +1701,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -37149,6 +37154,15 @@ var render = function() {
                 _vm.search = $event
               }
             },
+            scopedSlots: _vm._u([
+              {
+                key: "no-data",
+                fn: function() {
+                  return [_c("div", [_vm._v(" No matching items")])]
+                },
+                proxy: true
+              }
+            ]),
             model: {
               value: _vm.assetId,
               callback: function($$v) {

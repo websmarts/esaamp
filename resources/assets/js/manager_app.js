@@ -49,7 +49,7 @@ Vue.component('auditHistory',auditHistory);
 
 
 const routes = [
-    { path: '/', component: Dashboard },
+    { path: '/', component: Reports },
     { path: '/view/:assetid', component: ViewAsset },
     { path: '/add/:assettype', component: AddAsset },
     { path: '/auditsdue', component: AuditsDue },

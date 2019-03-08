@@ -21,7 +21,12 @@
                                         hide-details
                                         label="Enter Asset ID..."
                                         solo
-                                    ></v-autocomplete>
+                                    >
+                                        <template v-slot:no-data>
+                                            <div> No matching items</div>
+                                        </template>
+                                    
+                                    </v-autocomplete>
                             </v-flex>
                             <!-- <v-flex ><v-btn :disabled="!assetId" color="blue darken-2" @click="view" style="height:60px"> 
                                 Show <br /> Asset<v-icon dark right v-show="btn_selected.view">check_circle</v-icon>

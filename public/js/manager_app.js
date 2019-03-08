@@ -2551,6 +2551,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -38735,6 +38740,15 @@ var render = function() {
                 _vm.search = $event
               }
             },
+            scopedSlots: _vm._u([
+              {
+                key: "no-data",
+                fn: function() {
+                  return [_c("div", [_vm._v(" No matching items")])]
+                },
+                proxy: true
+              }
+            ]),
             model: {
               value: _vm.assetId,
               callback: function($$v) {
@@ -81844,7 +81858,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('assetAudit', assetAudit);
 var auditHistory = __webpack_require__("./resources/assets/js/components/app/AuditHistory.vue");
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('auditHistory', auditHistory);
 
-var routes = [{ path: '/', component: Dashboard }, { path: '/view/:assetid', component: ViewAsset }, { path: '/add/:assettype', component: AddAsset }, { path: '/auditsdue', component: AuditsDue }, { path: '/reports', component: Reports }];
+var routes = [{ path: '/', component: Reports }, { path: '/view/:assetid', component: ViewAsset }, { path: '/add/:assettype', component: AddAsset }, { path: '/auditsdue', component: AuditsDue }, { path: '/reports', component: Reports }];
 
 var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
     routes: routes
