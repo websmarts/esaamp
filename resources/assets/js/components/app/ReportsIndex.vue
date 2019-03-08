@@ -1,9 +1,87 @@
 <template>
-    <div>
-        <h3>Reports Index</h3>
+    <v-container>
+        <div class="display-2">Safety Audit &amp; Asset Management Reports</div>
 
-        <audits-due></audits-due>
+        <v-layout  mt-4 justify-center>
+          <v-flex xs12 md6 mt-4 >
+            <v-card color="blue-grey" class="white--text">
+              <v-card-title primary-title>
+                <div>
+                  <h3 class="headline">Asset report</h3>
+                </div>
+                  
+              </v-card-title>
+              <v-card-text>
+                <div  py-5 class="text-xs-left display-1" >Total number of assets: {{assetcount}}</div>
+                
+                  
+                
+              </v-card-text>
+              
+              
+            </v-card>
+          </v-flex>
+        </v-layout>
 
-    </div>
+        <v-layout  mt-4 justify-center>
+          <v-flex xs12 md6 mt-4>
+            <v-card color="blue-grey " class="white--text">
+              <v-card-title primary-title>
+                <div>
+                  <h3 class="headline">Audit report</h3>
+                </div>
+              </v-card-title>
+              <v-card-text>
+                <div  py-5 class="text-xs-left display-1" >Audits completed : {{auditsdone}}</div>
+                <div  py-5 class="text-xs-left display-1" >Audits overdue : {{auditsdue}}</div>
 
-</template
+              </v-card-text>
+              <v-card-actions>
+                <v-btn flat dark @click="goto('auditsdue')">view audits due</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-flex>
+        </v-layout>
+
+    </v-container>
+
+</template>
+
+<script>
+
+export default {
+
+    data() {
+        return {
+          auditsdue: 0,
+          auditsdone: 0,
+          assetcount: 0
+
+        }
+    },
+    methods: {
+
+      goto(url) {
+        this.$router.history.push(url)
+      },
+      load() {
+         this.$api.get('/api/reports',(status,data) => {
+                this.assetcount = data.data.assetcount
+                this.auditsdue = data.data.auditsdue
+                this.auditsdone = data.data.auditsdone
+            })
+            
+      }
+
+
+    },
+    mounted() {
+      
+
+      this.load()
+
+    }
+    
+}
+</script>
+    

@@ -398,6 +398,9 @@ var render = function() {
           "update:currentPage": function($event) {
             _vm.currentPage = $event
           },
+          "update:current-page": function($event) {
+            _vm.currentPage = $event
+          },
           select: _vm.selectrow
         },
         scopedSlots: _vm._u([
@@ -497,7 +500,7 @@ var render = function() {
                     {
                       on: {
                         click: function($event) {
-                          _vm.edititem(props.row)
+                          return _vm.edititem(props.row)
                         }
                       }
                     },

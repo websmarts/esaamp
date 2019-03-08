@@ -3,7 +3,7 @@
     <v-app id="inspire">
     
         
-        <v-toolbar color="grey darken-2" height="85" dark fixed app>
+        <v-toolbar color="blue-grey darken-2" height="85" dark fixed app>
         
             <v-toolbar-title>
                 <img src="images/saamlogo-with-checkbox.png" height="45" /><br />
@@ -25,7 +25,7 @@
 
 
         <v-content>
-            <v-toolbar tile dark flat  color="grey lighten-1" height="84">
+            <v-toolbar tile dark flat  color="blue-grey lighten-1" height="84">
                 
                     
                 <v-layout row align-center justify-center >
@@ -55,7 +55,7 @@
         </v-container>
         </v-content>
 
-        <v-footer color="primary" app>
+        <v-footer color="blue-grey darken-2" app>
         <span class="white--text">&copy; 2018</span>
         </v-footer>
     </v-app>

@@ -1221,7 +1221,7 @@ var render = function() {
                               staticClass: "action-link text-danger",
                               on: {
                                 click: function($event) {
-                                  _vm.revoke(token)
+                                  return _vm.revoke(token)
                                 }
                               }
                             },
@@ -1234,7 +1234,8 @@ var render = function() {
                         ]
                       )
                     ])
-                  })
+                  }),
+                  0
                 )
               ])
             ])
@@ -1354,7 +1355,7 @@ var render = function() {
                           staticClass: "action-link",
                           on: {
                             click: function($event) {
-                              _vm.edit(client)
+                              return _vm.edit(client)
                             }
                           }
                         },
@@ -1373,7 +1374,7 @@ var render = function() {
                           staticClass: "action-link text-danger",
                           on: {
                             click: function($event) {
-                              _vm.destroy(client)
+                              return _vm.destroy(client)
                             }
                           }
                         },
@@ -1385,7 +1386,8 @@ var render = function() {
                       )
                     ])
                   ])
-                })
+                }),
+                0
               )
             ])
           : _vm._e()
@@ -1420,7 +1422,8 @@ var render = function() {
                               "\n                            "
                           )
                         ])
-                      })
+                      }),
+                      0
                     )
                   ])
                 : _vm._e(),
@@ -1450,7 +1453,7 @@ var render = function() {
                         on: {
                           keyup: function($event) {
                             if (
-                              !("button" in $event) &&
+                              !$event.type.indexOf("key") &&
                               _vm._k(
                                 $event.keyCode,
                                 "enter",
@@ -1505,7 +1508,7 @@ var render = function() {
                         on: {
                           keyup: function($event) {
                             if (
-                              !("button" in $event) &&
+                              !$event.type.indexOf("key") &&
                               _vm._k(
                                 $event.keyCode,
                                 "enter",
@@ -1599,7 +1602,8 @@ var render = function() {
                               "\n                            "
                           )
                         ])
-                      })
+                      }),
+                      0
                     )
                   ])
                 : _vm._e(),
@@ -1629,7 +1633,7 @@ var render = function() {
                         on: {
                           keyup: function($event) {
                             if (
-                              !("button" in $event) &&
+                              !$event.type.indexOf("key") &&
                               _vm._k(
                                 $event.keyCode,
                                 "enter",
@@ -1680,7 +1684,7 @@ var render = function() {
                         on: {
                           keyup: function($event) {
                             if (
-                              !("button" in $event) &&
+                              !$event.type.indexOf("key") &&
                               _vm._k(
                                 $event.keyCode,
                                 "enter",
@@ -1875,7 +1879,7 @@ var render = function() {
                   staticClass: "action-link",
                   on: {
                     click: function($event) {
-                      _vm.createTokenModal("show")
+                      return _vm.createTokenModal("show")
                     }
                   }
                 },
@@ -1928,7 +1932,7 @@ var render = function() {
                               staticClass: "action-link text-danger",
                               on: {
                                 click: function($event) {
-                                  _vm.revoke(token)
+                                  return _vm.revoke(token)
                                 }
                               }
                             },
@@ -1941,7 +1945,8 @@ var render = function() {
                         ]
                       )
                     ])
-                  })
+                  }),
+                  0
                 )
               ])
             : _vm._e()
@@ -1973,7 +1978,7 @@ var render = function() {
                 attrs: { "aria-label": "close" },
                 on: {
                   click: function($event) {
-                    _vm.createTokenModal("hide")
+                    return _vm.createTokenModal("hide")
                   }
                 }
               })
@@ -1996,7 +2001,8 @@ var render = function() {
                               "\n                            "
                           )
                         ])
-                      })
+                      }),
+                      0
                     )
                   ])
                 : _vm._e(),
@@ -2065,7 +2071,7 @@ var render = function() {
                                   },
                                   on: {
                                     click: function($event) {
-                                      _vm.toggleScope(scope.id)
+                                      return _vm.toggleScope(scope.id)
                                     }
                                   }
                                 }),
@@ -2076,7 +2082,8 @@ var render = function() {
                                 )
                               ])
                             ])
-                          })
+                          }),
+                          0
                         )
                       ])
                     : _vm._e()
@@ -2090,7 +2097,7 @@ var render = function() {
                 attrs: { "aria-label": "close", "aria-hidden": "true" },
                 on: {
                   click: function($event) {
-                    _vm.createTokenModal("hide")
+                    return _vm.createTokenModal("hide")
                   }
                 }
               }),
@@ -2137,7 +2144,7 @@ var render = function() {
               attrs: { "aria-label": "close" },
               on: {
                 click: function($event) {
-                  _vm.newTokenModal("hide")
+                  return _vm.newTokenModal("hide")
                 }
               }
             })
@@ -2161,7 +2168,7 @@ var render = function() {
                 attrs: { type: "button" },
                 on: {
                   click: function($event) {
-                    _vm.newTokenModal("hide")
+                    return _vm.newTokenModal("hide")
                   }
                 }
               },
