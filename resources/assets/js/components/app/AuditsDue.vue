@@ -23,8 +23,8 @@
         <td class="text-xs-left">{{ props.item.department }}</td>
         <td class="text-xs-left">{{ props.item.type }}</td>
         <td class="text-xs-left">{{ props.item.condition }}</td>
-        <td class="text-xs-left">{{ props.item.last_audit_done }}</td>
-        <td class="text-xs-left">{{ props.item.next_audit_due }}</td>
+        <td class="text-xs-left">{{ convertDate(props.item.last_audit_date) }}</td>
+        <td class="text-xs-left">{{ convertDate(props.item.next_audit_due) }}</td>
         <td class="text-xs-left"><a @click="goto(props.item.asset_id)">audit</a></td>
         
         
@@ -76,7 +76,7 @@ export default {
                     text: 'Last audit',
                     align: 'left',
                     sortable: true,
-                    value: 'last_audit_done'
+                    value: 'last_audit_date'
                 },
                 {
                     text: 'Audit due',
@@ -107,6 +107,10 @@ export default {
             this.$api.get('/api/audits',(status,data) => {
                 this.items = data.items
             })
+        },
+        convertDate(dateString){
+            const p = dateString.split(/\D/g)
+            return [p[2],p[1],p[0] ].join("-")
         }
 
     },

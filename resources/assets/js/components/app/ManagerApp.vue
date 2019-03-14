@@ -3,10 +3,10 @@
     <v-app id="inspire">
     
         
-        <v-toolbar color="blue-grey darken-2" height="85" dark fixed app>
+        <v-toolbar color="blue" height="85" dark fixed app>
         
             <v-toolbar-title>
-                <img src="images/saamlogo-with-checkbox.png" height="45" /><br />
+                <img src="images/logo-with-tick-white.png" height="45" /><br />
                 <span style="font-size:13px">Safety Audit &amp; Asset Management</span>
             </v-toolbar-title>
             <v-spacer></v-spacer>
@@ -25,7 +25,7 @@
 
 
         <v-content>
-            <v-toolbar tile dark flat  color="blue-grey lighten-1" height="84">
+            <v-toolbar tile dark flat  color="blue lighten-1" height="84">
                 
                     
                 <v-layout row align-center justify-center >

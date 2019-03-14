@@ -7,19 +7,18 @@
     <div class="hero-body">
       <div class="container has-text-centered">
         <h1 class="title">
-          EQUIPMENT SAFETY AUDIT &amp; ASSET MANAGEMENT PORTAL
+          EQUIPMENT SAFETY AUDIT &amp; ASSET MANAGEMENT
         </h1>
         <h2 class="subtitle">
-          The Equipment Safety Audit and Asset Maanagement Portal is a tool to manage the acquisition, safe use and replacement of hospital equipment to ensure optimal patient use and care.
-        </h2>
+        The Equipment Safety Audit and Asset Management tool is an all-in-one system that manages critical safety audits on equipment used on patients.</h2>
       </div>
     </div>
   </div>
 </section>
 
-    <div class="box cta">
+    <div>
       <p class="has-text-centered">
-        <span class="tag is-danger">New</span> Now with support for wingdings as well as slingdings.
+        &nbsp;
       </p>
     </div>
 
@@ -30,10 +29,14 @@
                 <i class="fa fa-database"></i>
           </div>
           <div class="card-content">
-            <div class="content">
+            <div class="content has-text-centered">
               <h4>DATA CENTRALISATION </h4>
-              <p>Purus semper eget duis at tellus at urna condimentum mattis. Non blandit massa enim nec. Integer enim neque volutpat ac tincidunt vitae semper quis. Accumsan tortor posuere ac ut consequat semper viverra nam. Purus semper eget duis.</p>
-              <p><a href="#">Learn more</a></p>
+              <p>
+Key equipment manufacture details, ownership,<br />
+location information and audit records <br />
+all kept in the one secure place.
+</p>
+              
             </div>
           </div>
         </div>
@@ -44,10 +47,11 @@
               <i class="fa fa-id-card"></i>
           </div>
           <div class="card-content">
-            <div class="content">
-              <h4>SAFETY SOLUTION.</h4>
-              <p>Ut venenatis tellus in metus vulputate. Amet consectetur adipiscing elit pellentesque. Sed arcu non odio euismod lacinia at quis risus. Faucibus turpis in eu mi bibendum neque egestas cmonsu songue. Phasellus vestibulum lorem sed risus.</p>
-              <p><a href="#">Learn more</a></p>
+            <div class="content has-text-centered">
+              <h4>SAFETY SOLUTION</h4>
+              <p>Simple audit mechanism to conduct<br />
+               equipment safety audits with audit histories<br />
+              captured and overdue audit alerts.</p>
             </div>
           </div>
         </div>
@@ -58,10 +62,11 @@
               <i class="fa fa-table"></i>
           </div>
           <div class="card-content">
-            <div class="content">
-              <h4> ASSET MANAGEMENT.  </h4>
-              <p>Imperdiet dui accumsan sit amet nulla facilisi morbi. Fusce ut placerat orci nulla pellentesque dignissim enim. Libero id faucibus nisl tincidunt eget nullam. Commodo viverra maecenas accumsan lacus vel facilisis.</p>
-              <p><a href="#">Learn more</a></p>
+            <div class="content has-text-centered">
+              <h4> ASSET MANAGEMENT  </h4>
+              <p>Equipment usage data helps determine<br />
+               forecast budgeting for<br />
+               repair and replacement.</p>
             </div>
           </div>
         </div>
@@ -69,8 +74,8 @@
     </div>
 
     <div class="intro column is-8 is-offset-2 has-text-centered">
-      <h2 class="title">eSAAMP Basics</h2><br>
-      <p class="subtitle">Vel fringilla est ullamcorper eget nulla facilisi. Nulla facilisi nullam vehicula ipsum a. Neque egestas congue quisque egestas diam in arcu cursus.</p>
+      <h2 class="title">eSAAM Basics</h2><br>
+      <p class="subtitle"></p>
     </div>
 
   </section>
@@ -78,50 +83,73 @@
   <section class="container">
     <div class="columns features">
       <div class="column is-3">
-        <div class="card">
+        <div class="card has-background-primary">
 
           <div class="card-content">
-            <div class="content">
-              <h4>What is eSAAMP? </h4>
-              <p>Purus semper eget duis at tellus at urna condimentum mattis. Non blandit massa enim nec. Integer enim neque volutpat ac tincidunt vitae semper quis. Accumsan tortor posuere ac ut consequat semper viverra nam. Purus semper eget duis.</p>
-              <p><a href="#">Learn more</a></p>
+            <div class="content has-text-white">
+              <h4 class="has-text-white">What is eSAAM? </h4>
+              <p>eSAAM is a system that centralizes safety 
+              audit information regarding medical equipment 
+              and apparatus to ensure they are in the best condition 
+              for patient use. It takes the complexity out of trying to 
+              manage different methods for auditing medical equipment and 
+              retaining records. Patient safety is paramount therefore 
+              any information that impacts this needs to be 
+              clearly and accurately stored and accessible to the 
+              right people – the eSAAM takes care of this.</p>
             </div>
           </div>
         </div>
       </div>
       <div class="column is-3">
-        <div class="card">
+        <div class="card has-background-primary">
 
           <div class="card-content">
-            <div class="content">
-              <h4>Why eSAAMP?</h4>
-              <p>Ut venenatis tellus in metus vulputate. Amet consectetur adipiscing elit pellentesque. Sed arcu non odio euismod lacinia at quis risus. Faucibus turpis in eu mi bibendum neque egestas cmonsu songue. Phasellus vestibulum lorem sed risus.</p>
-              <p><a href="#">Learn more</a></p>
+            <div class="content has-text-white">
+              <h4 class="has-text-white">Why eSAAM?</h4>
+              <p>Hospitals are multi-disciplinary complex 
+              environments that produce and rely on a vast 
+              array of information to provide optimal care 
+              for patients. Good data management around medical 
+              equipment is therefore critical to reduce preventable 
+              risks to patients utilising any such device as 
+              part of their care. The eSAAM is a robust tool for
+               ensuring information is up to date, 
+               accurate and easy to understand. </p>
             </div>
           </div>
         </div>
       </div>
       <div class="column is-3">
-        <div class="card">
+        <div class="card has-background-primary">
 
           <div class="card-content">
-            <div class="content">
-              <h4> eSAAMP benefits  </h4>
-              <p>Imperdiet dui accumsan sit amet nulla facilisi morbi. Fusce ut placerat orci nulla pellentesque dignissim enim. Libero id faucibus nisl tincidunt eget nullam. Commodo viverra maecenas accumsan lacus vel facilisis. mperdiet dui accumsan sit amet nulla facilisi.</p>
-              <p><a href="#">Learn more</a></p>
+            <div class="content has-text-white">
+              <h4 class="has-text-white"> eSAAM benefits  </h4>
+              <p><ul>
+                <li>Safety audit mechanism that simplifies the audit process through a clear recording system </li>
+                <li>Alerts set up to ensure safety audits do not lapse </li>   
+                <li>Asset management feature that captures who the equipment belongs to, where it is kept, how old it is and when it may need to be replaced</li>
+                <li>Centralised and secure data portal accessible to permitted users ensures data is not kept by one person alone</li>
+                <li>Data is available across platforms - desktop, laptop, tablet or smart phone devices</li>
+              </ul>
+              </p>
             </div>
           </div>
         </div>
       </div>
 
       <div class="column is-3">
-        <div class="card">
+        <div class="card has-background-primary">
 
           <div class="card-content">
-            <div class="content">
-              <h4> How do I get started?  </h4>
-              <p>Imperdiet dui accumsan sit amet nulla facilisi morbi. Fusce ut placerat orci nulla pellentesque dignissim enim. Libero id faucibus nisl tincidunt eget nullam. Commodo viverra maecenas accumsan lacus vel facilisis. mperdiet dui accumsan sit amet nulla facilisi.</p>
-              <p><a href="#">Learn more</a></p>
+            <div class="content has-text-white">
+              <h4 class="has-text-white"> How do I get started?  </h4>
+              <p>Please complete the following information and a member of our staff will contact you within 48 hours regarding your inquiry.</p>
+             
+              @include('layouts.partials.register_interest_form')
+
+              
             </div>
           </div>
         </div>

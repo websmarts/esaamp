@@ -37340,18 +37340,12 @@ var render = function() {
       _c(
         "v-toolbar",
         {
-          attrs: {
-            color: "grey darken-2",
-            height: "85",
-            dark: "",
-            fixed: "",
-            app: ""
-          }
+          attrs: { color: "blue", height: "85", dark: "", fixed: "", app: "" }
         },
         [
           _c("v-toolbar-title", [
             _c("img", {
-              attrs: { src: "images/saamlogo-with-checkbox.png", height: "45" }
+              attrs: { src: "images/logo-with-tick-white.png", height: "45" }
             }),
             _c("br"),
             _vm._v(" "),
@@ -37403,7 +37397,7 @@ var render = function() {
                 tile: "",
                 dark: "",
                 flat: "",
-                color: "grey lighten-1",
+                color: "blue lighten-1",
                 height: "84"
               }
             },
@@ -37504,7 +37498,7 @@ var render = function() {
                     { attrs: { xs12: "", sm6: "", md4: "" } },
                     [
                       _c("v-text-field", {
-                        attrs: { value: _vm.assetId, label: "Asset Id" },
+                        attrs: { value: _vm.assetId, label: "Asset ID" },
                         on: {
                           input: _vm.assetIdInput,
                           change: _vm.assetIdChange
@@ -37529,7 +37523,9 @@ var render = function() {
                     "v-flex",
                     { attrs: { xs12: "", sm10: "", md8: "" } },
                     [
-                      _c("p", { staticClass: "title" }, [_vm._v("Wash list")]),
+                      _c("p", { staticClass: "title pt-5" }, [
+                        _vm._v("Wash list")
+                      ]),
                       _vm._v(" "),
                       _c("v-data-table", {
                         staticClass: "elevation-1",
@@ -37578,7 +37574,7 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _c("v-footer", { attrs: { color: "primary", app: "" } }, [
+      _c("v-footer", { attrs: { color: "blue", app: "" } }, [
         _c("span", { staticClass: "white--text" }, [_vm._v("© 2018")])
       ])
     ],

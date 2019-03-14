@@ -3,10 +3,10 @@
     <v-app id="inspire">
     
         
-        <v-toolbar color="grey darken-2" height="85" dark fixed app>
+        <v-toolbar color="blue" height="85" dark fixed app>
         
             <v-toolbar-title>
-                <img src="images/saamlogo-with-checkbox.png" height="45" /><br />
+                <img src="images/logo-with-tick-white.png" height="45" /><br />
                 <span style="font-size:13px">Safety Audit &amp; Asset Management</span>
             </v-toolbar-title>
             <v-spacer></v-spacer>
@@ -23,7 +23,7 @@
 
 
         <v-content style="padding-top:64px">
-            <v-toolbar tile dark flat  color="grey lighten-1" height="84">
+            <v-toolbar tile dark flat  color="blue lighten-1" height="84">
                     
                 <v-layout row align-center justify-center >
                     <v-flex xs12 sm11 md7>
@@ -82,7 +82,7 @@
                             :value ="assetId"
                             @input ="assetIdInput"
                             @change="assetIdChange"
-                            label="Asset Id"
+                            label="Asset ID"
                             
                             
                             ></v-text-field>
@@ -95,8 +95,8 @@
                 
                 <v-layout row justify-space-around wrap>
                     
-                    <v-flex xs12 sm10 md8>  
-                        <p class="title">Wash list</p>
+                    <v-flex xs12 sm10 md8 >  
+                        <p class="title pt-5">Wash list</p>
 
                         <v-data-table
                             :headers="headers"
@@ -125,7 +125,7 @@
             </v-container>
         </v-content>
 
-        <v-footer color="primary" app>
+        <v-footer color="blue" app>
         <span class="white--text">&copy; 2018</span>
         </v-footer>
     </v-app>

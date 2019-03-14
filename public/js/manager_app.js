@@ -2956,7 +2956,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 text: 'Last audit',
                 align: 'left',
                 sortable: true,
-                value: 'last_audit_done'
+                value: 'last_audit_date'
             }, {
                 text: 'Audit due',
                 align: 'left',
@@ -2982,6 +2982,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$api.get('/api/audits', function (status, data) {
                 _this.items = data.items;
             });
+        },
+        convertDate: function convertDate(dateString) {
+            var p = dateString.split(/\D/g);
+            return [p[2], p[1], p[0]].join("-");
         }
     },
     mounted: function mounted() {
@@ -38561,18 +38565,12 @@ var render = function() {
       _c(
         "v-toolbar",
         {
-          attrs: {
-            color: "blue-grey darken-2",
-            height: "85",
-            dark: "",
-            fixed: "",
-            app: ""
-          }
+          attrs: { color: "blue", height: "85", dark: "", fixed: "", app: "" }
         },
         [
           _c("v-toolbar-title", [
             _c("img", {
-              attrs: { src: "images/saamlogo-with-checkbox.png", height: "45" }
+              attrs: { src: "images/logo-with-tick-white.png", height: "45" }
             }),
             _c("br"),
             _vm._v(" "),
@@ -38623,7 +38621,7 @@ var render = function() {
                 tile: "",
                 dark: "",
                 flat: "",
-                color: "blue-grey lighten-1",
+                color: "blue lighten-1",
                 height: "84"
               }
             },
@@ -38947,7 +38945,7 @@ var render = function() {
               _c(
                 "v-flex",
                 {
-                  staticClass: "purple darken-1",
+                  staticClass: "blue darken-1",
                   staticStyle: {
                     "text-align": "right",
                     "font-size": "120%",
@@ -38962,7 +38960,7 @@ var render = function() {
               _c(
                 "v-flex",
                 {
-                  staticClass: "purple darken-1",
+                  staticClass: "blue darken-1",
                   staticStyle: {
                     "font-size": "120%",
                     color: "#fff",
@@ -39146,11 +39144,11 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("td", { staticClass: "text-xs-left" }, [
-                  _vm._v(_vm._s(props.item.last_audit_done))
+                  _vm._v(_vm._s(_vm.convertDate(props.item.last_audit_date)))
                 ]),
                 _vm._v(" "),
                 _c("td", { staticClass: "text-xs-left" }, [
-                  _vm._v(_vm._s(props.item.next_audit_due))
+                  _vm._v(_vm._s(_vm.convertDate(props.item.next_audit_due)))
                 ]),
                 _vm._v(" "),
                 _c("td", { staticClass: "text-xs-left" }, [

@@ -8,8 +8,8 @@
             light
             slider-color="grey darken-2"
             >
-            <v-flex xs2 class="purple darken-1" style="text-align: right;font-size:120%;color:#fff; padding:5px" >Asset ID</v-flex>
-            <v-flex  class="purple darken-1" style="font-size:120%;color:#fff; padding:5px; text-align: left" >{{assetId}} 
+            <v-flex xs2 class="blue darken-1" style="text-align: right;font-size:120%;color:#fff; padding:5px" >Asset ID</v-flex>
+            <v-flex  class="blue darken-1" style="font-size:120%;color:#fff; padding:5px; text-align: left" >{{assetId}} 
                  <span style="color: #ccc; font-style: italic">{{ assettypeName }}</span></v-flex>
             <v-tab  
                 :key="edit"

@@ -47,9 +47,22 @@ class AuditsController extends Controller
                             'assets.*']);
 
         foreach($assets as $asset) {
-            $lastAudit = Audit::where('asset_id',$asset->id)->latest()->first();
-            if($lastAudit){
-                $asset->last_audit_date = $lastAudit->created_at->toFormattedDateString();
+
+            $res = \DB::table('audits')
+                            ->select( 'meta->audit_date as audit_date')
+                            ->where([
+                                ['client_id',"=",$this->user->client_id],
+                                ['asset_id',"=", "13921"]
+                            ])
+                            ->orderBy('audit_date','desc')
+                            ->limit(1)
+                            ->get();
+
+                        
+            
+                                
+            if($res){
+                $asset->last_audit_date = $res[0]->audit_date;//->toFormattedDateString();
             }
             
         }

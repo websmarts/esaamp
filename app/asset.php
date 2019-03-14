@@ -60,6 +60,6 @@ class Asset extends Model
 
     public function audits()
     {
-        return $this->hasMany('App\Audit');
+        return $this->hasMany('App\Audit','asset_id','asset_id');
     }
 }

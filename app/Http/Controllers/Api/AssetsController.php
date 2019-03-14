@@ -48,7 +48,7 @@ class AssetsController extends Controller
 
        //dd($asset);
 
-        return ['asset'=>$asset->toArray()];
+        return ['asset'=>$asset];
     }
 
     public function store(Request $request)

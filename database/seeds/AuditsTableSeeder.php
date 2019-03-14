@@ -43,6 +43,7 @@ class AuditsTableSeeder extends Seeder
             // echo 'ASSET: '. $asset->id . "\n";
            
             $data['asset_id'] = $asset->asset_id;
+            $data['client_id'] = 1;
             $data['created_by'] = $auditor->id;
             
 
