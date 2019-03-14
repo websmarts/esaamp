@@ -52,17 +52,17 @@ class AuditsController extends Controller
                             ->select( 'meta->audit_date as audit_date')
                             ->where([
                                 ['client_id',"=",$this->user->client_id],
-                                ['asset_id',"=", "13921"]
+                                ['asset_id',"=", $asset->asset_id]
                             ])
                             ->orderBy('audit_date','desc')
                             ->limit(1)
-                            ->get();
+                            ->first();
 
                         
             
                                 
             if($res){
-                $asset->last_audit_date = $res[0]->audit_date;//->toFormattedDateString();
+                $asset->last_audit_date = $res->audit_date;//->toFormattedDateString();
             }
             
         }
