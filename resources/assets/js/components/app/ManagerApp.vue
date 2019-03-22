@@ -3,17 +3,17 @@
     <v-app id="inspire">
     
         
-        <v-toolbar color="blue" height="85" dark fixed app>
+        <v-toolbar color="blue" height="85" dark fixed app class="no-print">
         
-            <v-toolbar-title>
-                <img src="images/logo-with-tick-white.png" height="45" /><br />
+            <v-toolbar-title class="no-print">
+                <img src="images/logo-with-tick-white.png" height="45"  /><br />
                 <span style="font-size:13px">Safety Audit &amp; Asset Management</span>
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-title class="title" >{{ clientname }}</v-toolbar-title>
             <v-spacer></v-spacer>
 
-            <v-toolbar-items>
+            <v-toolbar-items >
                 <v-btn  flat><a href="/logout" style="color:white;text-decoration: none">Logout<br /><small>{{ user.name }}</small></a></v-btn>
             </v-toolbar-items>
             
@@ -25,7 +25,7 @@
 
 
         <v-content>
-            <v-toolbar tile dark flat  color="blue lighten-1" height="84">
+            <v-toolbar tile dark flat  color="blue lighten-1" height="84" class="no-print">
                 
                     
                 <v-layout row align-center justify-center >
@@ -55,7 +55,7 @@
         </v-container>
         </v-content>
 
-        <v-footer color="blue-grey darken-2" app>
+        <v-footer color="blue-grey darken-2" app class="no-print">
         <span class="white--text">&copy; 2018</span>
         </v-footer>
     </v-app>

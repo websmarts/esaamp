@@ -46,9 +46,8 @@ class AuditsTableSeeder extends Seeder
             $data['client_id'] = 1;
             $data['created_by'] = $auditor->id;
             
-
             $data['meta'] = [
-                'audit_date'=>$a->audit_date,
+                'audit_date' => $a->audit_date,
                 'auditors'=>$a->auditor1 .', '.$a->auditor2,
                 'audit_notes' => $a->audit_comment,
                 'next_action' => $a->next_action,

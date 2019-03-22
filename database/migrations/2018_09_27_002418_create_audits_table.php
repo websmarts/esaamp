@@ -19,7 +19,7 @@ class CreateAuditsTable extends Migration
             $table->string('asset_id');
             $table->json('meta')->nullable();
             $table->integer('created_by')->unsigned(); // The primary auditor
-            $table->timestamp('audit_date');
+            //$table->timestamp('audit_date');
             $table->timestamps();
         });
     }

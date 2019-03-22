@@ -1,6 +1,6 @@
 <template>
 <div>
-    <v-flex xs8 md4 offset-md8 offset-xs4 style="margin-bottom:2em">
+    <v-flex xs8 md4 offset-md8 offset-xs4 style="margin-bottom:2em" class="no-print">
         <v-text-field
             v-model="search"
             append-icon="search"
@@ -109,7 +109,7 @@ export default {
             })
         },
         convertDate(dateString){
-            if(typeof dateString == 'undefined' || dateString.length != 10){
+            if(!dateString || typeof dateString == 'undefined' || dateString.length != 10){
                 return
             }
 

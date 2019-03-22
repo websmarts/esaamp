@@ -1,7 +1,7 @@
 {
-    "/js/manager_app.js": "/js/manager_app.js?id=9c9a3587afaad161c534",
-    "/css/app.css": "/css/app.css?id=f2a0d8e53873aba04c4d",
-    "/js/washer_app.js": "/js/washer_app.js?id=319f061bea3465da290a",
-    "/js/accounts_app.js": "/js/accounts_app.js?id=78e3aebf78a36e6b7513",
-    "/js/slings.js": "/js/slings.js?id=70c530ff7b30acac10ff"
+    "/js/manager_app.js": "/js/manager_app.js?id=2c7f2f8df390103a1c71",
+    "/css/app.css": "/css/app.css?id=186d5305b0c3e1b197d4",
+    "/js/washer_app.js": "/js/washer_app.js?id=62d3aa1956b9f9eec469",
+    "/js/admin_app.js": "/js/admin_app.js?id=4c619f76961c715b8142",
+    "/js/accounts_app.js": "/js/accounts_app.js?id=f8bae7ee93b7522aa9de"
 }

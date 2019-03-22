@@ -50,3 +50,15 @@ $link-focus-border: $primary;
 .navbar-item img {
     max-height: 2.75rem;
 }
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+}
+
+@media screen {
+    .no-screen {
+        display: none !important;
+    }
+}
