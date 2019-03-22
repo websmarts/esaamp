@@ -109,6 +109,10 @@ export default {
             })
         },
         convertDate(dateString){
+            if(typeof dateString == 'undefined' || dateString.length != 10){
+                return
+            }
+
             const p = dateString.split(/\D/g)
             return [p[2],p[1],p[0] ].join("-")
         }

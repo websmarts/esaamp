@@ -64,7 +64,7 @@ const router = new Router({
 const App = require('./components/app/ManagerApp.vue');
 
 
-Vue.config.productionTip = true
+Vue.config.productionTip = false
 
 // import api from './components/app/lib/apiService.js';
 import apiService from './components/app/lib/apiServiceClass.js';

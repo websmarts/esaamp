@@ -147,7 +147,7 @@ export default {
             
             // Data table 
             headers: [
-                        { text: 'Asset Id', value: 'asset_id' },
+                        { text: 'Asset ID', value: 'asset_id' },
                         // { text: 'Description', value: 'asset.description' },
                         {
                             text: 'Wash count',
@@ -196,7 +196,7 @@ export default {
             this.selectedAssetId=null
 
             if(!$AssetIds.includes(aid)){
-                alert('Invalid assetId entered')
+                alert('Invalid assetID entered')
                 return
             }
 
@@ -253,7 +253,7 @@ export default {
 
                     this.records = data.records
 
-                    this.setMessage('Select Wash Date and enter Asset Ids of washed items')
+                    this.setMessage('Select Wash Date and enter Asset ID of washed item.')
 
                 }).catch( (err)=> {
                    

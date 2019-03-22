@@ -23,7 +23,7 @@
                                         solo
                                     >
                                         <template v-slot:no-data>
-                                            <div> No matching items</div>
+                                            <div>{{ dropdown_message }}</div>
                                         </template>
                                     
                                     </v-autocomplete>
@@ -85,6 +85,7 @@ export default {
             search: null,
             assetIds: [],
             auditsDueCount: $Refdata['audits_due_count'],
+            dropdown_message: 'No matching items...',
             
             loading: false,
             isEditing: false,
