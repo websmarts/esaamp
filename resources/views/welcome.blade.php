@@ -122,18 +122,18 @@ all kept in the one secure place.
       </div>
       <div class="column is-3">
         <div class="card has-background-primary">
-
           <div class="card-content">
             <div class="content has-text-white">
               <h4 class="has-text-white"> eSAAM benefits  </h4>
-              <p><ul>
+              
+              <ul>
                 <li>Safety audit mechanism that simplifies the audit process through a clear recording system </li>
                 <li>Alerts set up to ensure safety audits do not lapse </li>   
                 <li>Asset management feature that captures who the equipment belongs to, where it is kept, how old it is and when it may need to be replaced</li>
                 <li>Centralised and secure data portal accessible to permitted users ensures data is not kept by one person alone</li>
                 <li>Data is available across platforms - desktop, laptop, tablet or smart phone devices</li>
               </ul>
-              </p>
+              
             </div>
           </div>
         </div>

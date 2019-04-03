@@ -14,7 +14,7 @@
 </script>
  
 @if(!empty($user->role)) 
-    <script src="{{ asset('js/'. $user->role . '_app.js') }}"></script>
+    <script src="{{ mix('js/'. $user->role . '_app.js') }}"></script>
 @endif
 
 
