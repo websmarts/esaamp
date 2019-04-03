@@ -60,7 +60,7 @@ class WashController extends Controller
             'washdate' =>$this->request->washdate,
             'washcount' =>$asset->meta['wash_count'] + 1,
             'condition' => $asset->condition,
-            'quarantined' => $asset->quarantined
+            'quarantined' => $asset->meta['quarantined']
         ];
 
         // If wash exists for today then return
