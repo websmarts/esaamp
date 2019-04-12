@@ -11,7 +11,6 @@ use App\Http\Controllers\ApiController;
 class AuditsController extends ApiController
 {
     
-
     public function index()
     {
         
