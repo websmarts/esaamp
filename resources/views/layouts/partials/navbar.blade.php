@@ -54,7 +54,7 @@
 
 
               <a class="navbar-item"
-                        onclick="event.preventDefault();
+                        onclick="event.preventDefault ? event.preventDefault() : (event.returnValue = false);
                                  document.getElementById('logout-form').submit();">
                         Logout
                     </a>
