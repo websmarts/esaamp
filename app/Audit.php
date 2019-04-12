@@ -28,14 +28,7 @@ class Audit extends Model
         'meta' => 'array'
     ];
 
-    /**
-     * Global scope to restrict query to current client records
-     */
-    protected static function boot()
-    {
-        parent::boot();
-        static::addGlobalScope(new ClientScope);
-    }
+    
 
     
     // public function saveWithMetaData($data,$metakeys)

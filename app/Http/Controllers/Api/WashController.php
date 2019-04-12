@@ -5,31 +5,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Wash;
 use App\Asset;
-use App\Client;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\ApiController;
 
-class WashController extends Controller
+class WashController extends ApiController
 {
-    protected $user;
-    protected $request;
-
-    public function __construct(Request $request)
-    {
-        
-        $this->middleware(function ($request, $next) {
-
-            $this->user = $request->user('api');
-
-            $this->client = Client::find($this->user->client_id);
-
-            $this->request = $request;   
-
-            return $next($request);
-        });
-             
-        
-    }
 
 
     public function washes($date)
@@ -41,9 +21,7 @@ class WashController extends Controller
     }
 
     public function store()
-    {
-
-        
+    {     
         $this->request->validate([ 
             'asset_id'=> 'required',
             'washdate' => 'required'
@@ -93,9 +71,7 @@ class WashController extends Controller
 
     protected function washlist($date)
     {
-
-
-        return \DB::table('washes')
+        return DB::table('washes')
            ->join('assets', 'washes.asset_id', '=', 'assets.asset_id')
            ->where('washes.client_id','=',$this->user->client_id)
            ->whereDate('washdate','=', $date)

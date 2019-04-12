@@ -4,26 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Asset;
 use App\Audit;
-use App\Client;
-use App\AssetType;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ApiController;
 
-
-class AuditController extends Controller
+class AuditController extends ApiController
 {
-    protected $user;
-    protected $request;
 
-    public function __construct(Request $request)
-    {
-         
-        $this->user = $request->user('api');
-        $this->client = Client::find($this->user->client_id);
-        $this->request = $request;    
-        
-    }
 
     public function getAssetByAssetId($assetid)
     {
@@ -38,7 +23,7 @@ class AuditController extends Controller
         dd('audit update function is still a TODO');
     }
 
-    public function store( )
+    public function store()
     {
             // Validate data
             $validatedData = $this->request->validate([
@@ -70,7 +55,7 @@ class AuditController extends Controller
 
         $auditdata['asset_id'] = $asset->id;
         
-        $auditdata['client_id'] = $this->client->id;
+        $auditdata['client_id'] = $this->user->client_id;
 
         // Handle the switch inputs
         // $auditdata['quarantined'] = $this->request->quarantined === true ? 1 : 0;
@@ -116,7 +101,7 @@ class AuditController extends Controller
 
     protected function getTimezone()
     {
-        return $this->client->timezone;
+        return $this->user->client->timezone;
     }
 
     

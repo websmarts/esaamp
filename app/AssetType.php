@@ -26,12 +26,7 @@ class AssetType extends Model
         'metaschema' => 'array'
     ];
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::addGlobalScope(new ClientScope);
-    }
+    
 
 
     public function validationRules()

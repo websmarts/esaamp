@@ -3,36 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 
-use App\Wash;
 use App\Asset;
-use App\Audit;
-use App\Client;
-use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\ApiController;
 
-class ReportsController extends Controller
+class ReportsController extends ApiController
 {
-    protected $user;
-    protected $request;
-
-    public function __construct(Request $request)
-    {
-        
-        $this->middleware(function ($request, $next) {
-
-            $this->user = $request->user('api');
-
-            $this->client = Client::find($this->user->client_id);
-
-            $this->request = $request;   
-
-            return $next($request);
-        });
-             
-        
-    }
-
+    
 
     public function index()
     {
@@ -62,7 +40,7 @@ class ReportsController extends Controller
     {
         // return Audit::where('client_id',$this->user->client_id)->count();
 
-        $res = \DB::table('audits')
+        $res = DB::table('audits')
                     ->leftJoin('assets','audits.asset_id','=','assets.asset_id')
                     ->where('assets.client_id',$this->user->client_id)
                     ->count();

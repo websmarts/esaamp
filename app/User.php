@@ -40,5 +40,8 @@ class User extends Authenticatable
         'remember_token'
     ];
 
-    
+    public function client()
+    {
+        return $this->belongsTo('App\Client');
+    }
 }

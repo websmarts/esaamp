@@ -39,12 +39,7 @@ class Asset extends Model
         'meta' => 'array'
     ];
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::addGlobalScope(new ClientScope);
-    }
+   
  
     /**
      *  Returns an array of the supported keys in metadata
@@ -66,4 +61,6 @@ class Asset extends Model
     {
         return $this->hasMany('App\Audit');
     }
+
+    
 }

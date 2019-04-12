@@ -3,35 +3,20 @@
 namespace App\Http\Controllers\Api;
 
 use App\Asset;
-use App\Audit;
-use App\Client;
-use App\AssetType;
-use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\ApiController;
 
 
-class AuditsController extends Controller
+class AuditsController extends ApiController
 {
-    protected $user;
-    protected $request;
-
-    public function __construct(Request $request)
-    {
-         //$this->user = auth('api')->user();
-         
-        $this->user = $request->user('api');
-        $this->client = Client::find($this->user->client_id);
-        $this->request = $request;    
-        
-    }
+    
 
     public function index()
     {
         
         $cutoffDate = Carbon::now();
-
+        
         
         $assets = Asset::where('assets.client_id',$this->user->client_id)
                         ->whereNotNull('next_audit_due')
@@ -48,7 +33,7 @@ class AuditsController extends Controller
 
         foreach($assets as $asset) {
 
-            $res = \DB::table('audits')
+            $res = DB::table('audits')
                             ->select( 'meta->audit_date as audit_date')
                             ->where([
                                 ['client_id',"=",$this->user->client_id],
@@ -67,14 +52,8 @@ class AuditsController extends Controller
             
         }
 
-        
-
-        
         return ['items'=>$assets];
     }
 
-    
-
-    
     
 }

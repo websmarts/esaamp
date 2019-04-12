@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Asset;
 use App\AssetType;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-class AssetTypesController extends Controller
+
+class AssetTypesController extends ApiController
 {
     public function index()
     {
-        return AssetType::where('client_id',Auth::user()->client_id)->get();
+        return AssetType::where('client_id',$this->user->client_id)->get();
     }
 
     public function getAssetByAssetId($assetId)
@@ -23,17 +22,17 @@ class AssetTypesController extends Controller
         return ['asset'=>$asset->toArray()];
     }
 
-    public function update(Request $request, $assetid)
+    public function update( $assetid)
     {
             // Validate data
-            $validatedData = $request->validate([
+            $validatedData = $this->request->validate([
                 'asset_id' => 'required',
                 'body' => 'required'
                 ]);
             // Update data
             $asset = Asset::where('asset_id',$assetid)->first();
 
-            $data = $this->transform($request,$asset);
+            $data = $this->transform($asset);
 
             $asset->update($data);
             
@@ -41,12 +40,12 @@ class AssetTypesController extends Controller
 
     }
 
-    private function transform($request,$asset)
+    private function transform($asset)
     {
 
         // Transform the form data into suitable format
         // for model update or save
-        $data = $request->input();
+        $data = $this->request->input();
 
 
         

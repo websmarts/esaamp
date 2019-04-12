@@ -18,12 +18,7 @@ class Site extends Model
 
     protected $hidden = ['updated_at','created_at'];
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::addGlobalScope(new ClientScope);
-    }
+    
 
     public function departments() 
     {

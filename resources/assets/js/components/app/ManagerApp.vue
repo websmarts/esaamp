@@ -14,7 +14,7 @@
             <v-spacer></v-spacer>
 
             <v-toolbar-items >
-                <v-btn  flat><a href="/logout" style="color:white;text-decoration: none">Logout<br /><small>{{ user.name }}</small></a></v-btn>
+                <v-btn href="/logout" flat><span  style="color:white;text-decoration: none">Logout<br /><small>{{ user.name }}</small></span></v-btn>
             </v-toolbar-items>
             
         </v-toolbar>

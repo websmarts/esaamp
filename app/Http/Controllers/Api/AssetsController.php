@@ -2,30 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Asset;
-use App\Client;
 use App\AssetType;
-use Illuminate\Http\Request;
 
 
-
-
-class AssetsController extends Controller
+class AssetsController extends ApiController
 {
-    protected $user;
-    protected $client;
-    protected $request;
-
-    public function __construct(Request $request)
-    {
- 
-        $this->user = $request->user('api');
-        $this->client = Client::find($this->user->client_id);
-        $this->request = $request;        
-        
-    }
-
 
     public function index()
     {
@@ -36,12 +19,13 @@ class AssetsController extends Controller
     public function getAssetByAssetId($assetid)
     {
         
-        $asset = Asset::with(['audits','assettype'])->where('asset_id',$assetid)->first();  
+        $asset = Asset::where('client_id',$this->user->client_id)
+                ->with(['audits','assettype'])->where('asset_id',$assetid)->first();  
 
         return ['asset'=>$asset];
     }
 
-    public function store(Request $request)
+    public function store()
     {
         // Validate data
         $validatedData = $this->request->validate([
@@ -57,7 +41,7 @@ class AssetsController extends Controller
         $data['client_id'] = $this->user->client_id; // force assets client_id to be users client_id
 
         // Validate against the assetype rules
-        $assettype = AssetType::find($request->input('asset_type_id'));
+        $assettype = AssetType::find($this->request->input('asset_type_id'));
         $rules = $assettype->validationRules();
         $validatedData = $this->request->validate($rules);
 

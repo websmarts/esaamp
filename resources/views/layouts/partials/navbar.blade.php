@@ -54,13 +54,13 @@
 
 
               <a class="navbar-item"
-                        onclick="event.preventDefault ? event.preventDefault() : (event.returnValue = false);
+                        onclick="event.preventDefault();
                                  document.getElementById('logout-form').submit();">
                         Logout
                     </a>
                    
 
-                    <form class="navbar-item" id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    <form class="navbar-item" name="logout-form" id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         {{ csrf_field() }}
                     </form>
 
