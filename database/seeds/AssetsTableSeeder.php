@@ -173,7 +173,7 @@ class AssetsTableSeeder extends Seeder
                 ];
 
             // Delete any asset with this barcode because it is being replaced with the restraint
-            Asset::where('asset_id',$a->barcode)->delete();
+            Asset::withoutGlobalScopes()->where('asset_id',$a->barcode)->delete();
             
             Asset::create($data);
 

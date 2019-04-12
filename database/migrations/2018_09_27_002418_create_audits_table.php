@@ -16,7 +16,7 @@ class CreateAuditsTable extends Migration
         Schema::create('audits', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('client_id')->unsigned();
-            $table->string('asset_id');
+            $table->integer('asset_id')->unsigned();
             $table->json('meta')->nullable();
             $table->integer('created_by')->unsigned(); // The primary auditor
             //$table->timestamp('audit_date');

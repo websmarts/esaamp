@@ -52,7 +52,7 @@ class AuditsController extends Controller
                             ->select( 'meta->audit_date as audit_date')
                             ->where([
                                 ['client_id',"=",$this->user->client_id],
-                                ['asset_id',"=", $asset->asset_id]
+                                ['asset_id',"=", $asset->id]
                             ])
                             ->orderBy('audit_date','desc')
                             ->limit(1)

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Asset;
+use App\Audit;
+use App\Client;
 use App\AssetType;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Client;
 
 
 class AuditController extends Controller
@@ -17,7 +18,6 @@ class AuditController extends Controller
 
     public function __construct(Request $request)
     {
-         //$this->user = auth('api')->user();
          
         $this->user = $request->user('api');
         $this->client = Client::find($this->user->client_id);
@@ -49,27 +49,31 @@ class AuditController extends Controller
             $asset = Asset::where('asset_id',$this->request->asset_id)->first();
 
             // get the audit data
-            $data = $this->getData();
+            $data = $this->getData($asset);
 
             $asset->update($data['assetdata']);
-            
-            $audit = $asset->audits()->create($data['auditdata']);
-            $audit->update($data['auditdata']);
+ 
+            $audit = Audit::create($data['auditdata']);
             
         
-            return ['data'=>'success','record'=>$audit->refresh()];
+            return ['data'=>'success','record'=>$audit];
 
     }
 
-    private function getData()
+    private function getData($asset)
     {
 
         $auditdata=[];
         $assetdata=[];
         $data = [];
 
+
+        $auditdata['asset_id'] = $asset->id;
+        
+        $auditdata['client_id'] = $this->client->id;
+
         // Handle the switch inputs
-        $auditdata['quarantined'] = $this->request->quarantined === true ? 1 : 0;
+        // $auditdata['quarantined'] = $this->request->quarantined === true ? 1 : 0;
         $auditdata['retire_from_service'] = $this->request->retire_from_service === true ? 1 : 0;
 
 
@@ -84,7 +88,7 @@ class AuditController extends Controller
 
         // Asset data
         // Handle the switch inputs
-        $assetdata['quarantined'] = $this->request->quarantined === true ? 1 : 0;
+        // $assetdata['quarantined'] = $this->request->quarantined === true ? 1 : 0;
         $assetdata['retire_from_service'] = $this->request->retire_from_service === true ? 1 : 0;
         $assetdata['condition'] = $this->request->condition;
         $assetdata['next_audit_due'] = $this->request->next_audit_due;

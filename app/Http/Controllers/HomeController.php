@@ -10,6 +10,7 @@ use App\AssetType;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
 
 class HomeController extends Controller
 {
@@ -34,26 +35,13 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {  
-
+        
         $user = auth()->user();
         $clientdata = $this->clientdata();
         $refdata = $this->referenceData();
         $assetids = $this->getAssetIds();
 
-        // $asset = Asset::first();
-        // dd($asset->assettype->validationRules());
-
-
-        // $cutoffDate = Carbon::now();
-        // $auditsdue = Asset::with('assettype:id,name')
-        //                 ->select('asset_id','asset_type_id','next_audit_due')
-        //                 ->whereNotNull('next_audit_due')
-        //                 ->where('next_audit_due','<', $cutoffDate)
-        //                 ->limit(10)->get();
-
-        // dd($auditsdue);
-
-
+        
         return view('home',compact('clientdata','refdata','assetids','user'));
     }
 
@@ -78,18 +66,6 @@ class HomeController extends Controller
         
     }
 
-    // protected function getConditionOptions()
-    // {
-    //     // Asset condition field enum options
-    //     $options = \DB::select(\DB::raw('SHOW COLUMNS FROM assets WHERE Field = "condition"'))[0]->Type;
-    //     preg_match('/^enum\((.*)\)$/', $options, $matches);
-    //     $conditionOptions = array();
-    //     foreach(explode(',', $matches[1]) as $value){
-    //         $conditionOptions[] = trim($value, "'");
-    //     }
-
-    //     return $conditionOptions;
-    // }
 
     protected function auditsDueCount() 
     {
@@ -97,8 +73,7 @@ class HomeController extends Controller
         $cutoffDate = Carbon::now();
         $user = auth()->user();
         
-        return Asset::where('client_id',$user->client_id)
-                        ->whereNotNull('next_audit_due')
+        return Asset::whereNotNull('next_audit_due')
                         ->where('retire_from_service', 0)
                         ->whereDate('next_audit_due','<=', $cutoffDate)
                         ->count();
@@ -107,7 +82,7 @@ class HomeController extends Controller
     
     protected function getAssetTypes()
     {
-        $col =  AssetType::where('client_id',auth()->user()->client_id)->get();
+        $col =  AssetType::get();
 
         return $col->keyBy('id')->toArray();
     }
@@ -115,7 +90,7 @@ class HomeController extends Controller
     protected function getAssetIds()
     {
         $assetIds = Asset::select('asset_id')
-                    ->where('client_id',auth()->user()->client_id)
+                    //->where('client_id',auth()->user()->client_id)
                     ->orderBy('asset_id','ASC')
                     ->get()
                     ->pluck('asset_id')

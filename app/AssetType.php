@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\ClientScope;
 use Illuminate\Database\Eloquent\Model;
 
 class AssetType extends Model
@@ -24,6 +25,13 @@ class AssetType extends Model
         'auditschema' => 'array',
         'metaschema' => 'array'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new ClientScope);
+    }
 
 
     public function validationRules()

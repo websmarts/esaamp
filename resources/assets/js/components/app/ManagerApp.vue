@@ -39,11 +39,14 @@
             </v-toolbar>
         
             
+        <v-progress-linear :indeterminate="true" v-if="store.isActive()" style="margin-top:0"></v-progress-linear>
         
         <v-container fluid >
         
             <v-layout row align-center>
             <v-flex text-xs-center>
+                
+                
                 <transition name="fade" >
                     <router-view :key="$route.params.assetid"></router-view>
                 </transition>
@@ -63,12 +66,13 @@
 
 <script>
 
-
+import store from './lib/store'
 
 
 export default {
     data() {
         return {
+            store,
             clientname: $Clientdata['name'],
             user: $User,
             currentroute: '',

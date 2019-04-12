@@ -20,7 +20,7 @@ class CreateAssetsTable extends Migration
             $table->string('vendor')->nullable();
             $table->string('vendor_part_reference')->nullable();
             $table->string('description')->nullable();
-            $table->string('size')->nullable();
+            //$table->string('size')->nullable();
             $table->float('cost_price')->nullable();
             $table->integer('site_id')->unsigned();
             $table->integer('department_id')->unsigned()->nullable();

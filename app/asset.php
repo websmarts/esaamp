@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\ClientScope;
 use App\Traits\storesMetadata;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,7 +22,6 @@ class Asset extends Model
         'vendor', 
         'vendor_part_reference', 
         'description', 
-        'size', 
         'cost_price', 
         'site_id',
         'department_id',        
@@ -39,7 +39,12 @@ class Asset extends Model
         'meta' => 'array'
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
 
+        static::addGlobalScope(new ClientScope);
+    }
  
     /**
      *  Returns an array of the supported keys in metadata
@@ -51,7 +56,6 @@ class Asset extends Model
 
     
 
-
     public function assettype()
     {
         return $this->belongsTo('App\AssetType','asset_type_id');
@@ -60,6 +64,6 @@ class Asset extends Model
 
     public function audits()
     {
-        return $this->hasMany('App\Audit','asset_id','asset_id');
+        return $this->hasMany('App\Audit');
     }
 }

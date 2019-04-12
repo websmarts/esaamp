@@ -61,6 +61,7 @@
                                 Reports<v-icon dark right v-show="btn_selected.reports">check_circle</v-icon>
                                 </v-btn>
                             </v-flex>
+                            
                         </v-layout>
                     
   

@@ -204,10 +204,7 @@ export default {
         clear () {
             
             this.formdata = Object.assign({}, {}, {})
-            this.$refs.form.reset()
-            // this.$nextTick( function() {
-            //     this.$refs.form.reset()
-            // })
+            //this.$refs.form.resetValidation() // resets just the validation messages
             this.showSuccessAlertFlag = false
             this.successAlertMessage=''
         },
@@ -240,20 +237,27 @@ export default {
             })
              
             // Setup formdata object by combining the core asset data Obj and the asset meta data Obj
+            //self.formdata = Object.assign({})
             self.formdata = Object.assign({},assetdata,metadata)
+            //console.log('FORMDATA',self.formdata)
 
             
             // Setup the formschema with the laravel rules converted to local rules
             const validator = new formValidator(self.formdata,schema)
-            self.formschema =  validator.schema_with_rules
+            //console.log('Assigning formschema :',validator.schema_with_rules)
+            //self.formschema = Object.assign({})
+            self.formschema = Object.assign({},validator.schema_with_rules) 
+
+            //this.$forceUpdate()
                            
 
         }
     },
     watch: {
-        'asset' (to, from) {
+        asset: function (to, from) {
         // react to route changes...
 
+        
         this.load()
 
         

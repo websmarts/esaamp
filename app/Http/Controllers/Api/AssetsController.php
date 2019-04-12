@@ -7,7 +7,7 @@ use App\Asset;
 use App\Client;
 use App\AssetType;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+
 
 
 
@@ -19,34 +19,24 @@ class AssetsController extends Controller
 
     public function __construct(Request $request)
     {
-         //$this->user = auth('api')->user();
-
-        
-         
+ 
         $this->user = $request->user('api');
-
-        
         $this->client = Client::find($this->user->client_id);
-        $this->request = $request;    
-          
+        $this->request = $request;        
         
     }
 
 
     public function index()
     {
-              
-        $clientId = $this->user->client_id;
         
-        return Asset::where('client_id',$clientId)->select('asset_id')->get()->pluck('asset_id');
+        return Asset::select('asset_id')->get()->pluck('asset_id');
     }
 
     public function getAssetByAssetId($assetid)
     {
         
         $asset = Asset::with(['audits','assettype'])->where('asset_id',$assetid)->first();  
-
-       //dd($asset);
 
         return ['asset'=>$asset];
     }
@@ -62,14 +52,8 @@ class AssetsController extends Controller
             'asset_type_id' => 'required'
             ]);
 
-        
-        
-
-        $data = $this->getData($this->request->input());
-        //dd($data);
-
-        
-
+        $data = $this->process($this->request->input());
+ 
         $data['client_id'] = $this->user->client_id; // force assets client_id to be users client_id
 
         // Validate against the assetype rules
@@ -77,58 +61,57 @@ class AssetsController extends Controller
         $rules = $assettype->validationRules();
         $validatedData = $this->request->validate($rules);
 
-        $asset = Asset::create($data);
-
+        Asset::create($data); // storesMetaData Trait intercepts create method to handle metadata
+        
         return ['data'=>'success','record'=>$data];
 
     }
 
     public function update( $assetid)
     {
-            
+                 
+        // Pre Validate data - the rules for asset_id, site_id and department_id are not in the assettype rules
+        $validatedData = $this->request->validate([
+            'asset_id' => 'required',
+            'site_id'=> 'required',
+            'department_id' => 'required'
+            ]);
+
+  
+        $asset = Asset::where('asset_id',$assetid)->first();
+
+
+        // Validate against the assetype rules
+        $rules = $asset->assettype->validationRules();
+        $validatedData = $this->request->validate($rules);
+
+
+        // Data is valid so now update model
+        $data = $this->process($this->request->input());
+
+        $asset->update($data); // storesMetaData Trait intercepts update method to process metadata
         
-            // Pre Validate data - the rules for asset_id, site_id and department_id are not in the assettype rules
-            $validatedData = $this->request->validate([
-                'asset_id' => 'required',
-                'site_id'=> 'required',
-                'department_id' => 'required'
-                ]);
-
-            
-
-            
-            $asset = Asset::where('asset_id',$assetid)->first();
-
-
-            // Validate against the assetype rules
-            $rules = $asset->assettype->validationRules();
-            $validatedData = $this->request->validate($rules);
-
-
-
-            $data = $this->getData($this->request->input());
-
-            $asset->update($data);
-
-            //sleep(2);
-            
-            return ['data'=>'success','record'=>$data];
+        return ['data'=>'success','record'=>$data];
 
     }
 
     
 
-    private function getData($data)
+    private function process($data)
     {
+        // Note Meta data handled by Asset model
 
         // Remove the ID if it exists
         unSet($data['id']);
 
-        // Note Meta data handled by Asset model
-
+        
         // Handle the switch inputs
-        $data['quarantined'] = isSet($data['quarantined']) ? ($data['quarantined']===true ? 1 : 0) : 0;
-        $data['retire_from_service'] = isSet($data['retire_from_service']) ? ($data['retire_from_service']===true ? 1 : 0) : 0;
+        
+        $switches = ['quarantined','retire_from_service'];
+        foreach($switches as $switch){
+            $data[$switch] = isSet($data[$switch]) ? ($data[$switch]===true ? 1 : 0) : 0;
+        }
+        
 
         // Commisioned date
         if(!$this->isValidDate($data['commissioned_date'])){

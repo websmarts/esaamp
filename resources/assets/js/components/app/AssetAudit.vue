@@ -174,7 +174,7 @@ export default {
 
                 this.$api.post(path, data, (status,data) => {
 
-                    // emit event to update the list of barcodes
+                    // emit event to update the list of audits
                     EventBus.$emit('newAudit')
 
                     this.showSuccessMessage('Audit has been saved')
@@ -199,7 +199,7 @@ export default {
         clear () {
             
             this.formdata = Object.assign({}, {}, {})
-            this.$refs.auditform.reset()
+            this.$refs.auditform.resetValidation()
             // this.$nextTick( function() {
             //     this.$refs.form.reset()
             // })

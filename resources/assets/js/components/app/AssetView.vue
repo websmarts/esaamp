@@ -43,7 +43,7 @@
                 <v-card flat>
                 <v-card-text>
                     <div class="title">Audit asset</div>
-                    <asset-audit :asset="asset"  @created="addAudit"></asset-audit>
+                    <asset-audit :asset="asset"  ></asset-audit>
                     <div class="title" style="margin-top:20x; padding:5px; border-top: 1px dashed #ccc">Asset Audit History</div>
                     <audit-history :audits="asset.audits" ></audit-history>
                 </v-card-text>
@@ -93,10 +93,10 @@ export default {
             this.asset.audits.push(audit)
         },
         load () {
-
+            const self = this
             
             this.$api.get('/api/asset/'+ this.assetId,(status,data) => {
-                this.asset = Object.assign({},data.asset)
+                self.asset = Object.assign({},data.asset)
             })
             
             
@@ -126,12 +126,13 @@ export default {
         // when a new audit is created we reload the asset to get the 
         EventBus.$on('newAudit', () => {
             this.load()
+            //this.$forceUpdate()
         })
     },
     watch: {
         '$route' (to, from) {
             // react to route changes...
-            console.log('re-routed to: ',to.params.assetid,'query',to.query)
+            //console.log('re-routed to: ',to.params.assetid,'query',to.query)
             this.assetId = to.params.assetid
             if(typeof(this.assetId) !== 'undefined'){
                 this.load()
