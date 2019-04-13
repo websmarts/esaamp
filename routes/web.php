@@ -11,17 +11,28 @@
 |
  */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 Auth::routes();
 Route::get('logout','Auth\LoginController@logout'); // provide a GET logout request option 
 
-
-
+// Site guest home
 // need to be proteded by auth middleware 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::middleware(['guest'])->group(function () {
+    Route::get('/', 'IndexController@index')->name('welcome');
+});
+
+Route::middleware(['auth'])->group(function () {
+    
+    Route::get('/home', 'HomeController@index')->name('home');
+
+
+
+
+    
+});
+
+
 
 
 
