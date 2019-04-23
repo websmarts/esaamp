@@ -32,8 +32,10 @@
                 </div>
               </v-card-title>
               <v-card-text>
-                <div  py-5 class="text-xs-left display-1" >Audits completed : {{auditsdone}}</div>
+                
                 <div  py-5 class="text-xs-left display-1" >Audits overdue : {{auditsdue}}</div>
+
+                <div  style="background:#fff; margin-top:18px"><bar-chart v-if="loaded" :chart-data="datacollection"></bar-chart></div>
 
               </v-card-text>
               <v-card-actions>
@@ -49,16 +51,39 @@
 
 <script>
 
+import BarChart from './charts/BarChart.js'
+
 export default {
+    components: {
+      BarChart
+    },
 
     data() {
         return {
+          loaded: false,
           auditsdue: 0,
+          auditsOverdue30: 0,
           auditsdone: 0,
-          assetcount: 0
-
+          assetcount: 0,
+         
+          datacollection: {
+          
+            labels: ["Total due", "30+ days overdue"],
+            datasets: [
+              {
+                
+                backgroundColor: [ "#8e5ea2","#fe95cd"],
+                data: [716,80]
+              }
+            ]
         }
+
+          
+          
+        }
+      
     },
+ 
     methods: {
 
       goto(url) {
@@ -68,7 +93,12 @@ export default {
          this.$api.get('/api/reports',(status,data) => {
                 this.assetcount = data.data.assetcount
                 this.auditsdue = data.data.auditsdue
-                this.auditsdone = data.data.auditsdone
+                this.auditsOverdue30 = data.data.auditsOverdue30
+
+                this.datacollection.datasets[0].data[0] = this.auditsdue 
+                this.datacollection.datasets[0].data[1] = this.auditsOverdue30 
+
+                this.loaded = true
             })
             
       }

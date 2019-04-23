@@ -16,6 +16,7 @@ class ReportsController extends ApiController
     {
         $data = [
             'auditsdue' => $this->auditsDue(),
+            'auditsOverdue30' => $this->auditsDue(30),
             'auditsdone'=> $this->auditsDone(),
             'assetcount' =>$this->assetCount()
 
@@ -26,16 +27,19 @@ class ReportsController extends ApiController
         return ['data'=>$data];
     }
 
-    protected function auditsDue()
+    protected function auditsDue($days = 0)
     {
         $now = Carbon::now();
+
+        $now->subDays($days);
+
         
         return Asset::where('client_id',$this->user->client_id)
                     ->whereNotNull('next_audit_due')
                     ->whereDate('next_audit_due', '<=', $now)
                     ->count();
     }
-
+    
     protected function auditsDone()
     {
         // return Audit::where('client_id',$this->user->client_id)->count();
